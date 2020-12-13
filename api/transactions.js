@@ -12,7 +12,7 @@ var utils = require('./lib/utils');
 var DEFAULT_RESULTS_PER_PAGE = 10;
 
 /**
- * Submit a normal ripple-lib transaction, blocking duplicates for payments and
+ * Submit a normal divvy-lib transaction, blocking duplicates for payments and
  * orders.
  *
  * @param {Object} options - Holds various options
@@ -32,7 +32,7 @@ var DEFAULT_RESULTS_PER_PAGE = 10;
  *
  * @callback
  * @param {Error} error
- * @param {Object} transaction - Transaction data received from ripple
+ * @param {Object} transaction - Transaction data received from divvy
  */
 
 function submitTransaction(api, options, hooks, callback) {
@@ -180,7 +180,7 @@ function submitTransaction(api, options, hooks, callback) {
  * Helper that sets bit flags on transactions
  *
  * @param {Transaction} transaction - Transaction object that is used to submit
- *                                    requests to ripple
+ *                                    requests to divvy
  * @param {Object} options
  * @param {Object} options.flags - Holds flag names to set on transaction when
  *                                 parameter values are true or false on input
@@ -227,7 +227,7 @@ function setTransactionBitFlags(transaction, options) {
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
  *
- * @param {RippleAddress} account
+ * @param {DivvyAddress} account
  * @param {Hex-encoded String|ASCII printable character String} identifier
  * @param {Object} options
  * @param {Function} callback
@@ -380,10 +380,10 @@ function getTransactionAndRespond(account, identifier, options, callback) {
 }
 
 /**
- * Wrapper around the standard ripple-lib requestAccountTx function
+ * Wrapper around the standard divvy-lib requestAccountTx function
  *
  * @param {Remote} remote
- * @param {RippleAddress} options.account
+ * @param {DivvyAddress} options.account
  * @param {Number} [-1] options.ledger_index_min
  * @param {Number} [-1] options.ledger_index_max
  * @param {Boolean} [false] options.earliestFirst
@@ -434,7 +434,7 @@ function getAccountTx(api, options, callback) {
  *
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
- * @param {RippleAddress} options.account
+ * @param {DivvyAddress} options.account
  * @param {Number} [-1] options.ledger_index_min
  * @param {Number} [-1] options.ledger_index_max
  * @param {Boolean} [false] options.earliestFirst
@@ -449,7 +449,7 @@ function getAccountTx(api, options, callback) {
  */
 function getLocalAndRemoteTransactions(api, options, callback) {
 
-  function queryRippled(_callback) {
+  function queryDivvyd(_callback) {
     getAccountTx(api, options, function(error, results) {
       if (error) {
         _callback(error);
@@ -472,7 +472,7 @@ function getLocalAndRemoteTransactions(api, options, callback) {
   }
 
   var transactionSources = [
-    queryRippled,
+    queryDivvyd,
     queryDB
   ];
 
@@ -496,8 +496,8 @@ function getLocalAndRemoteTransactions(api, options, callback) {
  * @param {Boolean} [false] options.exclude_failed
  * @param {Array of Strings} options.types Possible values are "payment",
  *                      "offercreate", "offercancel", "trustset", "accountset"
- * @param {RippleAddress} options.source_account
- * @param {RippleAddress} options.destination_account
+ * @param {DivvyAddress} options.source_account
+ * @param {DivvyAddress} options.destination_account
  * @param {String} options.direction Possible values are "incoming", "outgoing"
  *
  * @returns {Array of transactions in JSON format} filtered_transactions
@@ -550,7 +550,7 @@ function transactionFilter(transactions, options) {
  *
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
- * @param {RippleAddress} options.account
+ * @param {DivvyAddress} options.account
  * @param {Number} [-1] options.ledger_index_min
  * @param {Number} [-1] options.ledger_index_max
  * @param {Boolean} [false] options.earliestFirst

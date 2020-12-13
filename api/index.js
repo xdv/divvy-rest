@@ -13,13 +13,13 @@ var serverLib = require('./lib/server-lib');
 var createRemote = require('./lib/remote');
 var DatabaseInterface = require('./lib/db-interface');
 
-function RippleAPI(options) {
+function DivvyAPI(options) {
   this.remote = createRemote(options);
   this.db = new DatabaseInterface(options.database_path || ':memory:',
                                   options.logger);
 }
 
-RippleAPI.prototype = {
+DivvyAPI.prototype = {
   getServerStatus: Info.serverStatus,
   isTrue: Info.isConnected,
   getFee: Info.fee,
@@ -57,4 +57,4 @@ RippleAPI.prototype = {
   }
 };
 
-module.exports = RippleAPI;
+module.exports = DivvyAPI;

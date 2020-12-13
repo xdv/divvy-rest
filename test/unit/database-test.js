@@ -27,7 +27,7 @@ suite('unit - database', function() {
           ledger: fixtures.unsubmittedTransaction.submitIndex,
           state: fixtures.unsubmittedTransaction.state,
           finalized: Number(fixtures.unsubmittedTransaction.finalized),
-          rippled_result: null
+          divvyd_result: null
         }]);
         done();
       });
@@ -47,7 +47,7 @@ suite('unit - database', function() {
           ledger: fixtures.pendingTransaction.submitIndex,
           state: fixtures.pendingTransaction.state,
           finalized: Number(fixtures.pendingTransaction.finalized),
-          rippled_result: fixtures.pendingTransaction.result.engine_result
+          divvyd_result: fixtures.pendingTransaction.result.engine_result
         }]);
         done();
       });
@@ -67,7 +67,7 @@ suite('unit - database', function() {
           ledger: fixtures.validatedTransaction.result.ledger_index,
           state: fixtures.validatedTransaction.state,
           finalized: Number(fixtures.validatedTransaction.finalized),
-          rippled_result: fixtures.validatedTransaction.result.engine_result
+          divvyd_result: fixtures.validatedTransaction.result.engine_result
         }]);
         done();
       });
@@ -88,7 +88,7 @@ suite('unit - database', function() {
             ledger: fixtures.unsubmittedTransaction.submitIndex,
             state: fixtures.unsubmittedTransaction.state,
             finalized: Number(fixtures.unsubmittedTransaction.finalized),
-            rippled_result: null
+            divvyd_result: null
           }]);
           callback();
         });
@@ -108,7 +108,7 @@ suite('unit - database', function() {
             ledger: fixtures.pendingTransaction.submitIndex,
             state: fixtures.pendingTransaction.state,
             finalized: Number(fixtures.pendingTransaction.finalized),
-            rippled_result: fixtures.pendingTransaction.result.engine_result
+            divvyd_result: fixtures.pendingTransaction.result.engine_result
           }]);
           callback();
         });
@@ -183,7 +183,7 @@ suite('unit - database', function() {
           ledger: fixtures.unsubmittedTransaction.submitIndex,
           state: fixtures.unsubmittedTransaction.state,
           finalized: Number(fixtures.unsubmittedTransaction.finalized),
-          rippled_result: null
+          divvyd_result: null
         });
         callback();
       });
@@ -213,7 +213,7 @@ suite('unit - database', function() {
           ledger: fixtures.unsubmittedTransaction.submitIndex,
           state: fixtures.unsubmittedTransaction.state,
           finalized: Number(fixtures.unsubmittedTransaction.finalized),
-          rippled_result: null
+          divvyd_result: null
         });
         callback();
       });
@@ -243,7 +243,7 @@ suite('unit - database', function() {
           ledger: fixtures.unsubmittedTransaction.submitIndex,
           state: fixtures.unsubmittedTransaction.state,
           finalized: Number(fixtures.unsubmittedTransaction.finalized),
-          rippled_result: null
+          divvyd_result: null
         });
         callback();
       });
@@ -268,7 +268,7 @@ suite('unit - database', function() {
           ledger: fixtures.unsubmittedTransaction.submitIndex,
           state: fixtures.unsubmittedTransaction.state,
           finalized: Number(fixtures.unsubmittedTransaction.finalized),
-          rippled_result: null
+          divvyd_result: null
         });
         callback();
       });

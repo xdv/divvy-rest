@@ -1,10 +1,10 @@
 'use strict';
 var config = require('./config');
-var RippleAPI = require('../api');
+var DivvyAPI = require('../api');
 var logger = require('./logger').logger;
 
 var options = {
-  servers: config.get('rippled_servers'),
+  servers: config.get('divvyd_servers'),
   max_fee: parseFloat(config.get('max_transaction_fee')),
   database_path: config.get('NODE_ENV') === 'test'
     ? ':memory:' : config.get('db_path'),
@@ -13,4 +13,4 @@ var options = {
   trace: config.get('debug') || false
 };
 
-module.exports = new RippleAPI(options);
+module.exports = new DivvyAPI(options);

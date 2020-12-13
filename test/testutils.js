@@ -4,12 +4,12 @@ var _ = require('lodash');
 var assert = require('assert-diff');
 var supertest = require('supertest');
 var WSS = require('ws').Server;
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var fixtures = require('./fixtures').startup;
 var addresses = require('./fixtures').addresses;
 var app = require('../server/express_app');
 var crypto = require('crypto');
-var UInt256 = ripple.UInt256;
+var UInt256 = divvy.UInt256;
 var api = require('../server/api');
 
 var LEDGER_OFFSET = 3;

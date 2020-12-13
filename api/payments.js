@@ -4,7 +4,7 @@
 var _ = require('lodash');
 var async = require('async');
 var bignum = require('bignumber.js');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var transactions = require('./transactions');
 var validator = require('./lib/schema-validator');
 var serverLib = require('./lib/server-lib');
@@ -22,15 +22,15 @@ var TimeOutError = errors.TimeOutError;
 var DEFAULT_RESULTS_PER_PAGE = 10;
 
 /**
- * Formats the local database transaction into ripple-rest Payment format
+ * Formats the local database transaction into divvy-rest Payment format
  *
- * @param {RippleAddress} account
+ * @param {DivvyAddress} account
  * @param {Transaction} transaction
  * @param {Function} callback
  *
  * @callback
  * @param {Error} error
- * @param {RippleRestTransaction} transaction
+ * @param {DivvyRestTransaction} transaction
  */
 function formatPaymentHelper(account, transaction, callback) {
   function checkIsPayment(_callback) {
@@ -80,10 +80,10 @@ function formatPaymentHelper(account, transaction, callback) {
       });
     } else {
       _callback(new NotFoundError('Payment Not Found. This may indicate that '
-        + 'the payment was never validated and written into the Ripple ledger '
-        + 'and it was not submitted through this ripple-rest instance. '
-        + 'This error may also be seen if the databases of either ripple-rest '
-        + 'or rippled were recently created or deleted.'));
+        + 'the payment was never validated and written into the Divvy ledger '
+        + 'and it was not submitted through this divvy-rest instance. '
+        + 'This error may also be seen if the databases of either divvy-rest '
+        + 'or divvyd were recently created or deleted.'));
     }
   }
 
@@ -97,7 +97,7 @@ function formatPaymentHelper(account, transaction, callback) {
 
 
 /**
- * Submit a payment in the ripple-rest format.
+ * Submit a payment in the divvy-rest format.
  *
  * @global
  * @param {/config/config-loader} config
@@ -115,16 +115,16 @@ function formatPaymentHelper(account, transaction, callback) {
  *
  * @query
  * @param {String "true"|"false"} request.query.validated - used to force
- *          request to wait until rippled has finished validating the
+ *          request to wait until divvyd has finished validating the
  *          submitted transaction
  */
 function submitPayment(account, payment, clientResourceID, secret,
     lastLedgerSequence, urlBase, options, callback) {
   var self = this;
   var max_fee = Number(options.max_fee) > 0 ?
-    utils.xrpToDrops(options.max_fee) : undefined;
+    utils.xdvToDrops(options.max_fee) : undefined;
   var fixed_fee = Number(options.fixed_fee) > 0 ?
-    utils.xrpToDrops(options.fixed_fee) : undefined;
+    utils.xdvToDrops(options.fixed_fee) : undefined;
 
   var params = {
     secret: secret,
@@ -212,11 +212,11 @@ function submitPayment(account, payment, clientResourceID, secret,
 
 /**
  * Retrieve the details of a particular payment from the Remote or
- * the local database and return it in the ripple-rest Payment format.
+ * the local database and return it in the divvy-rest Payment format.
  *
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
- * @param {RippleAddress} req.params.account
+ * @param {DivvyAddress} req.params.account
  * @param {Hex-encoded String|ASCII printable character String}
  *            req.params.identifier
  */
@@ -227,7 +227,7 @@ function getPayment(account, identifier, callback) {
   validate.paymentIdentifier(identifier);
 
   // If the transaction was not in the outgoing_transactions db,
-  // get it from rippled
+  // get it from divvyd
   function getTransaction(_callback) {
     transactions.getTransaction(self, account, identifier, {},
         function(error, transaction) {
@@ -262,9 +262,9 @@ function getPayment(account, identifier, callback) {
  *
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
- * @param {RippleAddress} req.params.account
- * @param {RippleAddress} req.query.source_account
- * @param {RippleAddress} req.query.destination_account
+ * @param {DivvyAddress} req.params.account
+ * @param {DivvyAddress} req.query.source_account
+ * @param {DivvyAddress} req.query.destination_account
  * @param {String "incoming"|"outgoing"} req.query.direction
  * @param {Number} [-1] req.query.start_ledger
  * @param {Number} [-1] req.query.end_ledger
@@ -373,18 +373,18 @@ function getAccountPayments(account, source_account, destination_account,
 }
 
 /**
- * Get a ripple path find, a.k.a. payment options,
+ * Get a divvy path find, a.k.a. payment options,
  * for a given set of parameters and respond to the
  * client with an array of fully-formed Payments.
  *
  * @param {Remote} remote
  * @param {/lib/db-interface} dbinterface
- * @param {RippleAddress} req.params.source_account
- * @param {Amount Array ["USD r...,XRP,..."]} req.query.source_currencies
+ * @param {DivvyAddress} req.params.source_account
+ * @param {Amount Array ["USD r...,XDV,..."]} req.query.source_currencies
  *          - Note that Express.js middleware replaces "+" signs with spaces.
  *            Clients should use "+" signs but the values here will end up
  *            as spaces
- * @param {RippleAddress} req.params.destination_account
+ * @param {DivvyAddress} req.params.destination_account
  * @param {Amount "1+USD+r..."} req.params.destination_amount_string
  */
 function getPathFind(source_account, destination_account,
@@ -404,7 +404,7 @@ function getPathFind(source_account, destination_account,
   var source_currencies = [];
   // Parse source currencies
   // Note that the source_currencies should be in the form
-  // "USD r...,BTC,XRP". The issuer is optional but if provided should be
+  // "USD r...,BTC,XDV". The issuer is optional but if provided should be
   // separated from the currency by a single space.
   if (source_currency_strings) {
     var sourceCurrencyStrings = source_currency_strings.split(',');
@@ -420,7 +420,7 @@ function getPathFind(source_account, destination_account,
           issuer: currencyIssuerArray[1]
         };
         if (validator.isValid(currencyObject.currency, 'Currency')
-            && ripple.UInt160.is_valid(currencyObject.issuer)) {
+            && divvy.UInt160.is_valid(currencyObject.issuer)) {
           source_currencies.push(currencyObject);
         } else {
           callback(new InvalidRequestError('Invalid parameter: '
@@ -446,10 +446,10 @@ function getPathFind(source_account, destination_account,
     if (typeof pathfindParams.dst_amount === 'object'
           && !pathfindParams.dst_amount.issuer) {
       // Convert blank issuer to sender's address
-      // (Ripple convention for 'any issuer')
-      // https://ripple.com/build/transactions/
+      // (Divvy convention for 'any issuer')
+      // https://xdv.io/build/transactions/
       //     #special-issuer-values-for-sendmax-and-amount
-      // https://ripple.com/build/ripple-rest/#counterparties-in-payments
+      // https://xdv.io/build/divvy-rest/#counterparties-in-payments
 
       pathfindParams.dst_amount.issuer = pathfindParams.dst_account;
     }
@@ -460,7 +460,7 @@ function getPathFind(source_account, destination_account,
   }
 
   function findPath(pathfindParams, _callback) {
-    var request = self.remote.requestRipplePathFind(pathfindParams);
+    var request = self.remote.requestDivvyPathFind(pathfindParams);
     request.once('error', _callback);
     request.once('success', function(pathfindResults) {
       pathfindResults.source_account = pathfindParams.src_account;
@@ -469,23 +469,23 @@ function getPathFind(source_account, destination_account,
       _callback(null, pathfindResults);
     });
 
-    function reconnectRippled() {
+    function reconnectDivvyd() {
       self.remote.disconnect(function() {
         self.remote.connect();
       });
     }
     request.timeout(serverLib.CONNECTION_TIMEOUT, function() {
       request.removeAllListeners();
-      reconnectRippled();
+      reconnectDivvyd();
       _callback(new TimeOutError('Path request timeout'));
     });
     request.request();
   }
 
-  function addDirectXrpPath(pathfindResults, _callback) {
-    // Check if destination_amount is XRP and if destination_account accepts XRP
+  function addDirectXdvPath(pathfindResults, _callback) {
+    // Check if destination_amount is XDV and if destination_account accepts XDV
     if (typeof pathfindResults.destination_amount.currency === 'string'
-          || pathfindResults.destination_currencies.indexOf('XRP') === -1) {
+          || pathfindResults.destination_currencies.indexOf('XDV') === -1) {
       return _callback(null, pathfindResults);
     }
     // Check source_account balance
@@ -499,7 +499,7 @@ function getPathFind(source_account, destination_account,
         return _callback(new Error('Internal Error. Malformed account info : '
                                   + JSON.stringify(result)));
       }
-      // Add XRP "path" only if the source_account has enough money
+      // Add XDV "path" only if the source_account has enough money
       // to execute the payment
       if (bignum(result.account_data.Balance).greaterThan(
                                       pathfindResults.destination_amount)) {
@@ -546,7 +546,7 @@ function getPathFind(source_account, destination_account,
   var steps = [
     prepareOptions,
     findPath,
-    addDirectXrpPath,
+    addDirectXdvPath,
     formatPath
   ];
 

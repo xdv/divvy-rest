@@ -2,7 +2,7 @@
 'use strict';
 var bignum = require('bignumber.js');
 var validator = require('./schema-validator.js');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 
 function renameCounterpartyToIssuer(amount) {
   if (amount && amount.counterparty) {
@@ -12,12 +12,12 @@ function renameCounterpartyToIssuer(amount) {
   return amount;
 }
 
-function dropsToXrp(drops) {
+function dropsToXdv(drops) {
   return bignum(drops).dividedBy(1000000.0).toString();
 }
 
-function xrpToDrops(xrp) {
-  return bignum(xrp).times(1000000.0).floor().toString();
+function xdvToDrops(xdv) {
+  return bignum(xdv).times(1000000.0).floor().toString();
 }
 
 function isValidHash256(hash) {
@@ -40,24 +40,24 @@ function parseLedger(ledger) {
   return 'validated';
 }
 
-function parseCurrencyAmount(rippledAmount, useIssuer) {
+function parseCurrencyAmount(divvydAmount, useIssuer) {
   var amount = {};
 
-  if (typeof rippledAmount === 'string') {
-    amount.currency = 'XRP';
-    amount.value = dropsToXrp(rippledAmount);
+  if (typeof divvydAmount === 'string') {
+    amount.currency = 'XDV';
+    amount.value = dropsToXdv(divvydAmount);
     if (useIssuer) {
       amount.issuer = '';
     } else {
       amount.counterparty = '';
     }
   } else {
-    amount.currency = rippledAmount.currency;
-    amount.value = rippledAmount.value;
+    amount.currency = divvydAmount.currency;
+    amount.value = divvydAmount.value;
     if (useIssuer) {
-      amount.issuer = rippledAmount.issuer;
+      amount.issuer = divvydAmount.issuer;
     } else {
-      amount.counterparty = rippledAmount.issuer;
+      amount.counterparty = divvydAmount.issuer;
     }
   }
 
@@ -65,8 +65,8 @@ function parseCurrencyAmount(rippledAmount, useIssuer) {
 }
 
 function txFromRestAmount(restAmount) {
-  if (restAmount.currency === 'XRP') {
-    return xrpToDrops(restAmount.value);
+  if (restAmount.currency === 'XDV') {
+    return xdvToDrops(restAmount.value);
   }
   return {
     currency: restAmount.currency,
@@ -97,10 +97,10 @@ function signum(num) {
 }
 
 /**
- *  Order two rippled transactions based on their ledger_index.
+ *  Order two divvyd transactions based on their ledger_index.
  *  If two transactions took place in the same ledger, sort
  *  them based on TransactionIndex
- *  See: https://ripple.com/build/transactions/
+ *  See: https://xdv.io/build/transactions/
  *
  *  @param {Object} first
  *  @param {Object} second
@@ -120,7 +120,7 @@ function isValidLedgerSequence(ledger) {
 }
 
 function isValidLedgerHash(ledger) {
-  return ripple.UInt256.is_valid(ledger);
+  return divvy.UInt256.is_valid(ledger);
 }
 
 function isValidLedgerWord(ledger) {
@@ -131,8 +131,8 @@ module.exports = {
   isValidLedgerSequence: isValidLedgerSequence,
   isValidLedgerWord: isValidLedgerWord,
   isValidLedgerHash: isValidLedgerHash,
-  dropsToXrp: dropsToXrp,
-  xrpToDrops: xrpToDrops,
+  dropsToXdv: dropsToXdv,
+  xdvToDrops: xdvToDrops,
   parseLedger: parseLedger,
   parseCurrencyAmount: parseCurrencyAmount,
   parseCurrencyQuery: parseCurrencyQuery,

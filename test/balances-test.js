@@ -20,7 +20,7 @@ var DEFAULT_LIMIT = 200;
 suite('get balances', function() {
   var self = this;
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -493,10 +493,10 @@ suite('get balances', function() {
     });
 
     self.app
-    .get(requestPath(addresses.VALID, '?currency=XRP'))
+    .get(requestPath(addresses.VALID, '?currency=XDV'))
     .expect(testutils.checkStatus(200))
     .expect(testutils.checkHeaders)
-    .expect(testutils.checkBody(fixtures.RESTAccountBalancesXRPResponse({
+    .expect(testutils.checkBody(fixtures.RESTAccountBalancesXDVResponse({
       ledger: LEDGER
     })))
     .end(done);

@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 'use strict';
 var assert = require('assert-diff');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').payments;
 var errors = require('./fixtures').errors;
@@ -13,7 +13,7 @@ var requestPath = fixtures.requestPath;
 suite('get payments', function() {
   var self = this;
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -148,7 +148,7 @@ suite('get payments', function() {
 suite('post payments', function() {
   var self = this;
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -192,7 +192,7 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var tx = ripple.Remote.parseBinaryAccountTransaction(message).tx;
+      var tx = divvy.Remote.parseBinaryAccountTransaction(message).tx;
       assert.strictEqual(tx.Amount.issuer, addresses.COUNTERPARTY);
       assert.strictEqual(message.command, 'submit');
       conn.send(fixtures.requestSubmitResponse(message, {hash: hash}));
@@ -221,7 +221,7 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Fee, '5000000');
       conn.send(fixtures.requestSubmitResponse(message, {
@@ -318,7 +318,7 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Fee, '5000000');
       conn.send(fixtures.requestSubmitResponse(message, {
@@ -458,7 +458,7 @@ suite('post payments', function() {
       value: '0.001',
       currency: 'USD',
       issuer: addresses.ISSUER,
-      max_fee: utils.dropsToXrp(10)
+      max_fee: utils.dropsToXdv(10)
     }))
     .expect(testutils.checkBody(errors.RESTMaxFeeExceeded))
     .expect(testutils.checkStatus(500))
@@ -725,7 +725,7 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.LastLedgerSequence, 9036185);
       conn.send(fixtures.requestSubmitResponse(message, {LastLedgerSequence: 9036185}));
@@ -757,7 +757,7 @@ suite('post payments', function() {
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
 
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
         Fee: '15',
         engineResult: 'telINSUF_FEE_P',
         engineResultCode: '-394',
@@ -814,7 +814,7 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Fee, '12');
       conn.send(fixtures.requestSubmitResponse(message, {Fee: '12'}));
@@ -834,13 +834,13 @@ suite('post payments', function() {
     .end(done);
   });
 
-  test('/payments?validated=true -- not enough XRP to create a new account', function(done) {
+  test('/payments?validated=true -- not enough XDV to create a new account', function(done) {
     var hash = testutils.generateHash();
 
     self.wss.once('request_subscribe', function(message, conn) {
       assert.strictEqual(message.command, 'subscribe');
       assert.strictEqual(message.accounts[0], addresses.VALID);
-      conn.send(fixtures.rippledSubcribeResponse(message));
+      conn.send(fixtures.divvydSubcribeResponse(message));
     });
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -850,21 +850,21 @@ suite('post payments', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(so.Amount, '1000000');
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
-        engineResult: 'tecNO_DST_INSUF_XRP',
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
+        engineResult: 'tecNO_DST_INSUF_XDV',
         engineResultCode: '125',
         engineResultMessage: 'This should not show up, is not a validated result',
         hash: hash
       }));
 
       process.nextTick(function() {
-        conn.send(fixtures.rippledValidatedErrorResponse(message, {
-          engineResult: 'tecNO_DST_INSUF_XRP',
+        conn.send(fixtures.divvydValidatedErrorResponse(message, {
+          engineResult: 'tecNO_DST_INSUF_XDV',
           engineResultCode: '125',
-          engineResultMessage: 'Destination does not exist. Too little XRP sent to create it.',
+          engineResultMessage: 'Destination does not exist. Too little XDV sent to create it.',
           hash: hash
         }));
       });
@@ -877,8 +877,8 @@ suite('post payments', function() {
       .expect(testutils.checkHeaders)
       .expect(testutils.checkBody(errors.RESTErrorResponse({
         type: 'transaction',
-        error: 'tecNO_DST_INSUF_XRP',
-        message: 'Destination does not exist. Too little XRP sent to create it.'
+        error: 'tecNO_DST_INSUF_XDV',
+        message: 'Destination does not exist. Too little XDV sent to create it.'
       })))
       .end(done);
   });
@@ -889,7 +889,7 @@ suite('post payments', function() {
     self.wss.once('request_subscribe', function(message, conn) {
       assert.strictEqual(message.command, 'subscribe');
       assert.strictEqual(message.accounts[0], addresses.VALID);
-      conn.send(fixtures.rippledSubcribeResponse(message));
+      conn.send(fixtures.divvydSubcribeResponse(message));
     });
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -900,7 +900,7 @@ suite('post payments', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
         engineResult: 'terINSUF_FEE_B',
         engineResultCode: '-99',
         engineResultMessage: 'Account balance can\'t pay fee.',
@@ -927,7 +927,7 @@ suite('post payments', function() {
     self.wss.once('request_subscribe', function(message, conn) {
       assert.strictEqual(message.command, 'subscribe');
       assert.strictEqual(message.accounts[0], addresses.VALID);
-      conn.send(fixtures.rippledSubcribeResponse(message));
+      conn.send(fixtures.divvydSubcribeResponse(message));
     });
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -938,7 +938,7 @@ suite('post payments', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
         engineResult: 'terNO_ACCOUNT',
         engineResultCode: '-96',
         engineResultMessage: 'The source account does not exist.',
@@ -1023,10 +1023,10 @@ suite('post payments', function() {
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
 
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
-        engineResult: 'tecNO_DST_INSUF_XRP',
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
+        engineResult: 'tecNO_DST_INSUF_XDV',
         engineResultCode: '125',
-        engineResultMessage: 'Destination does not exist. Too little XRP sent to create it.',
+        engineResultMessage: 'Destination does not exist. Too little XDV sent to create it.',
         hash: hash
       }));
 
@@ -1076,7 +1076,7 @@ suite('post payments', function() {
     self.wss.once('request_subscribe', function(message, conn) {
       assert.strictEqual(message.command, 'subscribe');
       assert.strictEqual(message.accounts[0], addresses.VALID);
-      conn.send(fixtures.rippledSubcribeResponse(message));
+      conn.send(fixtures.divvydSubcribeResponse(message));
     });
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -1087,18 +1087,18 @@ suite('post payments', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
-        engineResult: 'tecNO_DST_INSUF_XRP',
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
+        engineResult: 'tecNO_DST_INSUF_XDV',
         engineResultCode: '125',
         engineResultMessage: 'This should not show up, is not a validated result',
         hash: hash
       }));
 
       process.nextTick(function() {
-        conn.send(fixtures.rippledValidatedErrorResponse(message, {
-          engineResult: 'tecNO_DST_INSUF_XRP',
+        conn.send(fixtures.divvydValidatedErrorResponse(message, {
+          engineResult: 'tecNO_DST_INSUF_XDV',
           engineResultCode: '125',
-          engineResultMessage: 'Destination does not exist. Too little XRP sent to create it.',
+          engineResultMessage: 'Destination does not exist. Too little XDV sent to create it.',
           hash: hash
         }));
       });
@@ -1139,8 +1139,8 @@ suite('post payments', function() {
       .expect(testutils.checkHeaders)
       .expect(testutils.checkBody(errors.RESTErrorResponse({
         type: 'transaction',
-        error: 'tecNO_DST_INSUF_XRP',
-        message: 'Destination does not exist. Too little XRP sent to create it.'
+        error: 'tecNO_DST_INSUF_XDV',
+        message: 'Destination does not exist. Too little XDV sent to create it.'
       })))
       .end(secondPayment);
   });
@@ -1151,7 +1151,7 @@ suite('post payments', function() {
     self.wss.once('request_subscribe', function(message, conn) {
       assert.strictEqual(message.command, 'subscribe');
       assert.strictEqual(message.accounts[0], addresses.VALID);
-      conn.send(fixtures.rippledSubcribeResponse(message));
+      conn.send(fixtures.divvydSubcribeResponse(message));
     });
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -1162,18 +1162,18 @@ suite('post payments', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
-        engineResult: 'tecNO_DST_INSUF_XRP',
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
+        engineResult: 'tecNO_DST_INSUF_XDV',
         engineResultCode: '125',
         engineResultMessage: 'This should not show up, is not a validated result',
         hash: hash
       }));
 
       process.nextTick(function() {
-        conn.send(fixtures.rippledValidatedErrorResponse(message, {
-          engineResult: 'tecNO_DST_INSUF_XRP',
+        conn.send(fixtures.divvydValidatedErrorResponse(message, {
+          engineResult: 'tecNO_DST_INSUF_XDV',
           engineResultCode: '125',
-          engineResultMessage: 'Destination does not exist. Too little XRP sent to create it.',
+          engineResultMessage: 'Destination does not exist. Too little XDV sent to create it.',
           hash: hash
         }));
       });
@@ -1214,8 +1214,8 @@ suite('post payments', function() {
       .expect(testutils.checkHeaders)
       .expect(testutils.checkBody(errors.RESTErrorResponse({
         type: 'transaction',
-        error: 'tecNO_DST_INSUF_XRP',
-        message: 'Destination does not exist. Too little XRP sent to create it.'
+        error: 'tecNO_DST_INSUF_XDV',
+        message: 'Destination does not exist. Too little XDV sent to create it.'
       })))
       .end(secondPayment);
   });
@@ -1315,7 +1315,7 @@ suite('post payments', function() {
       .expect(testutils.checkStatus(400))
       .expect(testutils.checkHeaders)
       .expect(testutils.checkBody(errors.RESTErrorResponse({
-        message: 'Invalid parameter: source_account. Must be a valid Ripple address',
+        message: 'Invalid parameter: source_account. Must be a valid Divvy address',
         type: 'invalid_request',
         error: 'restINVALID_PARAMETER'
       })))
@@ -1348,18 +1348,18 @@ suite('post payments', function() {
       .expect(testutils.checkStatus(400))
       .expect(testutils.checkHeaders)
       .expect(testutils.checkBody(errors.RESTErrorResponse({
-        message: 'Invalid parameter: destination_account. Must be a valid Ripple address',
+        message: 'Invalid parameter: destination_account. Must be a valid Divvy address',
         type: 'invalid_request',
         error: 'restINVALID_PARAMETER'
       })))
       .end(done);
   });
 
-  test('/payments -- issuer with XRP source_amount');
+  test('/payments -- issuer with XDV source_amount');
 
-  test('/payments -- issuer with XRP destination_amount');
+  test('/payments -- issuer with XDV destination_amount');
 
-  test('/payments -- issuer with XRP destination_amount');
+  test('/payments -- issuer with XDV destination_amount');
 
   test('/payments -- valid source_tag');
 
@@ -1381,6 +1381,6 @@ suite('post payments', function() {
 
   test('/payments -- invalid partial_payment flag');
 
-  test('/payments -- invalid no_direct_ripple flag');
+  test('/payments -- invalid no_direct_divvy flag');
 
 });

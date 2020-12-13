@@ -1,5 +1,5 @@
 'use strict';
-var Wallet = require('ripple-lib').Wallet;
+var Wallet = require('divvy-lib').Wallet;
 var errors = require('./lib/errors.js');
 
 function generate(callback) {

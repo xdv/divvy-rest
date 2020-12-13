@@ -1,7 +1,7 @@
 'use strict';
 var assert = require('assert');
 var knex = require('knex');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var validator = require('./schema-validator');
 
 function noop() {
@@ -100,7 +100,7 @@ DI.init = function(callback) {
         table.integer('ledger').notNullable();
         table.text('state').notNullable();
         table.boolean('finalized').notNullable();
-        table.text('rippled_result').nullable();
+        table.text('divvyd_result').nullable();
       });
     }
   })
@@ -195,7 +195,7 @@ DI.saveTransaction = function(transaction, callback) {
     ? result.ledger_index : transaction.submitIndex;
 
   if (result.engine_result) {
-    txData.rippled_result = result.engine_result;
+    txData.divvyd_result = result.engine_result;
   }
 
   var txQuery = {
@@ -215,7 +215,7 @@ DI.saveTransaction = function(transaction, callback) {
   .then(function(res) {
     (callback || noop)(null, res);
 
-    var info = txData.hash + ': ' + txData.rippled_result;
+    var info = txData.hash + ': ' + txData.divvyd_result;
 
     self.logger.info('[DB] Saved transaction: ' + txData.state + ': ' + info);
 
@@ -254,7 +254,7 @@ DI.getPendingTransactions = function(callback) {
 DI.getFailedTransactions = function(options, callback) {
   assert.strictEqual(typeof options, 'object');
   assert.strictEqual(typeof options.account, 'string');
-  assert(ripple.UInt160.is_valid(options.account),
+  assert(divvy.UInt160.is_valid(options.account),
          'Specified account is invalid');
 
   var promise = this.db('transaction_history')
@@ -357,11 +357,11 @@ DI.convertOutgoingTransaction = function(txEntry) {
   // Convert to format similar to getTx call
   var transaction = JSON.parse(txEntry.tx_json);
   transaction.meta = transaction.meta || { };
-  transaction.meta.TransactionResult = txEntry.rippled_result;
+  transaction.meta.TransactionResult = txEntry.divvyd_result;
   transaction.ledger_index = txEntry.ledger;
   transaction.hash = txEntry.hash;
   transaction.finalized = Boolean(txEntry.finalized);
-  // transaction.date = ripple.utils.fromTimestamp(
+  // transaction.date = divvy.utils.fromTimestamp(
   //   new Date(txEntry.updated_at));
   transaction.client_resource_id = txEntry.client_resource_id;
 

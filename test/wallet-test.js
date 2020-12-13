@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures');
 var errors = require('./fixtures').errors;
@@ -7,7 +7,7 @@ var errors = require('./fixtures').errors;
 suite('wallet', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -22,8 +22,8 @@ suite('wallet', function() {
       assert.ifError(err);
       assert.strictEqual(res.body.success, true);
       assert.strictEqual(typeof res.body.wallet, 'object');
-      assert(ripple.UInt160.is_valid(res.body.wallet.address), 'Generated account is invalid');
-      assert(ripple.Seed.from_json(res.body.wallet.secret).get_key(res.body.wallet.address), 'Secret is invalid');
+      assert(divvy.UInt160.is_valid(res.body.wallet.address), 'Generated account is invalid');
+      assert(divvy.Seed.from_json(res.body.wallet.secret).get_key(res.body.wallet.address), 'Secret is invalid');
     })
     .end(done);
   });

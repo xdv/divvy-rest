@@ -5,7 +5,7 @@
 
 var _ = require('lodash');
 var addresses = require('./../fixtures').addresses;
-var SerializedObject = require('ripple-lib').SerializedObject;
+var SerializedObject = require('divvy-lib').SerializedObject;
 
 var fromAccount = addresses.VALID;
 var toAccount = addresses.COUNTERPARTY;
@@ -70,7 +70,7 @@ var METADATA = module.exports.METADATA = {
           },
           LowNode: '0000000000000002'
         },
-        LedgerEntryType: 'RippleState',
+        LedgerEntryType: 'DivvyState',
         LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
         PreviousFields: {
           Balance: {
@@ -142,7 +142,7 @@ var METADATA = module.exports.METADATA = {
           },
           LowNode: '000000000000000C'
         },
-        LedgerEntryType: 'RippleState',
+        LedgerEntryType: 'DivvyState',
         LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
         PreviousFields: {
           Balance: {
@@ -313,7 +313,7 @@ module.exports.accountTransactionsResponse = function(request, options) {
             },
             LowNode: '0000000000000002'
           },
-          LedgerEntryType: 'RippleState',
+          LedgerEntryType: 'DivvyState',
           LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
           PreviousFields: {
             Balance: {
@@ -385,7 +385,7 @@ module.exports.accountTransactionsResponse = function(request, options) {
             },
             LowNode: '000000000000000C'
           },
-          LedgerEntryType: 'RippleState',
+          LedgerEntryType: 'DivvyState',
           LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
           PreviousFields: {
             Balance: {
@@ -488,7 +488,7 @@ module.exports.RESTTransactionResponse = function(options) {
       source_tag: '',
       source_amount: {
         value: '1.112209',
-        currency: 'XRP',
+        currency: 'XDV',
         issuer: ''
       },
       source_slippage: '0',
@@ -501,7 +501,7 @@ module.exports.RESTTransactionResponse = function(options) {
       },
       invoice_id: '',
       paths: '[[{\"currency\":\"USD\",\"issuer\":\"' + addresses.COUNTERPARTY + '\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"' + addresses.COUNTERPARTY + '\",\"currency\":\"USD\",\"issuer\":\"' + addresses.COUNTERPARTY + '\",\"type\":49,\"type_hex\":\"0000000000000031\"}]]',
-      no_direct_ripple: false,
+      no_direct_divvy: false,
       partial_payment: false,
       direction: 'outgoing',
       result: 'tesSUCCESS',
@@ -509,7 +509,7 @@ module.exports.RESTTransactionResponse = function(options) {
       fee: options.fee,
       balance_changes: [
         {
-          currency: 'XRP',
+          currency: 'XDV',
           value: '-1.101208',
           issuer: ''
         }
@@ -517,7 +517,7 @@ module.exports.RESTTransactionResponse = function(options) {
       source_balance_changes: [
         {
           value: '-1.101208',
-          currency: 'XRP',
+          currency: 'XDV',
           issuer: ''
         }
       ],
@@ -530,7 +530,7 @@ module.exports.RESTTransactionResponse = function(options) {
       ],
       order_changes: [
         {
-          taker_pays: {currency: 'XRP', issuer: '', value: '-1.101198'},
+          taker_pays: {currency: 'XDV', issuer: '', value: '-1.101198'},
           taker_gets:
           {currency: 'USD',
             issuer: addresses.COUNTERPARTY,
@@ -568,7 +568,7 @@ module.exports.RESTAccountTransactionsResponse = function(options) {
           source_tag: '',
           source_amount: {
             value: '1.112209',
-            currency: 'XRP',
+            currency: 'XDV',
             issuer: ''
           },
           source_slippage: '0',
@@ -581,7 +581,7 @@ module.exports.RESTAccountTransactionsResponse = function(options) {
           },
           invoice_id: '',
           paths: '[[{"currency":"USD","issuer":"' + addresses.COUNTERPARTY + '","type":48,"type_hex":"0000000000000030"},{"account":"' + addresses.COUNTERPARTY + '","currency":"USD","issuer":"' + addresses.COUNTERPARTY + '","type":49,"type_hex":"0000000000000031"}]]',
-          no_direct_ripple: false,
+          no_direct_divvy: false,
           partial_payment: false,
           direction: 'outgoing',
           result: 'tesSUCCESS',
@@ -589,7 +589,7 @@ module.exports.RESTAccountTransactionsResponse = function(options) {
           fee: options.fee,
           balance_changes: [
             {
-              currency: 'XRP',
+              currency: 'XDV',
               value: '-1.101208',
               issuer: ''
             }
@@ -597,7 +597,7 @@ module.exports.RESTAccountTransactionsResponse = function(options) {
           source_balance_changes: [
             {
               value: '-1.101208',
-              currency: 'XRP',
+              currency: 'XDV',
               issuer: ''
             }
           ],
@@ -609,7 +609,7 @@ module.exports.RESTAccountTransactionsResponse = function(options) {
             }
           ],
           order_changes: [
-            {taker_pays: {currency: 'XRP', issuer: '', value: '-1.101198'},
+            {taker_pays: {currency: 'XDV', issuer: '', value: '-1.101198'},
               taker_gets:
               {currency: 'USD',
                 issuer: addresses.COUNTERPARTY,
@@ -658,7 +658,7 @@ module.exports.RESTTransactionResponseComplexCurrencies = function(options) {
       },
       invoice_id: '',
       paths: '[]',
-      no_direct_ripple: false,
+      no_direct_divvy: false,
       partial_payment: false,
       direction: 'outgoing',
       result: 'tesSUCCESS',
@@ -666,7 +666,7 @@ module.exports.RESTTransactionResponseComplexCurrencies = function(options) {
       fee: '0.012',
       balance_changes: [
         {
-          currency: 'XRP',
+          currency: 'XDV',
           value: '-0.012',
           issuer: ''
         },
@@ -679,7 +679,7 @@ module.exports.RESTTransactionResponseComplexCurrencies = function(options) {
       source_balance_changes: [
         {
           value: '-0.012',
-          currency: 'XRP',
+          currency: 'XDV',
           issuer: ''
         },
         {
@@ -710,7 +710,7 @@ module.exports.payment = function(options) {
     secret: addresses.SECRET,
     clientResourceId: '1',
     value: '1',
-    currency: 'XRP',
+    currency: 'XDV',
     issuer: '',
     sourceAccount: addresses.VALID,
     destinationAccount: addresses.COUNTERPARTY
@@ -796,7 +796,7 @@ module.exports.requestSubmitResponse = function(request, options) {
   );
 };
 
-module.exports.rippledSuccessResponse = function(request, options) {
+module.exports.divvydSuccessResponse = function(request, options) {
   options = options || {};
   _.defaults(options, {
     LastLedgerSequence: 9036180,
@@ -875,7 +875,7 @@ module.exports.rippledSuccessResponse = function(request, options) {
   );
 };
 
-module.exports.rippledSubmitErrorResponse = function(request, options) {
+module.exports.divvydSubmitErrorResponse = function(request, options) {
   options = options || {};
   _.defaults(options, {
     LastLedgerSequence: 9036180,
@@ -912,7 +912,7 @@ module.exports.rippledSubmitErrorResponse = function(request, options) {
   );
 };
 
-module.exports.rippledSubscribeRequest = function(request) {
+module.exports.divvydSubscribeRequest = function(request) {
   return JSON.stringify({
     id: request.id,
     command: 'subscribe',
@@ -922,7 +922,7 @@ module.exports.rippledSubscribeRequest = function(request) {
   });
 };
 
-module.exports.rippledSubcribeResponse = function(request) {
+module.exports.divvydSubcribeResponse = function(request) {
   return JSON.stringify({
     id: request.id,
     result: {},
@@ -931,7 +931,7 @@ module.exports.rippledSubcribeResponse = function(request) {
   });
 };
 
-module.exports.rippledValidatedErrorResponse = function(request, options) {
+module.exports.divvydValidatedErrorResponse = function(request, options) {
   options = options || {};
   _.defaults(options, {
     LastLedgerSequence: 9036180,
@@ -1057,7 +1057,7 @@ module.exports.destinationTagNeededResponse = function(request) {
               type_hex: '0000000000000001'
             },
             {
-              currency: 'XRP',
+              currency: 'XDV',
               type: 16,
               type_hex: '0000000000000010'
             },
@@ -1075,7 +1075,7 @@ module.exports.destinationTagNeededResponse = function(request) {
               type_hex: '0000000000000001'
             },
             {
-              currency: 'XRP',
+              currency: 'XDV',
               type: 16,
               type_hex: '0000000000000010'
             },
@@ -1187,7 +1187,7 @@ module.exports.transactionVerifiedResponse = function(options) {
               },
               LowNode: '0000000000000002'
             },
-            LedgerEntryType: 'RippleState',
+            LedgerEntryType: 'DivvyState',
             LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
             PreviousFields: {
               Balance: {
@@ -1259,7 +1259,7 @@ module.exports.transactionVerifiedResponse = function(options) {
               },
               LowNode: '000000000000000C'
             },
-            LedgerEntryType: 'RippleState',
+            LedgerEntryType: 'DivvyState',
             LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
             PreviousFields: {
               Balance: {
@@ -1377,7 +1377,7 @@ module.exports.verifiedResponseComplexCurrency = function(options) {
               },
               LowNode: '0000000000000000'
             },
-            LedgerEntryType: 'RippleState',
+            LedgerEntryType: 'DivvyState',
             LedgerIndex: '8AB5CFA846695B5BA335D113125D0D5165E979EDC3014333CC594E16A8D4042E',
             PreviousFields: {
               Balance: {

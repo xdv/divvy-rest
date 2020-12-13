@@ -1,16 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Trustline",
-  "description": "A simplified Trustline object used by the ripple-rest API",
+  "description": "A simplified Trustline object used by the divvy-rest API",
   "type": "object",
   "properties": {
     "account": {
       "description": "The account from whose perspective this trustline is being viewed",
-      "$ref": "RippleAddress"
+      "$ref": "DivvyAddress"
     },
     "counterparty": {
       "description": "The other party in this trustline",
-      "$ref": "RippleAddress"
+      "$ref": "DivvyAddress"
     },
     "currency": {
       "description": "The code of the currency in which this trustline denotes trust",
@@ -46,7 +46,7 @@
       "pattern": "^[0-9]+$"
     },
     "hash": {
-      "description": "If this object was returned by a historical query this value will be the hash of the transaction that modified this Trustline. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction",
+      "description": "If this object was returned by a historical query this value will be the hash of the transaction that modified this Trustline. The transaction hash is used throughout the Divvy Protocol to uniquely identify a particular transaction",
       "$ref": "Hash256"
     },
     "previous": {

@@ -9,7 +9,7 @@ var version = require('./version.js');
 var port = config.get('port') || 5990;
 var host = config.get('host');
 
-logger.info('ripple-rest (v' + version.getPackageVersion() + ')');
+logger.info('divvy-rest (v' + version.getPackageVersion() + ')');
 
 function loadSSLConfig() {
   var keyPath = config.get('ssl').key_path || './certs/server.key';

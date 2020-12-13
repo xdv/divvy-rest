@@ -1,6 +1,6 @@
 var _                = require('lodash');
 var addresses        = require('./../fixtures').addresses;
-var SerializedObject = require('ripple-lib').SerializedObject;
+var SerializedObject = require('divvy-lib').SerializedObject;
 
 module.exports.VALID_TRANSACTION_HASH = 'F4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF';
 module.exports.INVALID_TRANSACTION_HASH = 'XF4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF';
@@ -63,7 +63,7 @@ var METADATA = module.exports.METADATA = {
         },
         LowNode: '0000000000000002'
       },
-      LedgerEntryType: 'RippleState',
+      LedgerEntryType: 'DivvyState',
       LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
       PreviousFields: {
         Balance: {
@@ -135,7 +135,7 @@ var METADATA = module.exports.METADATA = {
         },
         LowNode: '000000000000000C'
       },
-      LedgerEntryType: 'RippleState',
+      LedgerEntryType: 'DivvyState',
       LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
       PreviousFields: {
         Balance: {
@@ -315,7 +315,7 @@ module.exports.RESTTransactionResponse = JSON.stringify({
             },
             LowNode: '0000000000000002'
           },
-          LedgerEntryType: 'RippleState',
+          LedgerEntryType: 'DivvyState',
           LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
           PreviousFields: {
             Balance: {
@@ -387,7 +387,7 @@ module.exports.RESTTransactionResponse = JSON.stringify({
             },
             LowNode: '000000000000000C'
           },
-          LedgerEntryType: 'RippleState',
+          LedgerEntryType: 'DivvyState',
           LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
           PreviousFields: {
             Balance: {

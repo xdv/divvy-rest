@@ -6,17 +6,17 @@ var logger = require('./logger.js').logger;
 
 var InvalidRequestError = errors.InvalidRequestError;
 var NetworkError = errors.NetworkError;
-var RippledNetworkError = errors.RippledNetworkError;
+var DivvydNetworkError = errors.DivvydNetworkError;
 var NotFoundError = errors.NotFoundError;
 var TimeOutError = errors.TimeOutError;
 var ApiError = errors.ApiError;
 var DatabaseError = errors.DatabaseError;
-var RippleError = errors.RippleError;
-var RippleLibError = require('ripple-lib').RippleError;
+var DivvyError = errors.DivvyError;
+var DivvyLibError = require('divvy-lib').DivvyError;
 
 
-function isRippleError(error) {
-  return error instanceof RippleError || error instanceof RippleLibError;
+function isDivvyError(error) {
+  return error instanceof DivvyError || error instanceof DivvyLibError;
 }
 
 function handleError(error, req, res, next) {
@@ -29,7 +29,7 @@ function handleError(error, req, res, next) {
     } else {
       logger.error(error);
     }
-  } else if (error.stack && !isRippleError(error)) {
+  } else if (error.stack && !isDivvyError(error)) {
     // always log stack traces for uncaught exceptions
     logger.error(error.stack);
   }
@@ -49,16 +49,16 @@ function handleError(error, req, res, next) {
     return;
   }
 
-  /* Handle ripple-lib errors */
+  /* Handle divvy-lib errors */
   if (err_obj.error === 'remoteError') {
     if (err_obj.message === 'Account not found.') {
       err_obj.error = 'Invalid address or secret.';
       err_obj.message = 'Please ensure the address and secret correspond to a '
-        + 'valid account that has a positive XRP balance.';
+        + 'valid account that has a positive XDV balance.';
 
     } else {
       err_obj.error = 'Internal Error';
-      err_obj.message = 'ripple-lib reported an error. If the problem '
+      err_obj.message = 'divvy-lib reported an error. If the problem '
         + 'persists, please try restarting the server. Error: '
         + JSON.stringify(err_obj.message);
     }
@@ -68,16 +68,16 @@ function handleError(error, req, res, next) {
       || err_obj.error === 'temBAD_AUTH_MASTER') {
     err_obj.error = 'Invalid address or secret.';
     err_obj.message = 'Please ensure the address and secret correspond to a '
-      + 'valid account that has a positive XRP balance.';
+      + 'valid account that has a positive XDV balance.';
   }
 
   if (err_obj.error === 'tooBusy') {
-    err_obj.error = 'Rippled Busy';
+    err_obj.error = 'Divvyd Busy';
     err_obj.message = 'The server is experiencing heavy load and is unable '
       + 'to process the request right now. Please try again.';
   }
 
-  /* Add info to rippled error messages */
+  /* Add info to divvyd error messages */
   if (err_obj.error === 'tecPATH_DRY') {
     err_obj.message = err_obj.message + ' Please ensure that the '
       + 'source_address has sufficient funds (in the source_amount currency, '
@@ -86,7 +86,7 @@ function handleError(error, req, res, next) {
 
   if (err_obj.error === 'telINSUF_FEE_P') {
     err_obj.message = err_obj.message + ' Please ensure that the '
-      + 'source_address has sufficient XRP to pay the fee. If it does, please '
+      + 'source_address has sufficient XDV to pay the fee. If it does, please '
       + 'report this error, this service should handle setting the proper fee.';
   }
 
@@ -115,7 +115,7 @@ function handleError(error, req, res, next) {
     case NetworkError.name:
       respond.connectionError(res, undefined, err_obj);
       break;
-    case RippledNetworkError.name:
+    case DivvydNetworkError.name:
       respond.connectionError(res, undefined, err_obj);
       break;
     case NotFoundError.name:

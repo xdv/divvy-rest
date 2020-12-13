@@ -51,13 +51,13 @@ try {
 if (nconf.get('NODE_ENV') === 'test') {
   nconf.set('port', exampleConfig.port);
   nconf.set('host', exampleConfig.host);
-  nconf.set('rippled_servers', exampleConfig.rippled_servers);
+  nconf.set('divvyd_servers', exampleConfig.divvyd_servers);
 }
 
-// Override `rippled_servers` with `rippled` if it exists
-if (/^(wss|ws):\/\/.+:[0-9]+$/.test(nconf.get('rippled'))) {
+// Override `divvyd_servers` with `divvyd` if it exists
+if (/^(wss|ws):\/\/.+:[0-9]+$/.test(nconf.get('divvyd'))) {
   nconf.overrides({
-    rippled_servers: [nconf.get('rippled')]
+    divvyd_servers: [nconf.get('divvyd')]
   });
 }
 

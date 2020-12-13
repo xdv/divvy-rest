@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').server;
 var errors = require('./fixtures').errors;
@@ -7,7 +7,7 @@ var errors = require('./fixtures').errors;
 suite('get server info', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -77,7 +77,7 @@ suite('get server info', function() {
 
     self.app
     .get('/v1/server/connected')
-    .expect(testutils.checkBody(errors.RESTCannotConnectToRippleD))
+    .expect(testutils.checkBody(errors.RESTCannotConnectToDivvyD))
     .expect(testutils.checkStatus(502))
     .expect(testutils.checkHeaders)
     .end(done);

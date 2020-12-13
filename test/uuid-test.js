@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures');
 var errors = require('./fixtures').errors;
@@ -7,7 +7,7 @@ var errors = require('./fixtures').errors;
 suite('get uuid', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));

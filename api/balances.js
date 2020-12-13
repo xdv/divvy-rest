@@ -16,13 +16,13 @@ var DefaultPageLimit = 200;
  *  parameter.  Additionally, any limit lower than 10 will be bumped up to 10.
  *
  *  @url
- *  @param {RippleAddress} request.params.account
+ *  @param {DivvyAddress} request.params.account
  *          - account to retrieve balances for
  *
  *  @query
  *  @param {String ISO 4217 Currency Code} [request.query.currency]
  *          - only request balances with given currency
- *  @param {RippleAddress} [request.query.counterparty]
+ *  @param {DivvyAddress} [request.query.counterparty]
  *          - only request balances with given counterparty
  *  @param {String} [request.query.marker] - start position in response paging
  *  @param {Number String} [request.query.limit] - max results per response
@@ -42,7 +42,7 @@ function getBalances(account, options, callback) {
   var currencyRE = new RegExp(options.currency ?
     ('^' + options.currency.toUpperCase() + '$') : /./);
 
-  function getXRPBalance() {
+  function getXDVBalance() {
     var promise = new Promise(function(resolve, reject) {
       var accountInfoRequest = self.remote.requestAccountInfo({
         account: account,
@@ -53,8 +53,8 @@ function getBalances(account, options, callback) {
       accountInfoRequest.once('error', reject);
       accountInfoRequest.once('success', function(result) {
         lines.push({
-          value: utils.dropsToXrp(result.account_data.Balance),
-          currency: 'XRP',
+          value: utils.dropsToXdv(result.account_data.Balance),
+          currency: 'XDV',
           counterparty: ''
         });
 
@@ -135,17 +135,17 @@ function getBalances(account, options, callback) {
     }
 
     if (options.currency) {
-      if (options.currency === 'XRP') {
-        return getXRPBalance();
+      if (options.currency === 'XDV') {
+        return getXDVBalance();
       }
       return getLineBalances();
     }
 
-    return Promise.all([getXRPBalance(), getLineBalances()])
+    return Promise.all([getXDVBalance(), getLineBalances()])
     .then(function(values) {
-      var xrpBalance = values[0].lines[0];
+      var xdvBalance = values[0].lines[0];
       var lineBalances = values[1];
-      lineBalances.lines.unshift(xrpBalance);
+      lineBalances.lines.unshift(xdvBalance);
       return Promise.resolve(lineBalances);
     });
   }

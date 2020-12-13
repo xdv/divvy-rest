@@ -37,14 +37,14 @@ module.exports.RESTInvalidAccount = JSON.stringify({
   success: false,
   error_type: 'invalid_request',
   error: 'restINVALID_PARAMETER',
-  message: 'Parameter is not a valid Ripple address: account'
+  message: 'Parameter is not a valid Divvy address: account'
 });
 
 module.exports.RESTInvalidCounterparty = JSON.stringify({
   success: false,
   error_type: 'invalid_request',
   error: 'restINVALID_PARAMETER',
-  message: 'Parameter is not a valid Ripple address: counterparty'
+  message: 'Parameter is not a valid Divvy address: counterparty'
 });
 
 module.exports.RESTInvalidTransactionHashOrClientResourceID = JSON.stringify({
@@ -102,18 +102,18 @@ module.exports.RESTInvalidCounter = JSON.stringify({
   message: 'Invalid parameter: counter. Must be a currency string in the form currency+counterparty'
 });
 
-module.exports.RESTInvalidXRPBase = JSON.stringify({
+module.exports.RESTInvalidXDVBase = JSON.stringify({
   success: false,
   error_type: 'invalid_request',
   error: 'restINVALID_PARAMETER',
-  message: 'Invalid parameter: base. XRP cannot have counterparty'
+  message: 'Invalid parameter: base. XDV cannot have counterparty'
 });
 
-module.exports.RESTInvalidXRPCounter = JSON.stringify({
+module.exports.RESTInvalidXDVCounter = JSON.stringify({
   success: false,
   error_type: 'invalid_request',
   error: 'restINVALID_PARAMETER',
-  message: 'Invalid parameter: counter. XRP cannot have counterparty'
+  message: 'Invalid parameter: counter. XDV cannot have counterparty'
 });
 
 module.exports.RESTAccountNotFound = JSON.stringify({
@@ -123,11 +123,11 @@ module.exports.RESTAccountNotFound = JSON.stringify({
   message: 'Account not found.'
 });
 
-module.exports.RESTCannotConnectToRippleD = JSON.stringify({
+module.exports.RESTCannotConnectToDivvyD = JSON.stringify({
   success: false,
   error_type: 'connection',
-  error: 'restRIPPLED_NETWORK_ERR',
-  message: 'Cannot connect to rippled'
+  error: 'restDIVVYD_NETWORK_ERR',
+  message: 'Cannot connect to divvyd'
 });
 
 module.exports.RESTResponseLedgerSequenceTooHigh = JSON.stringify({

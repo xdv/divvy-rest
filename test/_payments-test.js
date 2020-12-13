@@ -6,7 +6,7 @@ var assert = require('assert-diff');
 var ws = require('ws');
 var route = new (require('events').EventEmitter);
 var fixtures = require('./fixtures')._payments;
-var RL = require('ripple-lib');
+var RL = require('divvy-lib');
 var remote = require('../server/api').remote;
 
 var testutils = { };
@@ -25,7 +25,7 @@ testutils.hasKeys = function(obj, keys) {
   return {hasAllKeys: hasAllKeys, missing: missing};
 };
 
-// used to mark the orderings and count of incoming rippled
+// used to mark the orderings and count of incoming divvyd
 function OrderList(list) {
     // list = [{command:<command>}, ... ]
     var _list = list;
@@ -39,7 +39,7 @@ function OrderList(list) {
       if ((_list[idx]) && (_list[idx].command === command)) {
         idx++;
       } else {
-        throw new Error('out of order rippled command', command);
+        throw new Error('out of order divvyd command', command);
       }
     };
     this.test = function() {
@@ -71,24 +71,24 @@ var orderlist = new OrderList();
 
 
 suite('payments', function() {
-  var rippled;
+  var divvyd;
 
   suiteSetup(function(done) {
     var self = this;
     self.remote = remote;
-    rippled = new ws.Server({port: 5150});
+    divvyd = new ws.Server({port: 5150});
 
     route.on('ping', fixtures.ping);
     route.on('subscribe', fixtures.subscribe);
     route.on('response', fixtures.response);
     route.on('server_info', fixtures.server_info);
     route.on('account_info', fixtures.account_info);
-    route.on('ripple_path_find', fixtures.ripple_path_find);
+    route.on('divvy_path_find', fixtures.divvy_path_find);
     route.on('account_lines', fixtures.account_lines);
     route.on('submit', fixtures.submit);
     route.on('tx', fixtures.tx);
 
-    rippled.on('connection', fixtures.connection.bind({route: route}));
+    divvyd.on('connection', fixtures.connection.bind({route: route}));
 
     self.remote.once('connect', function() {
       self.remote.getServer().once('ledger_closed', function() {
@@ -108,7 +108,7 @@ suite('payments', function() {
   suiteTeardown(function(done) {
     var self = this;
     self.remote.once('disconnect', function() {
-      rippled.close();
+      divvyd.close();
       done();
     });
 
@@ -118,27 +118,27 @@ suite('payments', function() {
 
   var store = {};
 
-  test('Pathfinding:XRP', function(done) {
+  test('Pathfinding:XDV', function(done) {
 
-    // genesis initially gives Alice 429 XRP
-    orderlist.create([{command: 'ripple_path_find'}]);
+    // genesis initially gives Alice 429 XDV
+    orderlist.create([{command: 'divvy_path_find'}]);
 
     function incoming(data) {
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh',
         destination_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_amount: '429000000'
       });
 
-      orderlist.mark('ripple_path_find');
+      orderlist.mark('divvy_path_find');
     }
 
-    route.once('ripple_path_find', incoming);
+    route.once('divvy_path_find', incoming);
 
     app.get('/v1/accounts/' + fixtures.accounts.genesis.address
-            + '/payments/paths/' + fixtures.accounts.alice.address + '/429+XRP')
+            + '/payments/paths/' + fixtures.accounts.alice.address + '/429+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -159,7 +159,7 @@ suite('payments', function() {
       });
   });
 
-  test('Posting XRP from genesis to alice', function(done) {
+  test('Posting XDV from genesis to alice', function(done) {
     function _subscribe(data) {
       delete data.id;
       assert.deepEqual(data, {
@@ -212,12 +212,12 @@ suite('payments', function() {
     route.once('account_info', _accountinfo);
     route.once('submit', _submit);
 
-    // actually post a XRP payment of 429 from genesis to alice
+    // actually post a XDV payment of 429 from genesis to alice
     app.post('/v1/accounts/' + fixtures.accounts.genesis.address + '/payments')
       .send(store.paymentGenesisToAlice)
       .expect(function(resp) {
         assert.strictEqual(resp.body.success, true);
-        var keys = Object.keys(fixtures.nominal_xrp_post_response);
+        var keys = Object.keys(fixtures.nominal_xdv_post_response);
         assert.equal(testutils.hasKeys(resp.body, keys).hasAllKeys, true);
         assert.equal(orderlist.test(), true);
         orderlist.reset();
@@ -227,7 +227,7 @@ suite('payments', function() {
   });
 
   test('check amount alice has', function(done) {
-    // we check that alice has 429 XRP
+    // we check that alice has 429 XDV
 
     orderlist.create([
       {command: 'account_info'},
@@ -271,19 +271,19 @@ suite('payments', function() {
   });
 
 
-  test('Pathfinding: from alice to bob XRP', function(done) {
+  test('Pathfinding: from alice to bob XDV', function(done) {
 
-    // Now alice gives bob 1 drop XRP
+    // Now alice gives bob 1 drop XDV
     orderlist.create([
-      {command: 'ripple_path_find'},
+      {command: 'divvy_path_find'},
       {command: 'account_info'}
     ]);
 
-    function _ripple_path_find(data) {
-      orderlist.mark('ripple_path_find');
+    function _divvy_path_find(data) {
+      orderlist.mark('divvy_path_find');
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
         destination_amount: '1'
@@ -299,11 +299,11 @@ suite('payments', function() {
       });
     }
 
-    route.once('ripple_path_find', _ripple_path_find);
+    route.once('divvy_path_find', _divvy_path_find);
     route.once('account_info', _account_info);
 
     app.get('/v1/accounts/' + fixtures.accounts.alice.address +
-        '/payments/paths/' + fixtures.accounts.bob.address + '/0.000001+XRP')
+        '/payments/paths/' + fixtures.accounts.bob.address + '/0.000001+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -323,7 +323,7 @@ suite('payments', function() {
       });
   });
 
-  test('discover the reserve_base_xrp', function(done) {
+  test('discover the reserve_base_xdv', function(done) {
     function _server_info(data) {
       orderlist.mark('server_info');
       delete data.id;
@@ -340,29 +340,29 @@ suite('payments', function() {
         if (err) {
           throw err;
         }
-        store.reserve_base_xrp = resp.body.rippled_server_status
-                                   .validated_ledger.reserve_base_xrp;
+        store.reserve_base_xdv = resp.body.divvyd_server_status
+                                   .validated_ledger.reserve_base_xdv;
         assert.equal(orderlist.test(), true);
         orderlist.reset();
         done();
       });
   });
 
-  test('Pathfinding: from alice to bob XRP', function(done) {
-    // Now alice gives bob exactly the reserve_base_xrp XRP
+  test('Pathfinding: from alice to bob XDV', function(done) {
+    // Now alice gives bob exactly the reserve_base_xdv XDV
     orderlist.create([
-      {command: 'ripple_path_find'},
+      {command: 'divvy_path_find'},
       {command: 'account_info'}
     ]);
 
-    function _ripple_path_find(data) {
-      orderlist.mark('ripple_path_find');
+    function _divvy_path_find(data) {
+      orderlist.mark('divvy_path_find');
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
-        destination_amount: (store.reserve_base_xrp * 1000000).toString()
+        destination_amount: (store.reserve_base_xdv * 1000000).toString()
       });
     }
 
@@ -375,12 +375,12 @@ suite('payments', function() {
       });
     }
 
-    route.once('ripple_path_find', _ripple_path_find);
+    route.once('divvy_path_find', _divvy_path_find);
     route.once('account_info', _account_info);
 
     app.get('/v1/accounts/' + fixtures.accounts.alice.address
         + '/payments/paths/' + fixtures.accounts.bob.address
-        + '/' + store.reserve_base_xrp + '+XRP')
+        + '/' + store.reserve_base_xdv + '+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -402,8 +402,8 @@ suite('payments', function() {
       });
   });
 
-  test('send bob reserve_base_xrp XRP from Alice to bob', function(done) {
-    // sending bob reserve_base_xrp XRP from alice
+  test('send bob reserve_base_xdv XDV from Alice to bob', function(done) {
+    // sending bob reserve_base_xdv XDV from alice
     orderlist.create([{command: 'submit'}]);
 
     function _submit(data) {
@@ -415,7 +415,7 @@ suite('payments', function() {
         Flags: 2147483648,
         Sequence: 1,
         LastLedgerSequence: 8804619,
-        Amount: (store.reserve_base_xrp * 1000000).toString(),
+        Amount: (store.reserve_base_xdv * 1000000).toString(),
         Fee: '12',
         SigningPubKey:
           '022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB',
@@ -443,7 +443,7 @@ suite('payments', function() {
   });
 
   // confirm payment via client resource ID
-  test('check status url of the reserve_base_xrp transfer from alice to bob',
+  test('check status url of the reserve_base_xdv transfer from alice to bob',
       function(done) {
     orderlist.create([{command: 'tx'}]);
     function _tx(data) {
@@ -463,14 +463,14 @@ suite('payments', function() {
       var statusPayment = {
         source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         source_tag: '',
-        source_amount: {value: '200', currency: 'XRP', issuer: ''},
+        source_amount: {value: '200', currency: 'XDV', issuer: ''},
         source_slippage: '0',
         destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
         destination_tag: '',
-        destination_amount: {value: '200', currency: 'XRP', issuer: ''},
+        destination_amount: {value: '200', currency: 'XDV', issuer: ''},
         invoice_id: '',
         paths: '[]',
-        no_direct_ripple: false,
+        no_direct_divvy: false,
         partial_payment: false,
         direction: 'outgoing',
         timestamp: '',
@@ -512,14 +512,14 @@ suite('payments', function() {
         var statusPayment = {
           source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
           source_tag: '',
-          source_amount: {value: '200', currency: 'XRP', issuer: ''},
+          source_amount: {value: '200', currency: 'XDV', issuer: ''},
           source_slippage: '0',
           destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
           destination_tag: '',
-          destination_amount: {value: '200', currency: 'XRP', issuer: ''},
+          destination_amount: {value: '200', currency: 'XDV', issuer: ''},
           invoice_id: '',
           paths: '[]',
-          no_direct_ripple: false,
+          no_direct_divvy: false,
           partial_payment: false,
           direction: 'outgoing',
           timestamp: '',
@@ -579,7 +579,7 @@ suite('payments', function() {
           throw err;
         }
         var balance = resp.body.balances[0];
-        // change all instances of 200 with reserve base xrp
+        // change all instances of 200 with reserve base xdv
         assert.equal(balance.value, '200');
         store.bob_balance = balance.value;
         assert.equal(orderlist.test(), true);
@@ -592,15 +592,15 @@ suite('payments', function() {
   // bob should try to send all money back to alice
   test('try to send all of bobs money to alice below reserve', function(done) {
     orderlist.create([
-      {command: 'ripple_path_find'},
+      {command: 'divvy_path_find'},
       {command: 'account_info'}
     ]);
 
-    function _ripple_path_find(data) {
-      orderlist.mark('ripple_path_find');
+    function _divvy_path_find(data) {
+      orderlist.mark('divvy_path_find');
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
         destination_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_amount: '200000000'
@@ -616,12 +616,12 @@ suite('payments', function() {
       });
     }
 
-    route.once('ripple_path_find', _ripple_path_find);
+    route.once('divvy_path_find', _divvy_path_find);
     route.once('account_info', _account_info);
 
     var sendamount = store.bob_balance;
     app.get('/v1/accounts/' + fixtures.accounts.bob.address + '/payments/paths/'
-        + fixtures.accounts.alice.address + '/' + sendamount + '+XRP')
+        + fixtures.accounts.alice.address + '/' + sendamount + '+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -648,7 +648,7 @@ suite('payments', function() {
       function(done) {
     var sendamount = store.bob_balance * 0.95;
     app.get('/v1/accounts/' + fixtures.accounts.bob.address + '/payments/paths/'
-        + fixtures.accounts.alice.address + '/' + sendamount + '+XRP')
+        + fixtures.accounts.alice.address + '/' + sendamount + '+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -670,14 +670,14 @@ suite('payments', function() {
   // have alice send bob 10 USD/alice
   test('alice sends bob 10USD/alice without trust', function(done) {
     orderlist.create([
-      {command: 'ripple_path_find'}
+      {command: 'divvy_path_find'}
     ]);
 
-    function _ripple_path_find(data) {
-      orderlist.mark('ripple_path_find');
+    function _divvy_path_find(data) {
+      orderlist.mark('divvy_path_find');
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
         destination_amount: {
@@ -688,7 +688,7 @@ suite('payments', function() {
       });
     }
 
-    route.once('ripple_path_find', _ripple_path_find);
+    route.once('divvy_path_find', _divvy_path_find);
     app.get('/v1/accounts/' + fixtures.accounts.alice.address
         + '/payments/paths/' + fixtures.accounts.bob.address + '/10+USD+'
         + fixtures.accounts.alice.address)
@@ -698,7 +698,7 @@ suite('payments', function() {
           error_type: 'invalid_request',
           error: 'restNOT_FOUND',
           message: 'No paths found. The destination_account does not accept '
-            + 'USD, they only accept: XRP'
+            + 'USD, they only accept: XDV'
         });
         assert.equal(orderlist.test(), true);
         orderlist.reset();
@@ -795,13 +795,13 @@ suite('payments', function() {
   // have alice send bob 10 USD/alice
   test('get path for alice to bob 10USD/alice with trust', function(done) {
     orderlist.create([
-      {command: 'ripple_path_find'}
+      {command: 'divvy_path_find'}
     ]);
 
-    function _ripple_path_find(data) {
+    function _divvy_path_find(data) {
       delete data.id;
       assert.deepEqual(data, {
-        command: 'ripple_path_find',
+        command: 'divvy_path_find',
         source_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
         destination_account: 'rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5',
         destination_amount: {
@@ -810,10 +810,10 @@ suite('payments', function() {
           issuer: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U'
         }
       });
-      orderlist.mark('ripple_path_find');
+      orderlist.mark('divvy_path_find');
     }
 
-    route.once('ripple_path_find', _ripple_path_find);
+    route.once('divvy_path_find', _divvy_path_find);
 
     app.get('/v1/accounts/' + fixtures.accounts.alice.address
         + '/payments/paths/' + fixtures.accounts.bob.address + '/10+USD+'
@@ -841,7 +841,7 @@ suite('payments', function() {
               invoice_id: '',
               paths: '[]',
               partial_payment: false,
-              no_direct_ripple: false
+              no_direct_divvy: false
             }
           ]
         });
@@ -853,13 +853,13 @@ suite('payments', function() {
 
 
   /**
-   *  The tests below don't test the input for rippled
+   *  The tests below don't test the input for divvyd
    *  These should be rewritten in the payments.js class
    */
 
   test('path find populate carol with missing sum', function(done) {
     app.get('/v1/accounts/' + fixtures.accounts.genesis.address
-        + '/payments/paths/' + fixtures.accounts.carol.address + '/+XRP')
+        + '/payments/paths/' + fixtures.accounts.carol.address + '/+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -907,7 +907,7 @@ suite('payments', function() {
 
   test('path find populate carol with 400', function(done) {
     app.get('/v1/accounts/' + fixtures.accounts.genesis.address
-        + '/payments/paths/' + fixtures.accounts.carol.address + '/400+XRP')
+        + '/payments/paths/' + fixtures.accounts.carol.address + '/400+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -921,7 +921,7 @@ suite('payments', function() {
       });
   });
 
-  test('Posting XRP from genesis to carol', function(done) {
+  test('Posting XDV from genesis to carol', function(done) {
     app.post('/v1/accounts/' + fixtures.accounts.alice.address + '/payments')
       .send(store.paymentGenesisToCarol)
       .end(function(err) {
@@ -935,7 +935,7 @@ suite('payments', function() {
   // miss the client resource id
   test('path find populate dan with 600', function(done) {
     app.get('/v1/accounts/' + fixtures.accounts.genesis.address
-        + '/payments/paths/' + fixtures.accounts.dan.address + '/600+XRP')
+        + '/payments/paths/' + fixtures.accounts.dan.address + '/600+XDV')
       .end(function(err, resp) {
         if (err) {
           throw err;
@@ -948,7 +948,7 @@ suite('payments', function() {
       });
   });
 
-  test('Posting XRP from genesis to dan with missing client resource id',
+  test('Posting XDV from genesis to dan with missing client resource id',
       function(done) {
     app.post('/v1/accounts/' + fixtures.accounts.alice.address + '/payments')
       .send(store.paymentGenesisToDan)
@@ -966,7 +966,7 @@ suite('payments', function() {
       });
   });
 
-  test('Posting XRP from genesis to dan with empty client resource id',
+  test('Posting XDV from genesis to dan with empty client resource id',
       function(done) {
     store.paymentGenesisToDan.client_resource_id = '';
     app.post('/v1/accounts/' + fixtures.accounts.alice.address + '/payments')
@@ -988,7 +988,7 @@ suite('payments', function() {
       });
   });
 
-  test('Posting XRP from genesis to dan with valid client resource id',
+  test('Posting XDV from genesis to dan with valid client resource id',
       function(done) {
     store.paymentGenesisToDan.client_resource_id = 'qwerty';
     app.post('/v1/accounts/' + fixtures.accounts.alice.address + '/payments')
@@ -1007,7 +1007,7 @@ suite('payments', function() {
       });
   });
 
-  test('Double posting XRP from genesis to dan with valid client resource id',
+  test('Double posting XDV from genesis to dan with valid client resource id',
       function(done) {
     store.paymentGenesisToDan.client_resource_id = 'qwerty';
     app.post('/v1/accounts/' + fixtures.accounts.alice.address + '/payments')

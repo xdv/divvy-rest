@@ -9,16 +9,16 @@ var router = new express.Router();
 router.get('/', generateIndexPage);
 
 /**
- * For all the routes, we need a connected rippled
+ * For all the routes, we need a connected divvyd
  * insert the validateRemoteConnected middleware here
  */
 
-/* make sure the api is connected to a rippled */
+/* make sure the api is connected to a divvyd */
 router.all('*', function(req, res, next) {
   if (api.isConnected()) {
     next();
   } else {
-    next(new api.errors.RippledNetworkError(undefined));
+    next(new api.errors.DivvydNetworkError(undefined));
   }
 });
 

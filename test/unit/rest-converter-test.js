@@ -17,28 +17,28 @@ suite('unit - converter - Rest to Tx', function() {
     });
   });
 
-  test('convert() -- payment with XRP and no source amount', function(done) {
-    restToTxConverter.convert(fixtures.paymentRestXRP, function(err, transaction) {
+  test('convert() -- payment with XDV and no source amount', function(done) {
+    restToTxConverter.convert(fixtures.paymentRestXDV, function(err, transaction) {
       assert.strictEqual(err, null);
-      assert.deepEqual(transaction.summary(), fixtures.paymentTxXRP);
+      assert.deepEqual(transaction.summary(), fixtures.paymentTxXDV);
       assert.strictEqual(transaction.tx_json.SendMax, undefined);
       done();
     });
   });
 
-  test('convert() -- payment XRP to XRP', function(done) {
-    restToTxConverter.convert(fixtures.paymentRestXRPtoXRP, function(err, transaction) {
+  test('convert() -- payment XDV to XDV', function(done) {
+    restToTxConverter.convert(fixtures.paymentRestXDVtoXDV, function(err, transaction) {
       assert.strictEqual(err, null);
       assert.strictEqual(transaction.tx_json.SendMax, undefined);
       done();
     });
   });
 
-  test('convert() -- payment XRP to non-XRP', function(done) {
+  test('convert() -- payment XDV to non-XDV', function(done) {
     restToTxConverter.convert(fixtures.exportsPaymentRestIssuers({
       sourceAccount: addresses.VALID,
       sourceAmount: '10',
-      sourceCurrency: 'XRP',
+      sourceCurrency: 'XDV',
       destinationAccount: addresses.COUNTERPARTY,
       sourceIssuer: '',
       destinationIssuer: addresses.ISSUER

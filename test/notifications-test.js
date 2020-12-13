@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').notifications;
 var errors = require('./fixtures').errors;
@@ -11,7 +11,7 @@ const INVALID_TRANSACTION_HASH = 'XF4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049
 suite('get notifications', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));

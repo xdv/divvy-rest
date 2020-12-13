@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var addresses = require('./../fixtures').addresses;
 var paths = require('./paths');
-var SerializedObject = require('ripple-lib').SerializedObject;
+var SerializedObject = require('divvy-lib').SerializedObject;
 
 const ORDER_HASH = '71AE74B03DE3B9A06C559AD4D173A362D96B7D2A5AA35F56B9EF21543D627F34';
 const DEFAULTS = {
@@ -438,7 +438,7 @@ module.exports.requestCancelResponse = function(request, options) {
   });
 };
 
-module.exports.rippledSubmitErrorResponse = function(request, options) {
+module.exports.divvydSubmitErrorResponse = function(request, options) {
   options = options || {};
   _.defaults(options, LIB_DEFAULTS);
 
@@ -468,7 +468,7 @@ module.exports.rippledSubmitErrorResponse = function(request, options) {
   });
 };
 
-module.exports.rippledCancelErrorResponse = function(request, options) {
+module.exports.divvydCancelErrorResponse = function(request, options) {
   options = options || {};
   _.defaults(options, LIB_DEFAULTS);
 
@@ -1493,7 +1493,7 @@ module.exports.requestBookOffersAsksResponse = function(request, options) {
   });
 };
 
-module.exports.requestBookOffersXRPBaseResponse = function(request) {
+module.exports.requestBookOffersXDVBaseResponse = function(request) {
   return JSON.stringify({
     id: request.id,
     status: "success",
@@ -1735,7 +1735,7 @@ module.exports.requestBookOffersXRPBaseResponse = function(request) {
   });
 };
 
-module.exports.requestBookOffersXRPCounterResponse = function(request) {
+module.exports.requestBookOffersXDVCounterResponse = function(request) {
   return JSON.stringify({
     id: request.id,
     status: "success",
@@ -2051,7 +2051,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "000000000000028F"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "42A6E9991D540C80BE4A43EF5254656DD862F602BBFF99BC576B44FBF6B7D775",
           "PreviousFields": {
             "Balance": {
@@ -2086,7 +2086,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "0000000000000231"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "615463C4F78931AA3E2B65FE49C6DAAC25A456C15679E67D1C19CA0943D98C5A",
           "PreviousFields": {
             "Balance": {
@@ -2121,7 +2121,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "00000000000002C4"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "817EB23FB16D8D17676F29055C989CDFB738B7FC310DF3AB5CA0D06AA2DC1326",
           "PreviousFields": {
             "Balance": {
@@ -2156,7 +2156,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "0000000000000201"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "C688AE8E51943530C931C3B838D15818BDA1F1B60B641B5F866B724AD7D3E79B",
           "PreviousFields": {
             "Balance": {
@@ -2191,7 +2191,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "0000000000000201"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "D8F66B71771581E6185072E5264B2C4C0F9C2CA642EE46B62D6F550D897D00FF",
           "PreviousFields": {
             "Balance": {
@@ -2244,7 +2244,7 @@ module.exports.requestTxOfferCreateResponse = function(request, options) {
             },
             "LowNode": "000000000000028F"
           },
-          "LedgerEntryType": "RippleState",
+          "LedgerEntryType": "DivvyState",
           "LedgerIndex": "E929BE69F05FEB6B376C97E22A264D93D88A7E42BE3FE5BFBD1842AC08C85BCF",
           "PreviousFields": {
             "Balance": {
@@ -2489,7 +2489,7 @@ module.exports.RESTAccountOrdersResponse = function(options) {
           { currency: 'NZD',
             counterparty: 'rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc',
             value: '6.840555705' },
-        taker_pays: { currency: 'XRP', counterparty: '', value: '115760.19' },
+        taker_pays: { currency: 'XDV', counterparty: '', value: '115760.19' },
         sequence: 814018,
         passive: false },
       { type: 'buy',
@@ -2537,7 +2537,7 @@ module.exports.RESTAccountOrdersResponse = function(options) {
         sequence: 838954,
         passive: false },
       { type: 'buy',
-        taker_gets: { currency: 'XRP', counterparty: '', value: '2229.229447' },
+        taker_gets: { currency: 'XDV', counterparty: '', value: '2229.229447' },
         taker_pays:
           { currency: 'XAU',
             counterparty: 'r9Dr5xwkeLegBeXq6ujinjSBLQzQ1zQGjH',
@@ -3375,7 +3375,7 @@ module.exports.RESTOrderBookPartialAskResponse = function(options) {
   });
 };
 
-module.exports.RESTOrderBookXRPBaseResponse = function(options) {
+module.exports.RESTOrderBookXDVBaseResponse = function(options) {
   options = options || {};
 
   _.defaults(options,{
@@ -3384,7 +3384,7 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
 
   return JSON.stringify({
     success: true,
-    order_book: "XRP/USD+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+    order_book: "XDV/USD+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
     ledger: options.ledger,
     validated: true,
     bids: [
@@ -3405,12 +3405,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "577.9185501389138"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "27568.540895"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "27623.954214"
         },
@@ -3436,12 +3436,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "578.129773249599"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "0"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "27634.326809"
         },
@@ -3467,12 +3467,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "265.0254187774191"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "12668.215016"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "12668.215016"
         },
@@ -3498,12 +3498,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "193"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "9264.052522"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "9264.052522"
         },
@@ -3529,12 +3529,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "161.8304886"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "7771.132207"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "7771.132207"
         },
@@ -3560,12 +3560,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "605.341293717861"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "29075.779685"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "29075.779685"
         },
@@ -3591,12 +3591,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "166.647580164238"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "7988.547433"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "8004.519725"
         },
@@ -3622,12 +3622,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "792.5367174829754"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "38067.615332"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "38067.615332"
         },
@@ -3653,12 +3653,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "732.679143498934"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "0"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "35199.960104"
         },
@@ -3684,12 +3684,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "732.679143498934"
         },
         taker_pays_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "0"
         },
         taker_pays_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "35200.312104"
         },
@@ -3707,12 +3707,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.0209779"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "1000"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "1000"
         },
@@ -3738,12 +3738,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02098"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "70000"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "70000"
         },
@@ -3769,12 +3769,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.021"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "100000"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "100000"
         },
@@ -3800,12 +3800,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02102"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "58199.748"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "58200"
         },
@@ -3831,12 +3831,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02107249969981059951"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "8589.393882"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "8589.393882"
         },
@@ -3862,12 +3862,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02107441323863326587"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "0"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "1983.226007"
         },
@@ -3893,12 +3893,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.0211"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "60000"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "60000"
         },
@@ -3924,12 +3924,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.0211"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "8000"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "8000"
         },
@@ -3955,12 +3955,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02113950760685067166"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "85621.672636"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "85621.672636"
         },
@@ -3986,12 +3986,12 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
           value: "0.02115000000008415659"
         },
         taker_gets_funded: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "100752.658247"
         },
         taker_gets_total: {
-          currency: "XRP",
+          currency: "XDV",
           counterparty: "",
           value: "100752.658247"
         },
@@ -4014,7 +4014,7 @@ module.exports.RESTOrderBookXRPBaseResponse = function(options) {
   });
 };
 
-module.exports.RESTOrderBookXRPCounterResponse = function(options) {
+module.exports.RESTOrderBookXDVCounterResponse = function(options) {
   options = options || {};
 
   _.defaults(options,{
@@ -4023,16 +4023,16 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
 
   return JSON.stringify({
     success: true,
-    order_book: 'USD+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B/XRP',
+    order_book: 'USD+rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B/XDV',
     ledger: options.ledger,
     validated: true,
     bids:
     [ { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.66921379165693420218' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '1000' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '1000' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '1000' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '1000' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4046,11 +4046,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.66444232602478551001' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '70000' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '70000' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '70000' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '70000' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4064,11 +4064,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.61904761904761904762' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '100000' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '100000' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '100000' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '100000' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4082,11 +4082,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.57373929590865842055' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '58199.748' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '58200' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '58199.748' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '58200' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4100,11 +4100,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.45521481767955801105' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '8589.393882' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '8589.393882' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '8589.393882' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '8589.393882' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4118,11 +4118,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.45090592447985863047' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '0' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '1983.226007' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '0' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '1983.226007' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4136,11 +4136,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.39336492890995260664' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '60000' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '60000' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '60000' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '60000' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4154,11 +4154,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.39336492890995260664' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '8000' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '8000' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '8000' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '8000' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4172,11 +4172,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.30479151160220994475' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '85621.672636' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '85621.672636' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '85621.672636' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '85621.672636' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4190,11 +4190,11 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.28132387688042388099' },
-        taker_gets_funded: { currency: 'XRP', counterparty: '', value: '100752.658247' },
-        taker_gets_total: { currency: 'XRP', counterparty: '', value: '100752.658247' },
+        taker_gets_funded: { currency: 'XDV', counterparty: '', value: '100752.658247' },
+        taker_gets_total: { currency: 'XDV', counterparty: '', value: '100752.658247' },
         taker_pays_funded:
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
@@ -4209,7 +4209,7 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
         sell: true } ],
     asks:
     [ { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.79904401296697114116' },
         taker_gets_funded:
@@ -4220,14 +4220,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '577.9185501389138' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '27568.540895' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '27623.954214' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '27568.540895' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '27623.954214' },
         order_maker: 'rEiUs9rEiGHmpaprkYDNyXnJYg4ANxWLy9',
         sequence: 32667,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.79952198910414376988' },
         taker_gets_funded:
@@ -4238,14 +4238,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '578.129773249599' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '0' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '27634.326809' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '0' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '27634.326809' },
         order_maker: 'rEiUs9rEiGHmpaprkYDNyXnJYg4ANxWLy9',
         sequence: 32661,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '47.79999999411138377896' },
         taker_gets_funded:
@@ -4256,14 +4256,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '265.0254187774191' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '12668.215016' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '12668.215016' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '12668.215016' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '12668.215016' },
         order_maker: 'rsvZ4ucGpMvfSYFQXB4nFaQhxiW5CUy2zx',
         sequence: 549,
         passive: false,
         sell: true },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.00027213471502590674' },
         taker_gets_funded:
@@ -4274,14 +4274,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '193' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '9264.052522' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '9264.052522' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '9264.052522' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '9264.052522' },
         order_maker: 'rfCFLzNJYvvnoGHWQYACmJpTgkLUaugLEw',
         sequence: 2665862,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.02019863023511874882' },
         taker_gets_funded:
@@ -4292,14 +4292,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '161.8304886' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '7771.132207' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '7771.132207' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '7771.132207' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '7771.132207' },
         order_maker: 'rM3X3QSr8icjTGpaF52dozhbT2BZSXJQYM',
         sequence: 1425976,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.03204404976825003476' },
         taker_gets_funded:
@@ -4310,14 +4310,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '605.341293717861' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '29075.779685' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '29075.779685' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '29075.779685' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '29075.779685' },
         order_maker: 'r4rCiFc9jpMeCpKioVJUMbT1hU4kj3XiSt',
         sequence: 44405,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.0326189981949856156' },
         taker_gets_funded:
@@ -4328,14 +4328,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '166.647580164238' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '7988.547433' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '8004.519725' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '7988.547433' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '8004.519725' },
         order_maker: 'rNEib8Z73zSTYTi1WqzU4b1BQMXxnpYg1s',
         sequence: 781823,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.03262043542826285505' },
         taker_gets_funded:
@@ -4346,14 +4346,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '792.5367174829754' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '38067.615332' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '38067.615332' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '38067.615332' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '38067.615332' },
         order_maker: 'rPCFVxAqP2XdaPmih1ZSjmCPNxoyMiy2ne',
         sequence: 50020,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.04280347861603027671' },
         taker_gets_funded:
@@ -4364,14 +4364,14 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '732.679143498934' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '0' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '35199.960104' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '0' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '35199.960104' },
         order_maker: 'rEiUs9rEiGHmpaprkYDNyXnJYg4ANxWLy9',
         sequence: 32647,
         passive: false,
         sell: false },
       { price:
-          { currency: 'XRP',
+          { currency: 'XDV',
             counterparty: '',
             value: '48.04328390719533855633' },
         taker_gets_funded:
@@ -4382,8 +4382,8 @@ module.exports.RESTOrderBookXRPCounterResponse = function(options) {
           { currency: 'USD',
             counterparty: 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B',
             value: '732.679143498934' },
-        taker_pays_funded: { currency: 'XRP', counterparty: '', value: '0' },
-        taker_pays_total: { currency: 'XRP', counterparty: '', value: '35200.312104' },
+        taker_pays_funded: { currency: 'XDV', counterparty: '', value: '0' },
+        taker_pays_total: { currency: 'XDV', counterparty: '', value: '35200.312104' },
         order_maker: 'rEiUs9rEiGHmpaprkYDNyXnJYg4ANxWLy9',
         sequence: 32645,
         passive: false,

@@ -4,7 +4,7 @@
 
 var _ = require('lodash');
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').trustlines;
 var errors = require('./fixtures').errors;
@@ -21,7 +21,7 @@ var LEDGER_HASH = 'FD22E2A8D665A01711C0147173ECC0A32466BA976DE697E95197933311267
 suite('get trustlines', function() {
   var self = this;
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   // does a GET request to /v1/accounts/:account/trustlines
@@ -425,7 +425,7 @@ suite('post trustlines', function() {
     }
   };
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   // does a POST request to /v1/accounts/:account/trustlines
@@ -660,7 +660,7 @@ suite('post trustlines', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'), 'Missing signed transaction blob');
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
       assert.strictEqual(so.Flags, 2147483648);
@@ -711,7 +711,7 @@ suite('post trustlines', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
       assert.strictEqual(so.LimitAmount.value, '0');
@@ -751,10 +751,10 @@ suite('post trustlines', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'), 'Missing signed transaction blob');
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
-      assert((so.Flags & ripple.Transaction.flags.TrustSet.NoRipple) > 0);
+      assert((so.Flags & divvy.Transaction.flags.TrustSet.NoDivvy) > 0);
 
       conn.send(fixtures.submitTrustlineResponse(message, {
         hash: hash,
@@ -791,10 +791,10 @@ suite('post trustlines', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'), 'Missing signed transaction blob');
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
-      assert((so.Flags & ripple.Transaction.flags.TrustSet.SetFreeze) > 0);
+      assert((so.Flags & divvy.Transaction.flags.TrustSet.SetFreeze) > 0);
 
       conn.send(fixtures.submitTrustlineResponse(message, {
         hash: hash,
@@ -831,10 +831,10 @@ suite('post trustlines', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'), 'Missing signed transaction blob');
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
-      assert((so.Flags & ripple.Transaction.flags.TrustSet.ClearFreeze) > 0);
+      assert((so.Flags & divvy.Transaction.flags.TrustSet.ClearFreeze) > 0);
 
       conn.send(fixtures.submitTrustlineResponse(message, {
         hash: hash,
@@ -871,10 +871,10 @@ suite('post trustlines', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'), 'Missing signed transaction blob');
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'TrustSet');
-      assert((so.Flags & ripple.Transaction.flags.TrustSet.SetAuth) > 0);
+      assert((so.Flags & divvy.Transaction.flags.TrustSet.SetAuth) > 0);
 
       conn.send(fixtures.submitTrustlineResponse(message, {
         hash: hash,

@@ -11,7 +11,7 @@ var requestPath = fixtures.requestPath;
 suite('get transaction', function() {
   var self = this;
 
-  // self.wss: rippled mock
+  // self.wss: divvyd mock
   // self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));

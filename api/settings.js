@@ -2,7 +2,7 @@
 'use strict';
 var _ = require('lodash');
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var transactions = require('./transactions.js');
 var SubmitTransactionHooks = require('./lib/submit_transaction_hooks.js');
 var errors = require('./lib/errors.js');
@@ -15,23 +15,23 @@ var InvalidRequestError = errors.InvalidRequestError;
 var AccountRootFlags = {
   PasswordSpent: {
     name: 'password_spent',
-    value: ripple.Remote.flags.account_root.PasswordSpent
+    value: divvy.Remote.flags.account_root.PasswordSpent
   },
   RequireDestTag: {
     name: 'require_destination_tag',
-    value: ripple.Remote.flags.account_root.RequireDestTag
+    value: divvy.Remote.flags.account_root.RequireDestTag
   },
   RequireAuth: {
     name: 'require_authorization',
-    value: ripple.Remote.flags.account_root.RequireAuth
+    value: divvy.Remote.flags.account_root.RequireAuth
   },
-  DisallowXRP: {
-    name: 'disallow_xrp',
-    value: ripple.Remote.flags.account_root.DisallowXRP
+  DisallowXDV: {
+    name: 'disallow_xdv',
+    value: divvy.Remote.flags.account_root.DisallowXDV
   },
   DisableMaster: {
     name: 'disable_master',
-    value: ripple.Remote.flags.account_root.DisableMaster
+    value: divvy.Remote.flags.account_root.DisableMaster
   },
   NoFreeze: {
     name: 'no_freeze',
@@ -41,9 +41,9 @@ var AccountRootFlags = {
     name: 'global_freeze',
     value: 0x00400000
   },
-  DefaultRipple: {
-    name: 'default_ripple',
-    value: ripple.Remote.flags.account_root.DefaultRipple
+  DefaultDivvy: {
+    name: 'default_divvy',
+    value: divvy.Remote.flags.account_root.DefaultDivvy
   }
 };
 
@@ -61,11 +61,11 @@ var AccountRootFields = {
 
 var AccountSetIntFlags = {
   NoFreeze: {name: 'no_freeze',
-    value: ripple.Transaction.set_clear_flags.AccountSet.asfNoFreeze},
+    value: divvy.Transaction.set_clear_flags.AccountSet.asfNoFreeze},
   GlobalFreeze: {name: 'global_freeze',
-    value: ripple.Transaction.set_clear_flags.AccountSet.asfGlobalFreeze},
-  DefaultRipple: {name: 'default_ripple',
-    value: ripple.Transaction.set_clear_flags.AccountSet.asfDefaultRipple}
+    value: divvy.Transaction.set_clear_flags.AccountSet.asfGlobalFreeze},
+  DefaultDivvy: {name: 'default_divvy',
+    value: divvy.Transaction.set_clear_flags.AccountSet.asfDefaultDivvy}
 };
 
 var AccountSetFlags = {
@@ -73,7 +73,7 @@ var AccountSetFlags = {
                    unset: 'OptionalDestTag'},
   RequireAuth: {name: 'require_authorization', set: 'RequireAuth',
                 unset: 'OptionalAuth'},
-  DisallowXRP: {name: 'disallow_xrp', set: 'DisallowXRP', unset: 'AllowXRP'}
+  DisallowXDV: {name: 'disallow_xdv', set: 'DisallowXDV', unset: 'AllowXDV'}
 };
 
 // Emptry string passed to setting will clear it
@@ -235,7 +235,7 @@ function getSettings(account, callback) {
  *
  * @query
  * @param {String "true"|"false"} request.query.validated Used to force request
- *     to wait until rippled has finished validating the submitted transaction
+ *     to wait until divvyd has finished validating the submitted transaction
  *
  */
 function changeSettings(account, settings, secret, options, callback) {

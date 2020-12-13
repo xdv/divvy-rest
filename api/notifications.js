@@ -11,7 +11,7 @@ var validate = require('./lib/validate.js');
 
 /**
  *  Find the previous and next transaction hashes or
- *  client_resource_ids using both the rippled and
+ *  client_resource_ids using both the divvyd and
  *  local database. Report errors to the client using res.json
  *  or pass the notificationDetails with the added fields
  *  back to the callback.
@@ -19,8 +19,8 @@ var validate = require('./lib/validate.js');
  *  @param {Remote} $.remote
  *  @param {/lib/db-interface} $.dbinterface
  *  @param {Express.js Response} res
- *  @param {RippleAddress} notificationDetails.account
- *  @param {Ripple Transaction in JSON Format} notificationDetails.transaction
+ *  @param {DivvyAddress} notificationDetails.account
+ *  @param {Divvy Transaction in JSON Format} notificationDetails.transaction
  *  @param {Hex-encoded String|ResourceId} notificationDetails.identifier
  *  @param {Function} callback
  *
@@ -70,7 +70,7 @@ function attachPreviousAndNextTransactionIdentifiers(api,
         earliestFirst: earliestFirst
       };
 
-      // In rippled -1 corresponds to the first or last ledger
+      // In divvyd -1 corresponds to the first or last ledger
       // in its database, depending on whether it is the min or max value
       if (params.earliestFirst) {
         params.ledger_index_max = -1;
@@ -159,7 +159,7 @@ function attachPreviousAndNextTransactionIdentifiers(api,
  *
  *  @param {Remote} $.remote
  *  @param {/lib/db-interface} $.dbinterface
- *  @param {RippleAddress} req.params.account
+ *  @param {DivvyAddress} req.params.account
  *  @param {Hex-encoded String|ResourceId} req.params.identifier
  *  @param {Express.js Response} res
  *  @param {Function} callback
@@ -185,8 +185,8 @@ function getNotificationHelper(api, account, identifier, topCallback) {
         callback(null, baseTransaction);
       } else {
         callback(new errors.NotFoundError('Cannot Get Notification. ' +
-          'This transaction is not in the ripple\'s complete ledger set. ' +
-          'Because there is a gap in the rippled\'s historical database it ' +
+          'This transaction is not in the divvy\'s complete ledger set. ' +
+          'Because there is a gap in the divvyd\'s historical database it ' +
           'is not possible to determine the transactions that precede this one')
         );
       }
@@ -233,7 +233,7 @@ function getNotificationHelper(api, account, identifier, topCallback) {
  *  @param {Remote} $.remote
  *  @param {/lib/db-interface} $.dbinterface
  *  @param {/lib/config-loader} $.config
- *  @param {RippleAddress} req.params.account
+ *  @param {DivvyAddress} req.params.account
  *  @param {Hex-encoded String|ResourceId} req.params.identifier
  */
 function getNotification(account, identifier, urlBase, callback) {

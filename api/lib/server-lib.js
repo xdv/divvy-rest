@@ -26,7 +26,7 @@ function isConnected(remote) {
   }
 
   if (remote._stand_alone) {
-    // If rippled is in standalone mode we can assume there will not be a
+    // If divvyd is in standalone mode we can assume there will not be a
     // ledger close within 30 seconds.
     return true;
   }
@@ -64,8 +64,8 @@ function getStatus(remote, callback) {
   function prepareResponse(server_info, _callback) {
     var results = { };
 
-    results.rippled_server_url = remote.getServer()._url;
-    results.rippled_server_status = server_info.info;
+    results.divvyd_server_url = remote.getServer()._url;
+    results.divvyd_server_status = server_info.info;
 
     _callback(null, results);
   }
@@ -92,7 +92,7 @@ function remoteHasLedger(remote, ledger, callback) {
       return callback(err);
     }
 
-    var ledger_range = status.rippled_server_status.complete_ledgers;
+    var ledger_range = status.divvyd_server_status.complete_ledgers;
     var match = ledger_range.match(/([0-9]+)-([0-9]+)$/);
     var min = Number(match[1]);
     var max = Number(match[2]);

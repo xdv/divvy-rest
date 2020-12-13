@@ -1,14 +1,14 @@
 /* eslint-disable valid-jsdoc */
 'use strict';
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 
 /**
- * Convert a Ripple transaction in the JSON format,
+ * Convert a Divvy transaction in the JSON format,
  * along with some additional pieces of information,
  * into a Notification object.
  *
- * @param {Ripple Transaction in JSON Format} notification_details.transaction
- * @param {RippleAddress} notification_details.account
+ * @param {Divvy Transaction in JSON Format} notification_details.transaction
+ * @param {DivvyAddress} notification_details.account
  * @param {Hex-encoded String|ResourceId}
  *                    notification_details.previous_transaction_identifier
  * @param {Hex-encoded String|ResourceId}
@@ -47,7 +47,7 @@ NotificationParser.prototype.parse = function(notification_details) {
   };
 
   notification.timestamp = transaction.date ?
-    new Date(ripple.utils.time.fromRipple(transaction.date)).toISOString() : '';
+    new Date(divvy.utils.time.fromDivvy(transaction.date)).toISOString() : '';
 
   if (account === transaction.Account) {
     notification.direction = 'outgoing';

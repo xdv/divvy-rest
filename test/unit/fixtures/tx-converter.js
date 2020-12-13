@@ -8,7 +8,7 @@ var addresses = require('./../../fixtures').addresses;
 var VALID_TRANSACTION_HASH = 'F4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF';
 
 // VALID's EUR balance with ISSUER goes down from 6.948 to 6.113
-// VALID's XRP balance goes down 15000 drops for the fee
+// VALID's XDV balance goes down 15000 drops for the fee
 // rGAW's USD balance with ISSUER goes down from 615 to 614
 // rGAW's EUR balance with ISSUER goes up from 9988 to 9989
 module.exports.COMPLICATED_META = {
@@ -35,7 +35,7 @@ module.exports.COMPLICATED_META = {
          },
           LowNode: '0000000000000000'
        },
-        LedgerEntryType: 'RippleState',
+        LedgerEntryType: 'DivvyState',
         LedgerIndex: '24D1C0A5010D55A17DF68086F66945393CC8DBFED112D31A51CDAB36550845AA',
         PreviousFields: {
           Balance: {
@@ -89,7 +89,7 @@ module.exports.COMPLICATED_META = {
          },
           LowNode: '0000000000000000'
        },
-        LedgerEntryType: 'RippleState',
+        LedgerEntryType: 'DivvyState',
         LedgerIndex: '5DE72094CF0D34410C620A2003735FD4391FBA6F100D19A31CEFE4A4B1E9A116',
         PreviousFields: {
           Balance: {
@@ -124,7 +124,7 @@ module.exports.COMPLICATED_META = {
          },
           LowNode: '0000000000000000'
        },
-        LedgerEntryType: 'RippleState',
+        LedgerEntryType: 'DivvyState',
         LedgerIndex: '6086D04C4C47B3F92B3EC0BA70BF762A13C7366299CEAA2E5F75666991AE28DF',
         PreviousFields: {
           Balance: {
@@ -235,7 +235,7 @@ module.exports.paymentTx = function(options) {
              },
               'LowNode': '0000000000000002'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
             'PreviousFields': {
               'Balance': {
@@ -307,7 +307,7 @@ module.exports.paymentTx = function(options) {
              },
               'LowNode': '000000000000000C'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
             'PreviousFields': {
               'Balance': {
@@ -384,7 +384,7 @@ module.exports.paymentTx = function(options) {
 module.exports.paymentRest = {
   source_account: addresses.VALID,
   source_tag: '',
-  source_amount: {value: '1.112209', currency: 'XRP', issuer: ''},
+  source_amount: {value: '1.112209', currency: 'XDV', issuer: ''},
   source_slippage: '0',
   destination_account: addresses.ISSUER,
   destination_tag: '',
@@ -394,7 +394,7 @@ module.exports.paymentRest = {
     value: '0.001'},
   invoice_id: '',
   paths: '[[{\"currency\":\"USD\",\"issuer\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"currency\":\"USD\",\"issuer\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":49,\"type_hex\":\"0000000000000031\"}]]',
-  no_direct_ripple: false,
+  no_direct_divvy: false,
   partial_payment: false,
   direction: 'outgoing',
   result: 'tesSUCCESS',
@@ -402,12 +402,12 @@ module.exports.paymentRest = {
   fee: '0.00001',
   balance_changes: [
     {
-      currency: 'XRP',
+      currency: 'XDV',
       value: '-1.101208',
       issuer: ''
    }
  ],
-  source_balance_changes: [{value: '-1.101208', currency: 'XRP', issuer: ''}],
+  source_balance_changes: [{value: '-1.101208', currency: 'XDV', issuer: ''}],
   destination_balance_changes:
     [{value: '0.001',
       currency: 'USD',
@@ -415,7 +415,7 @@ module.exports.paymentRest = {
   order_changes: [
     {
       taker_pays: {
-        currency: 'XRP',
+        currency: 'XDV',
         issuer: '',
         value: '-1.101198'
      },
@@ -464,7 +464,7 @@ module.exports.pathFindResultsTx = {
             'type_hex': '0000000000000001'
          },
           {
-            'currency': 'XRP',
+            'currency': 'XDV',
             'type': 16,
             'type_hex': '0000000000000010'
          },
@@ -487,7 +487,7 @@ module.exports.pathFindResultsTx = {
             'type_hex': '0000000000000001'
          },
           {
-            'currency': 'XRP',
+            'currency': 'XDV',
             'type': 16,
             'type_hex': '0000000000000010'
          },
@@ -515,7 +515,7 @@ module.exports.pathFindResultsTx = {
             'type_hex': '0000000000000001'
          },
           {
-            'currency': 'XRP',
+            'currency': 'XDV',
             'type': 16,
             'type_hex': '0000000000000010'
          },
@@ -577,7 +577,7 @@ module.exports.pathFindResultsTx = {
             'type_hex': '0000000000000001'
          },
           {
-            'currency': 'XRP',
+            'currency': 'XDV',
             'type': 16,
             'type_hex': '0000000000000010'
          },
@@ -600,7 +600,7 @@ module.exports.pathFindResultsTx = {
             'type_hex': '0000000000000001'
          },
           {
-            'currency': 'XRP',
+            'currency': 'XDV',
             'type': 16,
             'type_hex': '0000000000000010'
          },
@@ -722,7 +722,7 @@ module.exports.pathFindResultsTx = {
     'EUR',
     '015841551A748AD2C1F76FF6ECB0CCCD00000000',
     'MXN',
-    'XRP'
+    'XDV'
  ],
   'source_account': addresses.VALID,
   'destination_amount': {
@@ -751,9 +751,9 @@ module.exports.pathPaymentsRest = [
       'issuer': addresses.ISSUER
    },
     'invoice_id': '',
-    'paths': '[[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rHHa9t2kLQyXRbdLkSzEgkzwf9unmFgZs9\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rHHa9t2kLQyXRbdLkSzEgkzwf9unmFgZs9\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]',
+    'paths': '[[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMAz5ZnK73nyNUL4foAvaxdreczCkG3vA6\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rHHa9t2kLQyXRbdLkSzEgkzwf9unmFgZs9\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rHHa9t2kLQyXRbdLkSzEgkzwf9unmFgZs9\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]',
     'partial_payment': false,
-    'no_direct_ripple': false
+    'no_direct_divvy': false
  },
   {
     'source_account': addresses.VALID,
@@ -772,16 +772,16 @@ module.exports.pathPaymentsRest = [
       'issuer': addresses.ISSUER
    },
     'invoice_id': '',
-    'paths': '[[{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]',
+    'paths': '[[{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]',
     'partial_payment': false,
-    'no_direct_ripple': false
+    'no_direct_divvy': false
  },
   {
     'source_account': addresses.VALID,
     'source_tag': '',
     'source_amount': {
       'value': '0.207669',
-      'currency': 'XRP',
+      'currency': 'XDV',
       'issuer': ''
    },
     'source_slippage': '0',
@@ -795,7 +795,7 @@ module.exports.pathPaymentsRest = [
     'invoice_id': '',
     'paths': '[[{\"currency\":\"USD\",\"issuer\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rf9X8QoYnWLHMHuDfjkmRcD2UE5qX5aYV\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rDVdJ62foD1sn7ZpxtXyptdkBSyhsQGviT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rDVdJ62foD1sn7ZpxtXyptdkBSyhsQGviT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rfQPFZ3eLcaSUKjUy7A3LAmDNM4F9Hz9j1\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpHgehzdpfWRXKvSv6duKvVuo1aZVimdaT\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"r3PDtZSa5LiYp1Ysn1vMuMzB59RzV3W9QH\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]',
     'partial_payment': false,
-    'no_direct_ripple': false
+    'no_direct_divvy': false
  }
 ];
 
@@ -1016,7 +1016,7 @@ module.exports.trustResponseTx = {
            },
             'LowNode': '0000000000000000'
          },
-          'LedgerEntryType': 'RippleState',
+          'LedgerEntryType': 'DivvyState',
           'LedgerIndex': '620379E07473AAE2E6CCCB196AE9DD13C5D036C4B47211BB3DAA55D019CB2226',
           'PreviousFields': {
             'Flags': 65536
@@ -1098,8 +1098,8 @@ module.exports.settingResponseRest = {
     signers: undefined,
     require_destination_tag: true,
     require_authorization: true,
-    disallow_xrp: true,
-    default_ripple: true
+    disallow_xdv: true,
+    default_divvy: true
  },
   hash: '0F480D344CFC610DFA5CAC62CC1621C92953A05FE8C319281CA49C5C162AF40E',
   ledger: 8820076,
@@ -1216,7 +1216,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '000000000000028F'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': '42A6E9991D540C80BE4A43EF5254656DD862F602BBFF99BC576B44FBF6B7D775',
             'PreviousFields': {
               'Balance': {
@@ -1251,7 +1251,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '0000000000000231'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': '615463C4F78931AA3E2B65FE49C6DAAC25A456C15679E67D1C19CA0943D98C5A',
             'PreviousFields': {
               'Balance': {
@@ -1286,7 +1286,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '00000000000002C4'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': '817EB23FB16D8D17676F29055C989CDFB738B7FC310DF3AB5CA0D06AA2DC1326',
             'PreviousFields': {
               'Balance': {
@@ -1321,7 +1321,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '0000000000000201'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': 'C688AE8E51943530C931C3B838D15818BDA1F1B60B641B5F866B724AD7D3E79B',
             'PreviousFields': {
               'Balance': {
@@ -1356,7 +1356,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '0000000000000201'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': 'D8F66B71771581E6185072E5264B2C4C0F9C2CA642EE46B62D6F550D897D00FF',
             'PreviousFields': {
               'Balance': {
@@ -1409,7 +1409,7 @@ module.exports.offerCreateTx = {
              },
               'LowNode': '000000000000028F'
            },
-            'LedgerEntryType': 'RippleState',
+            'LedgerEntryType': 'DivvyState',
             'LedgerIndex': 'E929BE69F05FEB6B376C97E22A264D93D88A7E42BE3FE5BFBD1842AC08C85BCF',
             'PreviousFields': {
               'Balance': {
@@ -1645,9 +1645,9 @@ module.exports.parsedOfferCancelTx = {
      type: 'cancel',
      sequence: 22,
      cancel_sequence: 20},
-  balance_changes: [{counterparty: '', currency: 'XRP', value: '-0.012'}],
+  balance_changes: [{counterparty: '', currency: 'XDV', value: '-0.012'}],
   order_changes:
-   [{taker_pays: {currency: 'XRP', counterparty: '', value: '0'},
+   [{taker_pays: {currency: 'XDV', counterparty: '', value: '0'},
        taker_gets:
         {currency: 'JPY',
           counterparty: 'r94s8px6kSw1uZ1MV98dhSRTvc6VMPoPcN',

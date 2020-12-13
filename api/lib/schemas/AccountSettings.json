@@ -5,15 +5,15 @@
   "type": "object",
   "properties": {
     "account": {
-      "description": "The Ripple address of the account in question",
-      "$ref": "RippleAddress"
+      "description": "The Divvy address of the account in question",
+      "$ref": "DivvyAddress"
     },
     "regular_key": {
       "description": "The hash of an optional additional public key that can be used for signing and verifying transactions",
-      "$ref": "RippleAddress"
+      "$ref": "DivvyAddress"
     },
     "domain": {
-      "description": "The domain associated with this account. The ripple.txt file can be looked up to verify this information",
+      "description": "The domain associated with this account. The divvy.txt file can be looked up to verify this information",
       "$ref": "URL"
     },
     "email_hash": {
@@ -41,8 +41,8 @@
       "description": "If set to true incoming trustlines will only be validated if this account first creates a trustline to the counterparty with the authorized flag set to true. This may be used by gateways to prevent accounts unknown to them from holding currencies they issue",
       "type": "boolean"
     },
-    "disallow_xrp": {
-      "description": "If set to true incoming XRP payments will be allowed",
+    "disallow_xdv": {
+      "description": "If set to true incoming XDV payments will be allowed",
       "type": "boolean"
     },
     "disable_master": {
@@ -63,7 +63,7 @@
       "pattern": "^[0-9]+$"
     },
     "hash": {
-      "description": "If this object was returned by a historical query this value will be the hash of the transaction that modified these settings. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction",
+      "description": "If this object was returned by a historical query this value will be the hash of the transaction that modified these settings. The transaction hash is used throughout the Divvy Protocol to uniquely identify a particular transaction",
       "$ref": "Hash256"
     }
 },

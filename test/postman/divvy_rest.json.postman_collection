@@ -1,6 +1,6 @@
 {
 	"id": "83d23725-411a-9e62-6a10-44dab7bdb4d4",
-	"name": "Ripple Rest",
+	"name": "Divvy Rest",
 	"description": "",
 	"order": [
 		"cd7426cb-3934-2385-6858-fb3fc8f6a543",
@@ -119,7 +119,7 @@
 		{
 			"id": "80ae41c3-23c4-fb9a-1552-1839028b8a6c",
 			"headers": "Content-Type: application/json\n",
-			"url": "{{host}}/v1/accounts/rBEXjfD3MuXKATePRwrk4AqgqzuD9JjQqv/payments/paths/rPj5gRLwVtiWTtycsBbZoay4WZMDo3aq2a/1+XRP",
+			"url": "{{host}}/v1/accounts/rBEXjfD3MuXKATePRwrk4AqgqzuD9JjQqv/payments/paths/rPj5gRLwVtiWTtycsBbZoay4WZMDo3aq2a/1+XDV",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -128,7 +128,7 @@
 			"version": 2,
 			"tests": "",
 			"time": 1409704324424,
-			"name": "/payments/paths (XRP)",
+			"name": "/payments/paths (XDV)",
 			"description": "",
 			"collectionId": "83d23725-411a-9e62-6a10-44dab7bdb4d4",
 			"responses": [],
@@ -187,7 +187,7 @@
 			"collectionId": "83d23725-411a-9e62-6a10-44dab7bdb4d4",
 			"responses": [],
 			"synced": false,
-			"rawModeData": "{\n  \"secret\": \"{YOUR SECRET}\",\n  \"client_resource_id\": \"1\",\n  \"payment\":\n    {\n      \"source_account\": \"rPs7nVbSops6xm4v77wpoPFf549cqjzUy9\",\n      \"source_tag\": \"\",\n      \"source_amount\": {\n        \"value\": \"0.0001\",\n        \"currency\": \"XRP\",\n        \"issuer\": \"\"\n      },\n      \"source_slippage\": \"0.01\",\n      \"destination_account\": \"rKB4oSXwPkRpb2sZRhgGyRfaEhhYS6tf4M\",\n      \"destination_tag\": \"\",\n      \"destination_amount\": {\n        \"value\": \"0.0001\",\n        \"currency\": \"XRP\",\n        \"issuer\": \"\"\n      },\n      \"invoice_id\": \"\",\n      \"paths\": \"[]\",\n      \"partial_payment\": false,\n      \"no_direct_ripple\": false\n    }\n}"
+			"rawModeData": "{\n  \"secret\": \"{YOUR SECRET}\",\n  \"client_resource_id\": \"1\",\n  \"payment\":\n    {\n      \"source_account\": \"rPs7nVbSops6xm4v77wpoPFf549cqjzUy9\",\n      \"source_tag\": \"\",\n      \"source_amount\": {\n        \"value\": \"0.0001\",\n        \"currency\": \"XDV\",\n        \"issuer\": \"\"\n      },\n      \"source_slippage\": \"0.01\",\n      \"destination_account\": \"rKB4oSXwPkRpb2sZRhgGyRfaEhhYS6tf4M\",\n      \"destination_tag\": \"\",\n      \"destination_amount\": {\n        \"value\": \"0.0001\",\n        \"currency\": \"XDV\",\n        \"issuer\": \"\"\n      },\n      \"invoice_id\": \"\",\n      \"paths\": \"[]\",\n      \"partial_payment\": false,\n      \"no_direct_divvy\": false\n    }\n}"
 		},
 		{
 			"id": "bcad8742-c29d-6e33-1c96-8d909b88ce00",
@@ -351,7 +351,7 @@
 			"collectionId": "83d23725-411a-9e62-6a10-44dab7bdb4d4",
 			"responses": [],
 			"synced": false,
-			"rawModeData": "{\n  \"secret\": \"{YOUR SECRET}\",\n  \"settings\": {\n    \"transfer_rate\": 100,\n    \"password_spent\": false,\n    \"require_destination_tag\": false,\n    \"require_authorization\": false,\n    \"disallow_xrp\": false,\n    \"disable_master\": false\n  }\n}"
+			"rawModeData": "{\n  \"secret\": \"{YOUR SECRET}\",\n  \"settings\": {\n    \"transfer_rate\": 100,\n    \"password_spent\": false,\n    \"require_destination_tag\": false,\n    \"require_authorization\": false,\n    \"disallow_xdv\": false,\n    \"disable_master\": false\n  }\n}"
 		}
 	]
 }

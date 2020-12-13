@@ -3,7 +3,7 @@ var _ = require('lodash');
 const DEFAULTS = {
   require_destination_tag: true,
   require_authorization: true,
-  disallow_xrp: true,
+  disallow_xdv: true,
   domain: 'example.com',
   email_hash: '23463B99B62A72F26ED677CC556C44E8',
   wallet_locator: 'DEADBEEF',
@@ -191,7 +191,7 @@ module.exports.RESTAccountSettingsResponse = JSON.stringify({
     password_spent: false,
     require_destination_tag: true,
     require_authorization: false,
-    disallow_xrp: true,
+    disallow_xdv: true,
     disable_master: false,
     no_freeze: false,
     global_freeze: false,
@@ -202,7 +202,7 @@ module.exports.RESTAccountSettingsResponse = JSON.stringify({
     message_key: '',
     domain: 'example.com',
     signers: '',
-    default_ripple: true
+    default_divvy: true
   }
 });
 
@@ -222,7 +222,7 @@ module.exports.RESTAccountSettingsSubmitResponse = function(options) {
       transfer_rate: 2,
       require_destination_tag: true,
       require_authorization: true,
-      disallow_xrp: true
+      disallow_xdv: true
     },
     hash: 'AD922400CB1CE0876CA7203DBE0B1277D0D0EAC56A64F26CEC6C78D447EFEA5E',
     ledger: options.current_ledger.toString(),

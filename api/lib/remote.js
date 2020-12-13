@@ -1,5 +1,5 @@
 'use strict';
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 
 function noop() {
   return;
@@ -13,7 +13,7 @@ var defaultLogger = {
 };
 
 function createRemote(options) {
-  var remote = new ripple.Remote(options);
+  var remote = new divvy.Remote(options);
   if (options.mock) {
     return remote;
   }
@@ -29,7 +29,7 @@ function createRemote(options) {
   }
 
   remote.connect = function() {
-    logger.info('[RIPD] Attempting to connect to the Ripple network...');
+    logger.info('[RIPD] Attempting to connect to the Divvy network...');
     connect.apply(remote, arguments);
   };
 
@@ -38,23 +38,23 @@ function createRemote(options) {
   });
 
   remote.on('disconnect', function() {
-    logger.info('[RIPD] Disconnected from the Ripple network');
+    logger.info('[RIPD] Disconnected from the Divvy network');
     connected = false;
   });
 
   remote._servers.forEach(function(server) {
     server.on('connect', function() {
-      logger.info('[RIPD] Connected to rippled server:', server.getServerID());
+      logger.info('[RIPD] Connected to divvyd server:', server.getServerID());
       server.once('ledger_closed', ready);
     });
     server.on('disconnect', function() {
-      logger.info('[RIPD] Disconnected from rippled server:',
+      logger.info('[RIPD] Disconnected from divvyd server:',
         server.getServerID());
     });
   });
 
   process.on('SIGHUP', function() {
-    logger.info('Received signal SIGHUP, reconnecting to Ripple network');
+    logger.info('Received signal SIGHUP, reconnecting to Divvy network');
     remote.reconnect();
   });
 

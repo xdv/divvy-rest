@@ -1,7 +1,7 @@
 /* eslint-disable valid-jsdoc */
 'use strict';
 var _ = require('lodash');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 
 /**
  *  Used to hold methods defined by caller to customize transaction submit
@@ -18,7 +18,7 @@ function SubmitTransactionHooks(hooks) {
  *  @callback
  *  @param {Error} error
  *  @param {Transaction} transaction - Transaction object that is used to
- *                                     submit requests to ripple
+ *                                     submit requests to divvy
  */
 SubmitTransactionHooks.prototype.initializeTransaction =
   function(async_callback) {
@@ -31,7 +31,7 @@ SubmitTransactionHooks.prototype.initializeTransaction =
     return this.hooks.initializeTransaction(async_callback);
   }
 
-  async_callback(null, new ripple.Transaction());
+  async_callback(null, new divvy.Transaction());
 };
 
 /**
@@ -51,10 +51,10 @@ SubmitTransactionHooks.prototype.validateParams = function(async_callback) {
 };
 
 /**
- *  Used to format messages received from ripple-lib which will be
+ *  Used to format messages received from divvy-lib which will be
  *  returned to client
  *
- *  @param {Object} message - Response object from ripple
+ *  @param {Object} message - Response object from divvy
  *  @param {Object} meta - Object that holds metadata about the transaction
  *  @param {String} meta.hash - Hash of the transaction
  *  @param {String} meta.ledger - Ledger sequence that the transaction
@@ -77,7 +77,7 @@ SubmitTransactionHooks.prototype.formatTransactionResponse = function(
  *  Used to set appropriate parameters on transaction
  *
  *  @param {Transaction} transaction - Transaction object that is used to
- *                                     submit requests to ripple
+ *                                     submit requests to divvy
  *
  *  @returns undefined
  */

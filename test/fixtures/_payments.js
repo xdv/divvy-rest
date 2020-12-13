@@ -1,4 +1,4 @@
-var RL = require('ripple-lib')
+var RL = require('divvy-lib')
 var SerializedObject = RL.SerializedObject;
 
 var accounts = {}
@@ -64,10 +64,10 @@ var submit = function(data,ws) {
         if (so.Destination == accounts.bob.address) {
             if (so.Amount == '1') {
                 ws.send(JSON.stringify({"id":data.id,
-                "result":{"engine_result":"tecNO_DST_INSUF_XRP","engine_result_code":125,"engine_result_message":"Destination does not exist. Too little XRP sent to create it.","tx_blob":"12000022000000002400000001201B0000000A61400000000000000168400000000000000C7321022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB7446304402206DC3B71D92905AD48CB360D749A59B21C40C61ACD8588CF6265F04FDB97A318202206AE57409DA90B873DA430B78F023BD8F610365823C1C71E344FDC931F44D00AE8114BF14A5EF6814B074833FDDBA3B2235812EF55ABF83146B3515E84CB5F28032F968FCBD58B694B33E1C69","tx_json":{"Account":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","Amount":"1","Destination":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","Fee":"12","Flags":0,"LastLedgerSequence":10,"Sequence":1,"SigningPubKey":"022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB","TransactionType":"Payment","TxnSignature":"304402206DC3B71D92905AD48CB360D749A59B21C40C61ACD8588CF6265F04FDB97A318202206AE57409DA90B873DA430B78F023BD8F610365823C1C71E344FDC931F44D00AE","hash":"2F56D7997CF9BC90005EFA5A4DE83384DDAD9146644D26FBBCBC2D6C9FC212F9"}},"status":"success","type":"response"
+                "result":{"engine_result":"tecNO_DST_INSUF_XDV","engine_result_code":125,"engine_result_message":"Destination does not exist. Too little XDV sent to create it.","tx_blob":"12000022000000002400000001201B0000000A61400000000000000168400000000000000C7321022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB7446304402206DC3B71D92905AD48CB360D749A59B21C40C61ACD8588CF6265F04FDB97A318202206AE57409DA90B873DA430B78F023BD8F610365823C1C71E344FDC931F44D00AE8114BF14A5EF6814B074833FDDBA3B2235812EF55ABF83146B3515E84CB5F28032F968FCBD58B694B33E1C69","tx_json":{"Account":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","Amount":"1","Destination":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","Fee":"12","Flags":0,"LastLedgerSequence":10,"Sequence":1,"SigningPubKey":"022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB","TransactionType":"Payment","TxnSignature":"304402206DC3B71D92905AD48CB360D749A59B21C40C61ACD8588CF6265F04FDB97A318202206AE57409DA90B873DA430B78F023BD8F610365823C1C71E344FDC931F44D00AE","hash":"2F56D7997CF9BC90005EFA5A4DE83384DDAD9146644D26FBBCBC2D6C9FC212F9"}},"status":"success","type":"response"
                 }))
             } else if ((so.Amount == '20000000') ||  (so.Amount == '200000000')) {
-                // this is the server_info's minimum drop XRP reserve  to create an account
+                // this is the server_info's minimum drop XDV reserve  to create an account
                 // which is 10x higher in standalone than in regular
                 ws.send(JSON.stringify({"id":data.id,"result":{"engine_result":"tesSUCCESS","engine_result_code":0,"engine_result_message":"The transaction was applied.","tx_blob":"12000022000000002400000002201B0000000A61400000000BEBC20068400000000000000C7321022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB74473045022100980B5BB4905990AB40724033611B28E1CAA111BC14E2B5301E306A913ADCB95C02201BCEA8C5BC6DF9A1262358F319BAC8184980A40263014FC4FBB80F6393DC4EFF8114BF14A5EF6814B074833FDDBA3B2235812EF55ABF83146B3515E84CB5F28032F968FCBD58B694B33E1C69","tx_json":{"Account":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","Amount":"200000000","Destination":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","Fee":"12","Flags":0,"LastLedgerSequence":10,"Sequence":2,"SigningPubKey":"022E3308DCB75B17BEF734CE342AC40FF7FDF55E3FEA3593EE8301A70C532BB5BB","TransactionType":"Payment","TxnSignature":"3045022100980B5BB4905990AB40724033611B28E1CAA111BC14E2B5301E306A913ADCB95C02201BCEA8C5BC6DF9A1262358F319BAC8184980A40263014FC4FBB80F6393DC4EFF","hash":"F61422CBCBBEBD131DA92D8A78917BE082DB5874CCB7BA451995BBDC417A5011"}},"status":"success","type":"response"}
                 ))
@@ -140,38 +140,38 @@ var server_info = function(data,ws) {
       "server_state": "syncing",
       "validated_ledger": {
         "age": 6,
-        "base_fee_xrp": 0.00001,
+        "base_fee_xdv": 0.00001,
         "hash": "8AA5B0329BB5A67CD53A5A31700F40D9AA44423DC4ACD598EB3BCBC6D425565D",
-        "reserve_base_xrp": 20,
-        "reserve_inc_xrp": 5,
+        "reserve_base_xdv": 20,
+        "reserve_inc_xdv": 5,
         "seq": 8803979
       },
       "validation_quorum": 3
     }}}));
 }
 exports.server_info = server_info;
-var ripple_path_find = function(data,ws) {
+var divvy_path_find = function(data,ws) {
     switch (data.source_account) {
         case accounts.alice.address :
             if (data.destination_account == accounts.bob.address) {
                 if (data.destination_amount == '1') {
                     ws.send(JSON.stringify({
-                        "id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XRP"],"ledger_current_index":3,"validated":false},"status":"success","type":"response"
+                        "id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XDV"],"ledger_current_index":3,"validated":false},"status":"success","type":"response"
                     }));
                 } else if (data.destination_amount == '20000000') {
                     ws.send(JSON.stringify({
-                        "id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XRP"],"ledger_current_index":3,"validated":false},"status":"success","type":"response"
+                        "id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XDV"],"ledger_current_index":3,"validated":false},"status":"success","type":"response"
                     }));
                 } else if (typeof data.destination_amount == 'object') {
                     if (data.destination_amount.currency == 'USD') {
                         if (state.usd === undefined) {
                             // first time, return no path
                             state.usd = 1;
-                            ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
+                            ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
                         } else {
                             // second time, return path
                             state.usd++;
-                            ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[{"paths_canonical":[],"paths_computed":[],"source_amount":{"currency":"USD","issuer":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","value":"10"}}],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["USD","XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
+                            ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[{"paths_canonical":[],"paths_computed":[],"source_amount":{"currency":"USD","issuer":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","value":"10"}}],"destination_account":"rwmityd4Ss34DBUsRy7Pacv6UA5n7yjfe5","destination_currencies":["USD","XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
                         }
                     }
                 }
@@ -185,16 +185,16 @@ var ripple_path_find = function(data,ws) {
                     result: 
                     { alternatives: [],
                     destination_account: 'rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U',
-                    destination_currencies: [ 'XRP' ] },
+                    destination_currencies: [ 'XDV' ] },
                     status: 'success',
                     type: 'response' }
                 ))
                 break;
                 case accounts.carol.address: 
-                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"r3YHFNkQRJDPc9aCkRojPLwKVwok3ihgBJ","destination_currencies":["XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
+                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"r3YHFNkQRJDPc9aCkRojPLwKVwok3ihgBJ","destination_currencies":["XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
                 break;
                 case accounts.dan.address:
-                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rsE6ZLDkXhSvfJHvSqFPhdazsoMgCEC52V","destination_currencies":["XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
+                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rsE6ZLDkXhSvfJHvSqFPhdazsoMgCEC52V","destination_currencies":["XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
                 break;
                 default:
                 break;
@@ -202,19 +202,19 @@ var ripple_path_find = function(data,ws) {
         break;
         case accounts.bob.address :
             if (data.destination_account == accounts.alice.address) {
-                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","destination_currencies":["XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}               
+                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[],"destination_account":"rJRLoJSErtNRFnbCyHEUYnRUKNwkVYDM7U","destination_currencies":["XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}               
                 ))
             }
         break;
         case accounts.carol.address :
             if (data.destination_account == accounts.dan.address) {
-                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[{"paths_canonical":[],"paths_computed":[],"source_amount":{"currency":"USD","issuer":"r3YHFNkQRJDPc9aCkRojPLwKVwok3ihgBJ","value":"10"}}],"destination_account":"rsE6ZLDkXhSvfJHvSqFPhdazsoMgCEC52V","destination_currencies":["USD","XRP"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
+                ws.send(JSON.stringify({"id":data.id,"result":{"alternatives":[{"paths_canonical":[],"paths_computed":[],"source_amount":{"currency":"USD","issuer":"r3YHFNkQRJDPc9aCkRojPLwKVwok3ihgBJ","value":"10"}}],"destination_account":"rsE6ZLDkXhSvfJHvSqFPhdazsoMgCEC52V","destination_currencies":["USD","XDV"],"ledger_current_index":4,"validated":false},"status":"success","type":"response"}))
             }
         default:
         break;    
     }
 };
-exports.ripple_path_find = ripple_path_find
+exports.divvy_path_find = divvy_path_find
 
 var account_info = function(data,ws) {
     switch (data.account) {
@@ -347,7 +347,7 @@ exports.clearInterval = function() {
 //    clearInterval(timerid)
 }
 
-exports.nominal_xrp_post_response = {
+exports.nominal_xdv_post_response = {
   "success": true,
   "client_resource_id": "f2f811b7-dc3b-4078-a2c2-e4ca9e453981",
   "status_url": ".../v1/accounts/r1.../payments/f2f811b7-dc3b-4078-a2c2-e4ca9e453981"

@@ -3,12 +3,12 @@
 'use strict';
 
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').orders;
 var errors = require('./fixtures').errors;
 var addresses = require('./fixtures').addresses;
-var Currency = require('ripple-lib').Currency;
+var Currency = require('divvy-lib').Currency;
 
 var HEX_CURRENCY = '0158415500000000C1F76FF6ECB0BAC600000000';
 var ISSUER = 'rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B';
@@ -373,7 +373,7 @@ suite('post orders', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
         engine_result: 'tecUNFUNDED_OFFER',
         engine_result_code: 103,
         engine_result_message: 'Insufficient balance to fund created offer.',
@@ -411,7 +411,7 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Account, addresses.VALID);
       assert.strictEqual(so.TransactionType, 'OfferCreate');
@@ -464,7 +464,7 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(so.TakerGets.value, VALUE);
       assert.strictEqual(so.TakerGets.currency, HEX_CURRENCY);
       assert.strictEqual(so.TakerGets.issuer, ISSUER);
@@ -518,7 +518,7 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(so.TakerPays.value, VALUE);
       assert.strictEqual(so.TakerPays.currency, HEX_CURRENCY);
       assert.strictEqual(so.TakerPays.issuer, ISSUER);
@@ -606,9 +606,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert((so.Flags & ripple.Transaction.flags.OfferCreate.Sell) > 0);
+      assert((so.Flags & divvy.Transaction.flags.OfferCreate.Sell) > 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -640,9 +640,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert((so.Flags & ripple.Transaction.flags.OfferCreate.Passive) > 0);
+      assert((so.Flags & divvy.Transaction.flags.OfferCreate.Passive) > 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -674,9 +674,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert((so.Flags & ripple.Transaction.flags.OfferCreate.FillOrKill) > 0);
+      assert((so.Flags & divvy.Transaction.flags.OfferCreate.FillOrKill) > 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -708,9 +708,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert((so.Flags & ripple.Transaction.flags.OfferCreate.ImmediateOrCancel) > 0);
+      assert((so.Flags & divvy.Transaction.flags.OfferCreate.ImmediateOrCancel) > 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -742,9 +742,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert.strictEqual(so.Flags & ripple.Transaction.flags.OfferCreate.Passive, 0);
+      assert.strictEqual(so.Flags & divvy.Transaction.flags.OfferCreate.Passive, 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -776,9 +776,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert.strictEqual(so.Flags & ripple.Transaction.flags.OfferCreate.FillOrKill, 0);
+      assert.strictEqual(so.Flags & divvy.Transaction.flags.OfferCreate.FillOrKill, 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -810,9 +810,9 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
-      assert.strictEqual(so.Flags & ripple.Transaction.flags.OfferCreate.ImmediateOrCancel, 0);
+      assert.strictEqual(so.Flags & divvy.Transaction.flags.OfferCreate.ImmediateOrCancel, 0);
 
       conn.send(fixtures.requestSubmitResponse(message, {
         hash: hash
@@ -905,7 +905,7 @@ suite('post orders', function() {
     .end(done);
   });
 
-  test('/orders -- taker_gets -- xrp', function(done) {
+  test('/orders -- taker_gets -- xdv', function(done) {
     var lastLedger = self.remote._ledger_current_index;
     var hash = testutils.generateHash();
 
@@ -921,7 +921,7 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Account, addresses.VALID);
       assert.strictEqual(so.TransactionType, 'OfferCreate');
@@ -934,7 +934,7 @@ suite('post orders', function() {
     .post('/v1/accounts/' + addresses.VALID + '/orders')
     .send(fixtures.order({
       taker_gets: {
-        currency: 'XRP',
+        currency: 'XDV',
         value: '100000',
         counterparty: ''
       }
@@ -943,7 +943,7 @@ suite('post orders', function() {
       hash: hash,
       last_ledger: lastLedger,
       taker_gets: {
-        currency: 'XRP',
+        currency: 'XDV',
         counterparty: '',
         value: '100000'
       }
@@ -953,7 +953,7 @@ suite('post orders', function() {
     .end(done);
   });
 
-  test('/orders -- taker_pays -- xrp', function(done) {
+  test('/orders -- taker_pays -- xdv', function(done) {
     var lastLedger = self.remote._ledger_current_index;
     var hash = testutils.generateHash();
 
@@ -969,7 +969,7 @@ suite('post orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.Account, addresses.VALID);
       assert.strictEqual(so.TransactionType, 'OfferCreate');
@@ -982,7 +982,7 @@ suite('post orders', function() {
     .post('/v1/accounts/' + addresses.VALID + '/orders')
     .send(fixtures.order({
       taker_pays: {
-        currency: 'XRP',
+        currency: 'XDV',
         value: '100000'
       }
     }))
@@ -992,7 +992,7 @@ suite('post orders', function() {
       hash: hash,
       last_ledger: lastLedger,
       taker_pays: {
-        currency: 'XRP',
+        currency: 'XDV',
         counterparty: '',
         value: '100000'
       }
@@ -1012,7 +1012,7 @@ suite('post orders', function() {
 
     self.wss.once('request_submit', function(message, conn) {
       assert.strictEqual(message.command, 'submit');
-      conn.send(fixtures.rippledSubmitErrorResponse(message, {
+      conn.send(fixtures.divvydSubmitErrorResponse(message, {
         engine_result: 'tecUNFUNDED_OFFER',
         engine_result_code: 103,
         engine_result_message: 'Insufficient balance to fund created offer.',
@@ -1258,7 +1258,7 @@ suite('delete orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.TransactionType, 'OfferCancel');
       assert.strictEqual(so.OfferSequence, 99);
@@ -1345,7 +1345,7 @@ suite('delete orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.TransactionType, 'OfferCancel');
       assert.strictEqual(so.OfferSequence, 99);
@@ -1378,11 +1378,11 @@ suite('delete orders', function() {
     });
 
     self.wss.once('request_submit', function(message, conn) {
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
       assert.strictEqual(message.command, 'submit');
       assert.strictEqual(so.TransactionType, 'OfferCancel');
       assert.strictEqual(so.OfferSequence, 99);
-      conn.send(fixtures.rippledCancelErrorResponse(message, {
+      conn.send(fixtures.divvydCancelErrorResponse(message, {
         engine_result: 'temBAD_SEQUENCE',
         engine_result_code: -283,
         engine_result_message: 'Malformed: Sequence is not in the past.',
@@ -1617,7 +1617,7 @@ suite('get order book', function() {
     .end(done);
   });
 
-  test('v1/accounts/:account/order_book/:base/:counter -- with XRP as base', function(done) {
+  test('v1/accounts/:account/order_book/:base/:counter -- with XDV as base', function(done) {
     self.wss.on('request_ledger', function(message, conn) {
       assert.strictEqual(message.ledger_index, 'validated');
       conn.send(fixtures.requestLedgerResponse(message, {
@@ -1632,24 +1632,24 @@ suite('get order book', function() {
 
       if (message.taker_gets.currency === Currency.from_human('USD').to_hex()) {
         // Bids
-        conn.send(fixtures.requestBookOffersXRPBaseResponse(message));
+        conn.send(fixtures.requestBookOffersXDVBaseResponse(message));
       } else {
         // Asks
-        conn.send(fixtures.requestBookOffersXRPCounterResponse(message));
+        conn.send(fixtures.requestBookOffersXDVCounterResponse(message));
       }
     });
 
     self.app
-    .get('/v1/accounts/' + addresses.VALID + '/order_book/XRP/USD+' + addresses.COUNTERPARTY)
+    .get('/v1/accounts/' + addresses.VALID + '/order_book/XDV/USD+' + addresses.COUNTERPARTY)
     .expect(testutils.checkStatus(200))
     .expect(testutils.checkHeaders)
-    .expect(testutils.checkBody(fixtures.RESTOrderBookXRPBaseResponse({
+    .expect(testutils.checkBody(fixtures.RESTOrderBookXDVBaseResponse({
       ledger: LEDGER
     })))
     .end(done);
   });
 
-  test('v1/accounts/:account/order_book/:base/:counter -- with XRP as counter', function(done) {
+  test('v1/accounts/:account/order_book/:base/:counter -- with XDV as counter', function(done) {
     self.wss.on('request_ledger', function(message, conn) {
       assert.strictEqual(message.ledger_index, 'validated');
       conn.send(fixtures.requestLedgerResponse(message, {
@@ -1662,20 +1662,20 @@ suite('get order book', function() {
       assert.strictEqual(message.ledger_index, LEDGER);
       assert.strictEqual(message.taker, addresses.VALID);
 
-      if (message.taker_gets.currency === Currency.from_human('XRP').to_hex()) {
+      if (message.taker_gets.currency === Currency.from_human('XDV').to_hex()) {
         // Bids
-        conn.send(fixtures.requestBookOffersXRPCounterResponse(message));
+        conn.send(fixtures.requestBookOffersXDVCounterResponse(message));
       } else {
         // Asks
-        conn.send(fixtures.requestBookOffersXRPBaseResponse(message));
+        conn.send(fixtures.requestBookOffersXDVBaseResponse(message));
       }
     });
 
     self.app
-    .get('/v1/accounts/' + addresses.VALID + '/order_book/USD+' + addresses.COUNTERPARTY + '/XRP')
+    .get('/v1/accounts/' + addresses.VALID + '/order_book/USD+' + addresses.COUNTERPARTY + '/XDV')
     .expect(testutils.checkStatus(200))
     .expect(testutils.checkHeaders)
-    .expect(testutils.checkBody(fixtures.RESTOrderBookXRPCounterResponse({
+    .expect(testutils.checkBody(fixtures.RESTOrderBookXDVCounterResponse({
       ledger: LEDGER
     })))
     .end(done);
@@ -1749,7 +1749,7 @@ suite('get order book', function() {
     .end(done);
   });
 
-  test('v1/accounts/:account/order_book/:base/:counter -- with XRP as base with counterparty', function(done) {
+  test('v1/accounts/:account/order_book/:base/:counter -- with XDV as base with counterparty', function(done) {
     self.wss.on('request_ledger', function() {
       assert(false, 'Should not request ledger info');
     });
@@ -1759,14 +1759,14 @@ suite('get order book', function() {
     });
 
     self.app
-    .get('/v1/accounts/' + addresses.VALID + '/order_book/' + 'XRP+' + addresses.ISSUER + '/USD+' + addresses.ISSUER)
+    .get('/v1/accounts/' + addresses.VALID + '/order_book/' + 'XDV+' + addresses.ISSUER + '/USD+' + addresses.ISSUER)
     .expect(testutils.checkStatus(400))
     .expect(testutils.checkHeaders)
-    .expect(testutils.checkBody(errors.RESTInvalidXRPBase))
+    .expect(testutils.checkBody(errors.RESTInvalidXDVBase))
     .end(done);
   });
 
-  test('v1/accounts/:account/order_book/:base/:counter -- with XRP as counter with issuer', function(done) {
+  test('v1/accounts/:account/order_book/:base/:counter -- with XDV as counter with issuer', function(done) {
     self.wss.on('request_ledger', function() {
       assert(false, 'Should not request ledger info');
     });
@@ -1776,10 +1776,10 @@ suite('get order book', function() {
     });
 
     self.app
-    .get('/v1/accounts/' + addresses.VALID + '/order_book/' + 'BTC+' + addresses.ISSUER + '/XRP+' + addresses.ISSUER)
+    .get('/v1/accounts/' + addresses.VALID + '/order_book/' + 'BTC+' + addresses.ISSUER + '/XDV+' + addresses.ISSUER)
     .expect(testutils.checkStatus(400))
     .expect(testutils.checkHeaders)
-    .expect(testutils.checkBody(errors.RESTInvalidXRPCounter))
+    .expect(testutils.checkBody(errors.RESTInvalidXDVCounter))
     .end(done);
   });
 
@@ -1793,7 +1793,7 @@ suite('get order book', function() {
     });
 
     self.app
-    .get('/v1/accounts/' + addresses.INVALID + '/order_book/BTC+' + addresses.ISSUER + '/XRP')
+    .get('/v1/accounts/' + addresses.INVALID + '/order_book/BTC+' + addresses.ISSUER + '/XDV')
     .expect(testutils.checkStatus(400))
     .expect(testutils.checkHeaders)
     .expect(testutils.checkBody(errors.RESTInvalidAccount))

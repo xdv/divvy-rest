@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "config.json",
-  "description": "The Ripple-REST configuration file",
+  "description": "The Divvy-REST configuration file",
   "type": "object",
   "properties": {
-    "rippled_servers": {
+    "divvyd_servers": {
       "type": "array",
       "items": {
           "type": "string"
@@ -13,5 +13,5 @@
       "uniqueItems": true
     }
   },
-  "required": ["rippled_servers"]
+  "required": ["divvyd_servers"]
 }

@@ -46,8 +46,8 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'XAU',
         limit: '0',
         limit_peer: '0',
-        no_ripple: true,
-        no_ripple_peer: true,
+        no_divvy: true,
+        no_divvy_peer: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -57,7 +57,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'USD',
         limit: '5',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -76,7 +76,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'EUR',
         limit: '1',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -86,7 +86,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'CNY',
         limit: '3',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -160,7 +160,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'CNY',
         limit: '100',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -170,7 +170,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'JPY',
         limit: '0',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0,
         freeze: true
@@ -181,8 +181,8 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'AUX',
         limit: '0',
         limit_peer: '0',
-        no_ripple: true,
-        no_ripple_peer: true,
+        no_divvy: true,
+        no_divvy_peer: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -192,7 +192,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'USD',
         limit: '1',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -202,7 +202,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'EUR',
         limit: '100',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -212,7 +212,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'USD',
         limit: '500',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -222,7 +222,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'JOE',
         limit: '0',
         limit_peer: '50',
-        no_ripple_peer: true,
+        no_divvy_peer: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -232,7 +232,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'USD',
         limit: '0',
         limit_peer: '100',
-        no_ripple_peer: true,
+        no_divvy_peer: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -242,7 +242,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: 'JOE',
         limit: '0',
         limit_peer: '100',
-        no_ripple_peer: true,
+        no_divvy_peer: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -252,7 +252,7 @@ module.exports.accountLinesResponse = function(request, options) {
         currency: '015841551A748AD2C1F76FF6ECB0CCCD00000000',
         limit: '10.01037626125837',
         limit_peer: '0',
-        no_ripple: true,
+        no_divvy: true,
         quality_in: 0,
         quality_out: 0
       },
@@ -695,7 +695,7 @@ module.exports.setTrustValidatedResponse = function(options) {
               },
               LowNode: '0000000000000000'
             },
-            LedgerEntryType: 'RippleState',
+            LedgerEntryType: 'DivvyState',
             LedgerIndex: '620379E07473AAE2E6CCCB196AE9DD13C5D036C4B47211BB3DAA55D019CB2226',
             PreviousFields: {
               Flags: 65536

@@ -22,17 +22,17 @@
  * 403 Forbidden - Unauthorized access to endpoint
  * 404 Not Found - The requested item doesn't exist.
  * 500 Internal Server Error - Unexpected condition occurred
- * 502 Bad Gateway - Invalid/unexpected response from rippled
- * 503 Service Unavailable - Rippled busy
- * 504 Gateway Timeout - Rippled response timed out
+ * 502 Bad Gateway - Invalid/unexpected response from divvyd
+ * 503 Service Unavailable - Divvyd busy
+ * 504 Gateway Timeout - Divvyd response timed out
  *
  *
  * Error Types
  *
  * invalid_request  - invalid request errors arise when the request has
  *                    invalid parameters.
- * connection       - rippled is busy or could not be connected, timed out, etc.
- * transaction      - response from rippled or internal processing error
+ * connection       - divvyd is busy or could not be connected, timed out, etc.
+ * transaction      - response from divvyd or internal processing error
  * server           - unexpected condition in the server occurred
  *
  */

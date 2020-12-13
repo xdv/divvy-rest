@@ -2,9 +2,9 @@
 var router = require('./server/router.js');
 var remote = require('./server/api').remote;
 
-function RippleRestPlugin() {
+function DivvyRestPlugin() {
   this.router = router;
   this.remote = remote;
 }
 
-module.exports = RippleRestPlugin;
+module.exports = DivvyRestPlugin;

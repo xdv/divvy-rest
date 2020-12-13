@@ -1,5 +1,5 @@
 {
-  "name": "ripple-rest",
+  "name": "divvy-rest",
   "version": "1.6.0",
   "dependencies": {
     "async": {
@@ -678,10 +678,10 @@
       "from": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.2.tgz",
       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.2.tgz"
     },
-    "ripple-lib": {
+    "divvy-lib": {
       "version": "0.12.3",
-      "from": "https://registry.npmjs.org/ripple-lib/-/ripple-lib-0.12.3.tgz",
-      "resolved": "https://registry.npmjs.org/ripple-lib/-/ripple-lib-0.12.3.tgz",
+      "from": "https://registry.npmjs.org/divvy-lib/-/divvy-lib-0.12.3.tgz",
+      "resolved": "https://registry.npmjs.org/divvy-lib/-/divvy-lib-0.12.3.tgz",
       "dependencies": {
         "async": {
           "version": "0.9.0",
@@ -703,10 +703,10 @@
           "from": "https://registry.npmjs.org/lru-cache/-/lru-cache-2.5.2.tgz",
           "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-2.5.2.tgz"
         },
-        "ripple-wallet-generator": {
+        "divvy-wallet-generator": {
           "version": "1.0.2",
-          "from": "https://registry.npmjs.org/ripple-wallet-generator/-/ripple-wallet-generator-1.0.2.tgz",
-          "resolved": "https://registry.npmjs.org/ripple-wallet-generator/-/ripple-wallet-generator-1.0.2.tgz"
+          "from": "https://registry.npmjs.org/divvy-wallet-generator/-/divvy-wallet-generator-1.0.2.tgz",
+          "resolved": "https://registry.npmjs.org/divvy-wallet-generator/-/divvy-wallet-generator-1.0.2.tgz"
         },
         "ws": {
           "version": "0.7.1",
@@ -861,10 +861,10 @@
         }
       }
     },
-    "ripple-lib-transactionparser": {
+    "divvy-lib-transactionparser": {
       "version": "0.3.2",
-      "from": "https://registry.npmjs.org/ripple-lib-transactionparser/-/ripple-lib-transactionparser-0.3.2.tgz",
-      "resolved": "https://registry.npmjs.org/ripple-lib-transactionparser/-/ripple-lib-transactionparser-0.3.2.tgz",
+      "from": "https://registry.npmjs.org/divvy-lib-transactionparser/-/divvy-lib-transactionparser-0.3.2.tgz",
+      "resolved": "https://registry.npmjs.org/divvy-lib-transactionparser/-/divvy-lib-transactionparser-0.3.2.tgz",
       "dependencies": {
         "bignumber.js": {
           "version": "1.4.1",

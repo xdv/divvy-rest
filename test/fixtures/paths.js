@@ -35,7 +35,7 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               },
@@ -58,7 +58,7 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               },
@@ -86,7 +86,7 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               },
@@ -148,7 +148,7 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               },
@@ -171,7 +171,7 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               },
@@ -293,13 +293,13 @@ module.exports.generateIOUPaymentPaths = function(request_id, sendingAccount, de
         "EUR",
         "015841551A748AD2C1F76FF6ECB0CCCD00000000",
         "MXN",
-        "XRP"
+        "XDV"
       ]
     }
   });
 };
 
-module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, destinationAccount, destinationAmount){
+module.exports.generateXDVPaymentPaths = function(request_id, sendingAccount, destinationAccount, destinationAmount){
   return JSON.stringify({
     "id": request_id,
     "status": "success",
@@ -316,7 +316,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               }
@@ -338,7 +338,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               }
@@ -350,7 +350,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               }
@@ -367,7 +367,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               }
@@ -384,7 +384,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
                 "type_hex": "0000000000000001"
               },
               {
-                "currency": "XRP",
+                "currency": "XDV",
                 "type": 16,
                 "type_hex": "0000000000000010"
               }
@@ -400,7 +400,7 @@ module.exports.generateXRPPaymentPaths = function(request_id, sendingAccount, de
       "destination_account": destinationAccount,
       "destination_currencies": [
         "USD",
-        "XRP"
+        "XDV"
       ]
     }
   });

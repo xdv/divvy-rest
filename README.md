@@ -1,14 +1,14 @@
-[![Build Status](https://travis-ci.org/ripple/ripple-rest.svg?branch=develop)](https://travis-ci.org/ripple/ripple-rest)
-[![Coverage Status](https://coveralls.io/repos/ripple/ripple-rest/badge.png?branch=develop)](https://coveralls.io/r/ripple/ripple-rest?branch=develop)
-[![Code Climate](https://codeclimate.com/github/ripple/ripple-rest.png)](https://codeclimate.com/github/ripple/ripple-rest)
+[![Build Status](https://travis-ci.org/xdv/divvy-rest.svg?branch=develop)](https://travis-ci.org/xdv/divvy-rest)
+[![Coverage Status](https://coveralls.io/repos/divvy/divvy-rest/badge.png?branch=develop)](https://coveralls.io/r/divvy/divvy-rest?branch=develop)
+[![Code Climate](https://codeclimate.com/github/divvy/divvy-rest.png)](https://codeclimate.com/github/divvy/divvy-rest)
 
-[![NPM](https://nodei.co/npm/ripple-rest.png)](https://www.npmjs.org/package/ripple-rest)
+[![NPM](https://nodei.co/npm/divvy-rest.png)](https://www.npmjs.org/package/divvy-rest)
 
-# Ripple-REST API #
+# Divvy-REST API #
 
-The Ripple-REST API provides a simplified, easy-to-use interface to the Ripple Network via a RESTful API. This page explains how to use the API to send and receive payments on Ripple.
+The Divvy-REST API provides a simplified, easy-to-use interface to the Divvy Network via a RESTful API. This page explains how to use the API to send and receive payments on Divvy.
 
-We recommend Ripple-REST for users just getting started with Ripple, since it provides high-level abstractions and convenient simplifications in the data format. If you prefer to access a `rippled` server directly, you can use [rippled's WebSocket or JSON-RPC APIs](https://ripple.com/build/rippled-apis) instead, which provide the full power of Ripple at the cost of more complexity.
+We recommend Divvy-REST for users just getting started with Divvy, since it provides high-level abstractions and convenient simplifications in the data format. If you prefer to access a `divvyd` server directly, you can use [divvyd's WebSocket or JSON-RPC APIs](https://divvy.com/build/divvyd-apis) instead, which provide the full power of Divvy at the cost of more complexity.
 
 
 ## Available API Routes ##
@@ -51,7 +51,7 @@ We recommend Ripple-REST for users just getting started with Ripple, since it pr
 
 #### Utilities ####
 
-* [Retrieve Ripple Transaction - `GET /v1/transactions/{:id}`](#retrieve-ripple-transaction)
+* [Retrieve Divvy Transaction - `GET /v1/transactions/{:id}`](#retrieve-divvy-transaction)
 * [Retrieve Transaction Fee - `GET /v1/transaction-fee`](#retrieve-transaction-fee)
 * [Generate UUID - `GET /v1/uuid`](#create-client-resource-id)
 
@@ -59,25 +59,25 @@ We recommend Ripple-REST for users just getting started with Ripple, since it pr
 
 ## API Overview ##
 
-### Ripple Concepts ###
+### Divvy Concepts ###
 
-Ripple is a system for making financial transactions.  You can use Ripple to send money anywhere in the world, in any currency, instantly and for free.
+Divvy is a system for making financial transactions.  You can use Divvy to send money anywhere in the world, in any currency, instantly and for free.
 
-In the Ripple world, each account is identified by a [Ripple Address](https://ripple.com/wiki/Account).  A Ripple address is a string that uniquely identifies an account, for example: `rNsJKf3kaxvFvR8RrDi9P3LBk2Zp6VL8mp`
+In the Divvy world, each account is identified by a [Divvy Address](https://divvy.com/wiki/Account).  A Divvy address is a string that uniquely identifies an account, for example: `rNsJKf3kaxvFvR8RrDi9P3LBk2Zp6VL8mp`
 
-A Ripple ___payment___ can be sent using Ripple's native currency, XRP, directly from one account to another.  Payments can also be sent in other currencies, for example US dollars, Euros, Pounds or Bitcoins, though the process is slightly more complicated.
+A Divvy ___payment___ can be sent using Divvy's native currency, XDV, directly from one account to another.  Payments can also be sent in other currencies, for example US dollars, Euros, Pounds or Bitcoins, though the process is slightly more complicated.
 
-Payments are made between two accounts, by specifying the ___source___ and ___destination___ address for those accounts.  A payment also involves an ___amount___, which includes both the numeric amount and the currency, for example: `100+XRP`.
+Payments are made between two accounts, by specifying the ___source___ and ___destination___ address for those accounts.  A payment also involves an ___amount___, which includes both the numeric amount and the currency, for example: `100+XDV`.
 
-When you make a payment in a currency other than XRP, you also need to include the Ripple address of the ___counterparty___.  The counterparty is the gateway or other entity who holds the funds on your behalf.  For non-XRP payments, the amount looks something like this: `100+USD+rNsJKf3kaxvFvR8RrDi9P3LBk2Zp6VL8mp`.
+When you make a payment in a currency other than XDV, you also need to include the Divvy address of the ___counterparty___.  The counterparty is the gateway or other entity who holds the funds on your behalf.  For non-XDV payments, the amount looks something like this: `100+USD+rNsJKf3kaxvFvR8RrDi9P3LBk2Zp6VL8mp`.
 
-Although the Ripple-REST API provides a high-level interface to Ripple, there are also API methods for checking the status of the `rippled` server and retrieving a Ripple transaction in its native format.
+Although the Divvy-REST API provides a high-level interface to Divvy, there are also API methods for checking the status of the `divvyd` server and retrieving a Divvy transaction in its native format.
 
 ### Sending Payments ###
 
 Sending a payment involves three steps:
 
-1. Generate the payment object with the [Prepare Payment method](#prepare-payment).  If the payment is not a direct send of XRP from one account to another, the Ripple system identifies the chain of trust, or ___path___, that connects the source and destination accounts, and includes it in the payment object.
+1. Generate the payment object with the [Prepare Payment method](#prepare-payment).  If the payment is not a direct send of XDV from one account to another, the Divvy system identifies the chain of trust, or ___path___, that connects the source and destination accounts, and includes it in the payment object.
 2. Modify the payment object if desired, and then [submit it](#submit-payment) to the API for processing. *Caution:* Making many changes to the payment object increases the chances of causing an error.
 3. Finally, ___confirm___ that the payment has completed, using the [Confirm Payment method](#confirm-payment). Payment submission is an asynchronous process, so payments can fail even after they have been submitted successfully.
 
@@ -85,41 +85,41 @@ When you submit a payment for processing, you assign a unique `client resource i
 
 ### Transaction Types ###
 
-The Ripple protocol supports multiple types of transactions, not just payments. Transactions are considered to be any changes to the database made on behalf of a Ripple Address. Transactions are first constructed and then submitted to the network. After transaction processing, meta data is associated with the transaction which itemizes the resulting changes to the ledger.
+The Divvy protocol supports multiple types of transactions, not just payments. Transactions are considered to be any changes to the database made on behalf of a Divvy Address. Transactions are first constructed and then submitted to the network. After transaction processing, meta data is associated with the transaction which itemizes the resulting changes to the ledger.
 
- * Payment: A Payment transaction is an authorized transfer of balance from one address to another. (This maps to rippled's [Payment transaction type](https://ripple.com/build/transactions#payment))
- * Trustline: A Trustline transaction is an authorized grant of trust between two addresses. (This maps to rippled's [TrustSet transaction type](https://ripple.com/build/transactions#trustset))
- * Setting: A Setting transaction is an authorized update of account flags under a Ripple Account. (This maps to rippled's [AccountSet transaction type](https://ripple.com/build/transactions#accountset))
+ * Payment: A Payment transaction is an authorized transfer of balance from one address to another. (This maps to divvyd's [Payment transaction type](https://divvy.com/build/transactions#payment))
+ * Trustline: A Trustline transaction is an authorized grant of trust between two addresses. (This maps to divvyd's [TrustSet transaction type](https://divvy.com/build/transactions#trustset))
+ * Setting: A Setting transaction is an authorized update of account flags under a Divvy Account. (This maps to divvyd's [AccountSet transaction type](https://divvy.com/build/transactions#accountset))
  
 ### Client Resource IDs ###
 
-All Ripple transactions are identified by a unique hash, which is generated with the fields of the transaction. Ripple-REST uses an additional type of identifier, called a Client Resource ID, which is an arbitrary string provided at the time a transaction is submitted.
+All Divvy transactions are identified by a unique hash, which is generated with the fields of the transaction. Divvy-REST uses an additional type of identifier, called a Client Resource ID, which is an arbitrary string provided at the time a transaction is submitted.
 
-A client resource ID generally maps to one Ripple transaction. However, if Ripple-REST re-submits a failed transaction, the client resource ID can become associated with the new transaction, which may have slightly different properties (such as the deadline for it to succeed) and therefore a different transaction hash.
+A client resource ID generally maps to one Divvy transaction. However, if Divvy-REST re-submits a failed transaction, the client resource ID can become associated with the new transaction, which may have slightly different properties (such as the deadline for it to succeed) and therefore a different transaction hash.
 
 You can create client resource IDs using any method you like, so long as you follow some simple rules:
 
 * Do not reuse identifiers. 
-* A client resource ID cannot be a 256-bit hex string, because that is ambiguous with Ripple transaction hashes.
+* A client resource ID cannot be a 256-bit hex string, because that is ambiguous with Divvy transaction hashes.
 * Client resource IDs must be properly [encoded](http://tools.ietf.org/html/rfc3986#section-2.1) when provided as part of a URL.
 
 You can use the [Create Client Resource ID](#create-client-resource-id) method in order to generate new Client Resource IDs.
 
 
-## Using Ripple-REST ##
+## Using Divvy-REST ##
 
-You don't need to do any setup to retrieve information from a public Ripple-REST server. Ripple Labs hosts a public Ripple-REST server here:
+You don't need to do any setup to retrieve information from a public Divvy-REST server. Divvy Labs hosts a public Divvy-REST server here:
 
-`https://api.ripple.com`
+`https://api.divvy.com`
 
-If you want to run your own Ripple-REST server, see the [installation instructions](#running-ripple-rest).
+If you want to run your own Divvy-REST server, see the [installation instructions](#running-divvy-rest).
 
-In order to submit payments or other transactions, you need an activated Ripple account. See the [online support](https://support.ripplelabs.com/hc/en-us/categories/200194196-Set-Up-Activation) for how you can create an account using the [Ripple Trade client](https://rippletrade.com/).
+In order to submit payments or other transactions, you need an activated Divvy account. See the [online support](https://support.divvylabs.com/hc/en-us/categories/200194196-Set-Up-Activation) for how you can create an account using the [Divvy Trade client](https://divvytrade.com/).
 
 Make sure you know both the account address and the account secret for your account:
 
- * The *address* can be found by clicking the *Show Address* button in the __Fund__ tab of Ripple Trade
- * The *secret* is provided when you first create your account. **WARNING: If you submit your secret to a server you do not control, your account can be stolen, along with all the money in it.** We recommend using a test account with very limited funds on the public Ripple-REST server.
+ * The *address* can be found by clicking the *Show Address* button in the __Fund__ tab of Divvy Trade
+ * The *secret* is provided when you first create your account. **WARNING: If you submit your secret to a server you do not control, your account can be stolen, along with all the money in it.** We recommend using a test account with very limited funds on the public Divvy-REST server.
 
 As a programmer, you will also need to have a suitable HTTP client that allows you to make secure HTTP (`HTTPS`) GET and POST requests. For testing, there are lots of options, including:
 
@@ -127,22 +127,22 @@ As a programmer, you will also need to have a suitable HTTP client that allows y
  * The [Poster Firefox extension](https://addons.mozilla.org/en-US/firefox/addon/poster/)
  * The [Postman Chrome extension](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm?hl=en)
 
-You can also use the [REST API Tool](https://ripple.com/build/rest-tool) here on the Dev Portal to try out the API.
+You can also use the [REST API Tool](https://divvy.com/build/rest-tool) here on the Dev Portal to try out the API.
 
-[Try it! >](https://ripple.com/build/rest-tool)
+[Try it! >](https://divvy.com/build/rest-tool)
 
 ### Exploring the API ###
 
 A REST API makes resources available via HTTP, the same protocol used by your browser to access the web. This means you can even use your browser to get a response from the API. Try visiting the following URL:
 
-https://api.ripple.com/v1/server
+https://api.divvy.com/v1/server
 
 The response should be a page with content similar to the following:
 
 ```js
 {
-  "rippled_server_url": "wss://s-west.ripple.com:443",
-  "rippled_server_status": {
+  "divvyd_server_url": "wss://s-west.divvy.com:443",
+  "divvyd_server_status": {
     "build_version": "0.23.0",
     "complete_ledgers": "5526705-6142138",
     "fetch_pack": 2004,
@@ -157,39 +157,39 @@ The response should be a page with content similar to the following:
     "server_state": "full",
     "validated_ledger": {
       "age": 1,
-      "base_fee_xrp": 0.00001,
+      "base_fee_xdv": 0.00001,
       "hash": "BADDAB671EF21E8ED56B21253123D2C74139FE34E12DBE4B1F5527772EC88494",
-      "reserve_base_xrp": 20,
-      "reserve_inc_xrp": 5,
+      "reserve_base_xdv": 20,
+      "reserve_inc_xdv": 5,
       "seq": 6142138
     },
     "validation_quorum": 3
   },
   "success": true,
-  "api_documentation_url": "https://github.com/ripple/ripple-rest"
+  "api_documentation_url": "https://github.com/xdv/divvy-rest"
 }
 ```
 
-If you want to connect to your own server, just replace the hostname and port with the location of your instance. For example, if you are running Ripple-REST locally on port 5990, you can access the same information at the following URL:
+If you want to connect to your own server, just replace the hostname and port with the location of your instance. For example, if you are running Divvy-REST locally on port 5990, you can access the same information at the following URL:
 
 http://localhost:5990/v1/server
 
-Since the hostname depends on where your chosen Ripple-REST instance is, the methods in this document are identified using only the part of the path that comes after the hostname.
+Since the hostname depends on where your chosen Divvy-REST instance is, the methods in this document are identified using only the part of the path that comes after the hostname.
 
 
 
-# Running Ripple-REST #
+# Running Divvy-REST #
 
 ## Quick Start ##
 
-Ripple-REST requires [Node.js](http://nodejs.org/) and [sqlite 3](http://www.sqlite.org/). Before starting, you should make sure that you have both installed. 
+Divvy-REST requires [Node.js](http://nodejs.org/) and [sqlite 3](http://www.sqlite.org/). Before starting, you should make sure that you have both installed. 
 
-Following that, use these instructions to get Ripple-REST installed and running:
+Following that, use these instructions to get Divvy-REST installed and running:
 
-1. Clone the Ripple-REST repository with git:
-    `git clone https://github.com/ripple/ripple-rest.git`
-2. Switch to the `ripple-rest` directory:
-    `cd ripple-rest`
+1. Clone the Divvy-REST repository with git:
+    `git clone https://github.com/xdv/divvy-rest.git`
+2. Switch to the `divvy-rest` directory:
+    `cd divvy-rest`
 3. Use *npm* to install additional dependencies:
     `npm install`
 4. Copy the example config file to `config.json`:
@@ -199,28 +199,28 @@ Following that, use these instructions to get Ripple-REST installed and running:
 6. Visit [http://localhost:5990](http://localhost:5990) in a browser to view available endpoints and get started
 
 
-## Configuring `ripple-rest` ##
+## Configuring `divvy-rest` ##
 
-The Ripple-REST server uses [nconf](https://github.com/flatiron/nconf) to load configuration options from several sources. Settings from sources earlier in the following hierarchy override settings from the later levels:
+The Divvy-REST server uses [nconf](https://github.com/flatiron/nconf) to load configuration options from several sources. Settings from sources earlier in the following hierarchy override settings from the later levels:
 
 1. Command line arguments
 2. Environment variables
 3. The `config.json` file
 
-The path to the `config.json` file can be specified as a command line argument (`node server.js --config /path/to/config.json`). If no path is specified, the default location for that file is Ripple-REST's root directory.
+The path to the `config.json` file can be specified as a command line argument (`node server.js --config /path/to/config.json`). If no path is specified, the default location for that file is Divvy-REST's root directory.
 
-Available configuration options are outlined in the [__Server Configuration__](https://github.com/ripple/ripple-rest/blob/develop/docs/server-configuration.md) document. The `config-example.json` file in the root directory contains a sample configuration.
+Available configuration options are outlined in the [__Server Configuration__](https://github.com/xdv/divvy-rest/blob/develop/docs/server-configuration.md) document. The `config-example.json` file in the root directory contains a sample configuration.
 
 
 ## Debug mode ##
 The server can be run in Debug Mode by running `node server.js --debug`.
 
 
-## Running Ripple-REST securely over SSL ##
+## Running Divvy-REST securely over SSL ##
 
-We highly recommend running Ripple-REST securely over SSL. Doing so requires a certificate. For development and internal-only deployments, you can use a self-signed certificate. For production servers that are accessed over untrusted network connections, you should purchase a cert from a proper authority.
+We highly recommend running Divvy-REST securely over SSL. Doing so requires a certificate. For development and internal-only deployments, you can use a self-signed certificate. For production servers that are accessed over untrusted network connections, you should purchase a cert from a proper authority.
 
-You can perform the following steps to generate a self-signed cert with [OpenSSL](https://www.openssl.org/) and configure Ripple-REST to use it:
+You can perform the following steps to generate a self-signed cert with [OpenSSL](https://www.openssl.org/) and configure Divvy-REST to use it:
 
 1. Generate the SSL certificate:
 
@@ -247,7 +247,7 @@ openssl x509 -req -days 730 -in /etc/ssl/server.csr -signkey /etc/ssl/private/se
 
 ### Keeping the service running ###
 
-Monitor `ripple-rest` using [`monit`](http://mmonit.com/monit/). On Ubuntu you can install `monit` using `sudo apt-get install monit`.
+Monitor `divvy-rest` using [`monit`](http://mmonit.com/monit/). On Ubuntu you can install `monit` using `sudo apt-get install monit`.
 
 Here is an example of a monit script that will restart the server if:
 
@@ -257,9 +257,9 @@ Here is an example of a monit script that will restart the server if:
 ```
 set httpd port 2812 and allow localhost
 
-check process ripple-rest with pidfile /var/run/ripple-rest/ripple-rest.pid
-    start program = "/etc/init.d/ripple-rest start"
-    stop program = "/etc/init.d/ripple-rest stop"
+check process divvy-rest with pidfile /var/run/divvy-rest/divvy-rest.pid
+    start program = "/etc/init.d/divvy-rest start"
+    stop program = "/etc/init.d/divvy-rest stop"
     if memory > 25% then restart
     if failed port 5990 protocol HTTP
         and request "/v1/server"
@@ -270,7 +270,7 @@ check process ripple-rest with pidfile /var/run/ripple-rest/ripple-rest.pid
 
 # Formatting Conventions #
 
-The `ripple-rest` API conforms to the following general behavior for [RESTful API](http://en.wikipedia.org/wiki/Representational_state_transfer):
+The `divvy-rest` API conforms to the following general behavior for [RESTful API](http://en.wikipedia.org/wiki/Representational_state_transfer):
 
 * You make HTTP (or HTTPS) requests to the API endpoint, indicating the desired resources within the URL itself. (The public server, for the sake of security, only accepts HTTPS requests.)
 * The HTTP method identifies what you are trying to do.  Generally, HTTP `GET` requests are used to retrieve information, while HTTP `POST` requests are used to make changes or submit information.
@@ -278,7 +278,7 @@ The `ripple-rest` API conforms to the following general behavior for [RESTful AP
   * This means that you must set `Content-Type: application/json` in the headers when sending POST requests with a body.
 * Upon successful completion, the server returns an [HTTP status code](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) of 200 OK, and a `Content-Type` value of `application/json`.  The body of the response will be a JSON-formatted object containing the information returned by the endpoint.
 
-As an additional convention, all responses from Ripple-REST contain a `"success"` field with a boolean value indicating whether or not the success
+As an additional convention, all responses from Divvy-REST contain a `"success"` field with a boolean value indicating whether or not the success
 
 ## Errors ##
 
@@ -286,15 +286,15 @@ When errors occur, the server returns an HTTP status code in the 400-599 range, 
 
 In general, the HTTP status code is indicative of where the problem occurred:
 
-* Codes in the 200-299 range indicate success. (*Note:* This behavior is new in [Ripple-REST v1.3.0](https://github.com/ripple/ripple-rest/releases/tag/1.3.0). Previous versions sometimes return 200 OK for some types of errors.)
+* Codes in the 200-299 range indicate success. (*Note:* This behavior is new in [Divvy-REST v1.3.0](https://github.com/xdv/divvy-rest/releases/tag/1.3.0). Previous versions sometimes return 200 OK for some types of errors.)
     * Unless otherwise specified, methods are expected to return `200 OK` on success.
 * Codes in the 400-499 range indicate that the request was invalid or incorrect somehow. For example:
     * `400 Bad Request` occurs if the JSON body is malformed. This includes syntax errors as well as when invalid or mutually-exclusive options are selected.
     * `404 Not Found` occurs if the path specified does not exist, or does not support that method (for example, trying to POST to a URL that only serves GET requests)
 * Codes in the 500-599 range indicate that the server experienced a problem. This could be due to a network outage or a bug in the software somewhere. For example:
-    * `500 Internal Server Error` occurs when the server does not catch an error. This is always a bug. If you can reproduce the error, file it at [our bug tracker](https://ripplelabs.atlassian.net/browse/RA/).
-    * `502 Bad Gateway` occurs if Ripple-REST could not contact its `rippled` server at all.
-    * `504 Gateway Timeout` occurs if the `rippled` server took too long to respond to the Ripple-REST server.
+    * `500 Internal Server Error` occurs when the server does not catch an error. This is always a bug. If you can reproduce the error, file it at [our bug tracker](https://divvylabs.atlassian.net/browse/RA/).
+    * `502 Bad Gateway` occurs if Divvy-REST could not contact its `divvyd` server at all.
+    * `504 Gateway Timeout` occurs if the `divvyd` server took too long to respond to the Divvy-REST server.
 
 When possible, the server provides a JSON response body with more information about the error. These responses contain the following fields:
 
@@ -312,26 +312,26 @@ Example error:
     "success": false,
     "error_type": "invalid_request",
     "error": "Invalid parameter: destination_amount",
-    "message": "Non-XRP payment must have an issuer"
+    "message": "Non-XDV payment must have an issuer"
 }
 ```
 
 
 ## Quoted Numbers ##
 
-In any case where a large number should be specified, Ripple-REST uses a string instead of the native JSON number type. This avoids problems with JSON libraries which might automatically convert numbers into native types with differing range and precision.
+In any case where a large number should be specified, Divvy-REST uses a string instead of the native JSON number type. This avoids problems with JSON libraries which might automatically convert numbers into native types with differing range and precision.
 
 You should parse these numbers into a numeric data type with adequate precision. If it is not clear how much precision you need, we recommend using an arbitrary-precision data type.
 
 ## <a id="amount_object"></a> Currency Amounts ##
 
-There are two kinds of currency on the Ripple network: XRP, and issuances. XRP is the native cryptocurrency that only exists in the network, and can be held by accounts and sent directly to other accounts with no trust necessary.
+There are two kinds of currency on the Divvy network: XDV, and issuances. XDV is the native cryptocurrency that only exists in the network, and can be held by accounts and sent directly to other accounts with no trust necessary.
 
-All other currencies take the form of *issuances*, which are held in the *trust lines* that link accounts. Issuances are identified by a `counterparty` on the other end of the trust line. Sending and trading issuances actually means debiting the balance of a trust line and crediting the balance of another trust line linked to the same account. Ripple ensures this operation happens atomically.
+All other currencies take the form of *issuances*, which are held in the *trust lines* that link accounts. Issuances are identified by a `counterparty` on the other end of the trust line. Sending and trading issuances actually means debiting the balance of a trust line and crediting the balance of another trust line linked to the same account. Divvy ensures this operation happens atomically.
 
-Issuances are typically created by Gateway accounts in exchange for assets in the outside world. In most cases, the `counterparty` of a currency refers to the gateway that created the issuances. XRP never has a counterparty.
+Issuances are typically created by Gateway accounts in exchange for assets in the outside world. In most cases, the `counterparty` of a currency refers to the gateway that created the issuances. XDV never has a counterparty.
 
-You can read more about [XRP](https://ripple.com/knowledge_categories/xrp/) and [Gateways](https://ripple.com/knowledge_center/gateways/) in the Knowledge Center.
+You can read more about [XDV](https://divvy.com/knowledge_categories/xdv/) and [Gateways](https://divvy.com/knowledge_center/gateways/) in the Knowledge Center.
 
 
 ### Amounts in JSON ###
@@ -341,8 +341,8 @@ When an amount of currency is specified as part of a JSON body, it is encoded as
 | Field | Type | Description |
 |-------|------|-------------|
 | value | String (Quoted decimal) | The quantity of the currency |
-| currency | String | Three-digit [ISO 4217 Currency Code](http://www.xe.com/iso4217.php) specifying which currency. Alternatively, a 160-bit hex value. (Some advanced features, like [demurrage](https://ripple.com/wiki/Gateway_demurrage), require the hex version.) |
-| counterparty | String | (New in [v1.4.0](https://github.com/ripple/ripple-rest/releases/tag/1.4.0)) The Ripple address of the account that is a counterparty to this currency. This is usually an [issuing gateway](https://wiki.ripple.com/Gateway_List). Always omitted, or an empty string, for XRP. |
+| currency | String | Three-digit [ISO 4217 Currency Code](http://www.xe.com/iso4217.php) specifying which currency. Alternatively, a 160-bit hex value. (Some advanced features, like [demurrage](https://divvy.com/wiki/Gateway_demurrage), require the hex version.) |
+| counterparty | String | (New in [v1.4.0](https://github.com/xdv/divvy-rest/releases/tag/1.4.0)) The Divvy address of the account that is a counterparty to this currency. This is usually an [issuing gateway](https://wiki.divvy.com/Gateway_List). Always omitted, or an empty string, for XDV. |
 | issuer | String | (Prior to 1.4.0) **DEPRECATED** alias for `counterparty`.
 
 
@@ -356,17 +356,17 @@ Example Amount Object:
 }
 ```
 
-or for XRP:
+or for XDV:
 
 ```js
 {
   "value": "1.0",
-  "currency": "XRP",
+  "currency": "XDV",
   "counterparty": ""
 }
 ```
 
-The `value` field can get very large or very small. See the [Currency Format](https://wiki.ripple.com/Currency_Format) for the exact limits of Ripple's precision.
+The `value` field can get very large or very small. See the [Currency Format](https://wiki.divvy.com/Currency_Format) for the exact limits of Divvy's precision.
 
 ### Amounts in URLs ###
 
@@ -376,24 +376,24 @@ Example Amount:
 
 `1.0+USD+rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q`
 
-When specifying an amount of XRP, you must omit the counterparty entirely. For example:
+When specifying an amount of XDV, you must omit the counterparty entirely. For example:
 
-`1.0+XRP`
+`1.0+XDV`
 
 ### Counterparties in Payments ###
 
-Most of the time, the `counterparty` field of a non-XRP currency indicates the account of the gateway that issues that currency. However, when describing payments, there are a few nuances that are important:
+Most of the time, the `counterparty` field of a non-XDV currency indicates the account of the gateway that issues that currency. However, when describing payments, there are a few nuances that are important:
 
 * There is only ever one balance for the same currency between two accounts. This means that, sometimes, the `counterparty` field of an amount actually refers to a counterparty that is redeeming issuances, instead of the account that created the issuances.
 * You can omit the counterparty from the `destination_amount` of a payment to mean "any counterparty that the destination accepts". This includes all accounts to which the destination has extended trust lines, as well as issuances created by the destination which may be held on other trust lines. 
-    * For compatibility with `rippled`, setting the `counterparty` of the `destination_amount` to be the destination account's address means the same thing.
+    * For compatibility with `divvyd`, setting the `counterparty` of the `destination_amount` to be the destination account's address means the same thing.
 * You can omit the counterparty from the `source_amount` of a payment to mean "any counterparty the source can use". This includes creating new issuances on trust lines that other accounts have extended to the source account, as well as issuances from other accounts that the source account possesses.
     * Similarly, setting the `counterparty` of the `source_amount` to be the source account's address means the same thing.
 
 
 ## <a id="payment_object"></a> Payment Objects ##
 
-The `Payment` object is a simplified version of the standard Ripple transaction format.
+The `Payment` object is a simplified version of the standard Divvy transaction format.
 
 This `Payment` format is intended to be straightforward to create and parse, from strongly or loosely typed programming languages. Once a transaction is processed and validated it also includes information about the final details of the payment.
 
@@ -406,7 +406,7 @@ An example Payment object looks like this:
     "source_tag": "",
     "source_amount": {
         "value": "0.001",
-        "currency": "XRP",
+        "currency": "XDV",
         "issuer": ""
     },
     "source_slippage": "0",
@@ -414,12 +414,12 @@ An example Payment object looks like this:
     "destination_tag": "",
     "destination_amount": {
         "value": "0.001",
-        "currency": "XRP",
+        "currency": "XDV",
         "issuer": ""
     },
     "invoice_id": "",
     "paths": "[]",
-    "flag_no_direct_ripple": false,
+    "flag_no_direct_divvy": false,
     "flag_partial_payment": false
 }
 ```
@@ -428,30 +428,30 @@ The fields of a Payment object are defined as follows:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `source_account` | String | The Ripple address of the account sending the payment |
+| `source_account` | String | The Divvy address of the account sending the payment |
 | `source_amount` | [Amount Object](#amount_object) | The amount to deduct from the account sending the payment. |
-| `destination_account` | String | The Ripple address of the account receiving the payment |
+| `destination_account` | String | The Divvy address of the account receiving the payment |
 | `destination_amount` | [Amount Object](#amount_object) | The amount that should be deposited into the account receiving the payment. |
 | `source_tag` | String (Quoted unsigned integer) | (Optional) A quoted 32-bit unsigned integer (0-4294967294, inclusive) to indicate a sub-category of the source account. Typically, it identifies a hosted wallet at a gateway as the sender of the payment. |
 | `destination_tag` | String (Quoted unsigned integer) | (Optional) A quoted 32-bit unsigned integer (0-4294967294, inclusive) to indicate a particular sub-category of the destination account. Typically, it identifies a hosted wallet at a gateway as the recipient of the payment. |
 | `source_slippage` | String (Quoted decimal) | (Optional) Provides the `source_amount` a cushion to increase its chance of being processed successfully. This is helpful if the payment path changes slightly between the time when a payment options quote is given and when the payment is submitted. The `source_address` will never be charged more than `source_slippage` + the `value` specified in `source_amount`. |
 | `invoice_id` | String | (Optional) Arbitrary 256-bit hash that can be used to link payments to an invoice or bill. |
-| `paths` | String | A "stringified" version of the Ripple PathSet structure. You can get a path for your payment from the [Prepare Payment](#prepare-payment) method. |
-| `no_direct_ripple` | Boolean  | (Optional, defaults to false) `true` if `paths` are specified and the sender would like the Ripple Network to disregard any direct paths from the `source_address` to the `destination_address`. This may be used to take advantage of an arbitrage opportunity or by gateways wishing to issue balances from a hot wallet to a user who has mistakenly set a trustline directly to the hot wallet. Most users will not need to use this option. |
-| `partial_payment` | Boolean | (Optional, defaults to false) If set to `true`, fees will be deducted from the delivered amount instead of the sent amount. (*Caution:* There is no minimum amount that will actually arrive as a result of using this flag; only a miniscule amount may actually be received.) See [Partial Payments](https://ripple.com/build/transactions#partial-payments) |
+| `paths` | String | A "stringified" version of the Divvy PathSet structure. You can get a path for your payment from the [Prepare Payment](#prepare-payment) method. |
+| `no_direct_divvy` | Boolean  | (Optional, defaults to false) `true` if `paths` are specified and the sender would like the Divvy Network to disregard any direct paths from the `source_address` to the `destination_address`. This may be used to take advantage of an arbitrage opportunity or by gateways wishing to issue balances from a hot wallet to a user who has mistakenly set a trustline directly to the hot wallet. Most users will not need to use this option. |
+| `partial_payment` | Boolean | (Optional, defaults to false) If set to `true`, fees will be deducted from the delivered amount instead of the sent amount. (*Caution:* There is no minimum amount that will actually arrive as a result of using this flag; only a miniscule amount may actually be received.) See [Partial Payments](https://divvy.com/build/transactions#partial-payments) |
 | `memos` | Array | (Optional) Array of [memo objects](#memo-objects), where each object is an arbitrary note to send with this payment. |
 
 Submitted transactions can have additional fields reflecting the current status and outcome of the transaction, including:
 
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/lib/tx-to-rest-converter.js#L25 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/lib/tx-to-rest-converter.js#L25 "Source")
 
 | Field | Type | Description |
 |-------|------|-------------|
 | direction | String | The direction of the payment relative to the account from the URL, either `"outgoing"` (sent by the account in the URL) or `"incoming"` (received by the account in the URL) |
-| result | String | The [Ripple transaction status code](https://wiki.ripple.com/Transaction_errors) for the transaction. A value of `"tesSUCCESS"` indicates a successful transaction. |
+| result | String | The [Divvy transaction status code](https://wiki.divvy.com/Transaction_errors) for the transaction. A value of `"tesSUCCESS"` indicates a successful transaction. |
 | timestamp | String | The time the ledger containing this transaction was validated, as a [ISO8601 extended format](http://en.wikipedia.org/wiki/ISO_8601) string in the form `YYYY-MM-DDTHH:mm:ss.sssZ`. |
-| fee | String (Quoted decimal) | The amount of XRP charged as a transaction fee. |
-| balance_changes | Array | Array of [Amount objects](#amount_object) indicating changes in balances held by the perspective account (i.e., the Ripple account address specified in the URI). |
+| fee | String (Quoted decimal) | The amount of XDV charged as a transaction fee. |
+| balance_changes | Array | Array of [Amount objects](#amount_object) indicating changes in balances held by the perspective account (i.e., the Divvy account address specified in the URI). |
 | source_balance_changes | Array | Array of [Amount objects](#amount_object) indicating changes in balances held by the account sending the transaction as a result of the transaction. |
 | destination_balance_changes | Array | Array of [Amount objects](#amount_object) indicating changes in balances held by the account receiving the transaction as a result of the transaction. |
 | destination_amount_submitted | Object | An [Amount object](#amount_object) indicating the destination amount submitted (useful when `payment.partial_payment` flag is set to *true* |
@@ -461,7 +461,7 @@ Submitted transactions can have additional fields reflecting the current status 
 
 ### Memo Objects ###
 
-_(New in [Ripple-REST v1.3.0](https://github.com/ripple/ripple-rest/releases/tag/1.3.0))_
+_(New in [Divvy-REST v1.3.0](https://github.com/xdv/divvy-rest/releases/tag/1.3.0))_
 
 Memo objects represent arbitrary data that can be included in a transaction. The overall size of the `memos` field cannot exceed 1KB after serialization.
 
@@ -490,7 +490,7 @@ Example of the memos field:
 
 ## Order Objects ##
 
-_(New in [Ripple-REST 1.4.0](https://github.com/ripple/ripple-rest/releases/tag/1.4.0-rc1))_
+_(New in [Divvy-REST 1.4.0](https://github.com/xdv/divvy-rest/releases/tag/1.4.0-rc1))_
 
 An order object describes an offer to exchange two currencies. Order objects are used when creating or looking up individual orders.
 
@@ -500,14 +500,14 @@ An order object describes an offer to exchange two currencies. Order objects are
 | taker\_pays | String ([Amount Object](#amount_object)) | The amount the taker must pay to consume this order. |
 | taker\_gets | String ([Amount Object](#amount_object)) | The amount the taker will get once the order is consumed. |
 | sequence   | Number | The sequence number of the transaction that created the order. Used in combination with account to uniquely identify the order. |
-| passive    | Boolean | Whether the order should be [passive](https://ripple.com/build/transactions#offercreate-flags). |
-| sell       | Boolean | Whether the order should be [sell](https://ripple.com/build/transactions#offercreate-flags). |
-| immediate\_or\_cancel | Boolean | Whether the order should be [immediate or cancel](https://ripple.com/build/transactions#offercreate-flags). |
-| fill\_or\_kill        | Boolean | Whether the order should be [fill or kill](https://ripple.com/build/transactions#offercreate-flags). |
+| passive    | Boolean | Whether the order should be [passive](https://divvy.com/build/transactions#offercreate-flags). |
+| sell       | Boolean | Whether the order should be [sell](https://divvy.com/build/transactions#offercreate-flags). |
+| immediate\_or\_cancel | Boolean | Whether the order should be [immediate or cancel](https://divvy.com/build/transactions#offercreate-flags). |
+| fill\_or\_kill        | Boolean | Whether the order should be [fill or kill](https://divvy.com/build/transactions#offercreate-flags). |
 
 ## Order Change Objects ##
 
-An order change object describes the changes to to a Ripple account's open order due to a transaction.
+An order change object describes the changes to to a Divvy account's open order due to a transaction.
 
 | Field | Value | Description |
 |-------|-------|-------------|
@@ -527,13 +527,13 @@ An bid object describes an offer to exchange two currencies, including the curre
 | type  | String (`buy` or `sell`) | Whether the order is to buy or sell. |
 | price | String ([Amount Object](#amount_object)) | The quoted price, denominated in total units of the counter currency per unit of the base currency |
 | taker\_pays\_total | String ([Amount Object](#amount_object)) | The total amount the taker must pay to consume this order. |
-| taker\_pays\_funded | String ([Amount Object](#amount_object)) | The actual amount the taker must pay to consume this order, if the order is [partially funded](https://wiki.ripple.com/Unfunded_offers). |
+| taker\_pays\_funded | String ([Amount Object](#amount_object)) | The actual amount the taker must pay to consume this order, if the order is [partially funded](https://wiki.divvy.com/Unfunded_offers). |
 | taker\_gets\_total | String ([Amount Object](#amount_object)) | The total amount the taker will get once the order is consumed. |
-| taker\_gets\_funded | String ([Amount Object](#amount_object)) | The actual amount the taker will get once the order is consumed, if the order is [partially funded](https://wiki.ripple.com/Unfunded_offers). |
-| order\_maker | String | The Ripple address of the account that placed the bid or ask on the order book. |
+| taker\_gets\_funded | String ([Amount Object](#amount_object)) | The actual amount the taker will get once the order is consumed, if the order is [partially funded](https://wiki.divvy.com/Unfunded_offers). |
+| order\_maker | String | The Divvy address of the account that placed the bid or ask on the order book. |
 | sequence | Number | The sequence number of the transaction that created the order. Used in combination with account to uniquely identify the order. |
-| sell     | Boolean | Whether the order should be [sell](https://ripple.com/build/transactions/#offercreate-flags). |
-| passive  | Boolean | Whether the order should be [passive](https://ripple.com/build/transactions/#offercreate-flags). |
+| sell     | Boolean | Whether the order should be [sell](https://divvy.com/build/transactions/#offercreate-flags). |
+| passive  | Boolean | Whether the order should be [passive](https://divvy.com/build/transactions/#offercreate-flags). |
 
 ## Trustline Objects ##
 
@@ -550,10 +550,10 @@ From the perspective of an account on one side of the trustline, the trustline h
 | currency | String | Currency code for the type of currency that is held on this trustline. |
 | limit | String (Quoted decimal) | The maximum amount of currency issued by the counterparty account that this account should hold. |
 | reciprocated_limit | String (Quoted decimal) | (Read-only) The maximum amount of currency issued by this account that the counterparty account should hold. |
-| account\_allows\_rippling | Boolean | If set to false on two trustlines from the same account, payments cannot ripple between them. (See the [NoRipple flag](https://ripple.com/knowledge_center/understanding-the-noripple-flag/) for details.) |
-| counterparty\_allows\_rippling | Boolean | (Read-only) If false, the counterparty account has the [NoRipple flag](https://ripple.com/knowledge_center/understanding-the-noripple-flag/) enabled. |
-| account\_trustline\_frozen | Boolean | Indicates whether this account has [frozen](https://wiki.ripple.com/Freeze) the trustline. (`account_froze_trustline` prior to [v1.4.0](https://github.com/ripple/ripple-rest/releases/tag/1.4.0-rc1)) |
-| counterparty\_trustline\_frozen | Boolean | (Read-only) Indicates whether the counterparty account has [frozen](https://wiki.ripple.com/Freeze) the trustline. (`counterparty_froze_line` prior to [v1.4.0](https://github.com/ripple/ripple-rest/releases/tag/1.4.0-rc1)) |
+| account\_allows\_rippling | Boolean | If set to false on two trustlines from the same account, payments cannot divvy between them. (See the [NoDivvy flag](https://divvy.com/knowledge_center/understanding-the-nodivvy-flag/) for details.) |
+| counterparty\_allows\_rippling | Boolean | (Read-only) If false, the counterparty account has the [NoDivvy flag](https://divvy.com/knowledge_center/understanding-the-nodivvy-flag/) enabled. |
+| account\_trustline\_frozen | Boolean | Indicates whether this account has [frozen](https://wiki.divvy.com/Freeze) the trustline. (`account_froze_trustline` prior to [v1.4.0](https://github.com/xdv/divvy-rest/releases/tag/1.4.0-rc1)) |
+| counterparty\_trustline\_frozen | Boolean | (Read-only) Indicates whether the counterparty account has [frozen](https://wiki.divvy.com/Freeze) the trustline. (`counterparty_froze_line` prior to [v1.4.0](https://github.com/xdv/divvy-rest/releases/tag/1.4.0-rc1)) |
 
 The read-only fields indicate portions of the trustline that pertain to the counterparty, and can only be changed by that account. (The `counterparty` field is technically part of the identity of the trustline. If you "change" it, that just means that you are referring to a different trustline object.)
 
@@ -562,15 +562,15 @@ A trust line with a limit *and* a balance of 0 is equivalent to no trust line.
 
 # ACCOUNTS #
 
-Accounts are the core unit of authentication in the Ripple Network. Each account can hold balances in multiple currencies, and all transactions must be signed by an account’s secret key. In order for an account to exist in a validated ledger version, it must hold a minimum reserve amount of XRP. (The [account reserve](https://wiki.ripple.com/Reserves) increases with the amount of data it is responsible for in the shared ledger.) It is expected that accounts will correspond loosely to individual users.
+Accounts are the core unit of authentication in the Divvy Network. Each account can hold balances in multiple currencies, and all transactions must be signed by an account’s secret key. In order for an account to exist in a validated ledger version, it must hold a minimum reserve amount of XDV. (The [account reserve](https://wiki.divvy.com/Reserves) increases with the amount of data it is responsible for in the shared ledger.) It is expected that accounts will correspond loosely to individual users.
 
 
 
 ## Generate Wallet ##
 
-(New in [Ripple-REST v1.3.0](https://github.com/ripple/ripple-rest/releases/tag/1.3.0))
+(New in [Divvy-REST v1.3.0](https://github.com/xdv/divvy-rest/releases/tag/1.3.0))
 
-Randomly generate keys for a potential new Ripple account.
+Randomly generate keys for a potential new Divvy account.
 
 <!-- <div class='multicode'> -->
 
@@ -582,13 +582,13 @@ GET /v1/wallet/new
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#generate-wallet)
+[Try it! >](https://divvy.com/build/rest-tool#generate-wallet)
 
-There are two steps to making a new account on the Ripple network: randomly creating the keys for that account, and sending it enough XRP to meet the account reserve.
+There are two steps to making a new account on the Divvy network: randomly creating the keys for that account, and sending it enough XDV to meet the account reserve.
 
-Generating the keys can be done offline, since it does not affect the network at all. To make it easy, Ripple-REST can generate account keys for you.
+Generating the keys can be done offline, since it does not affect the network at all. To make it easy, Divvy-REST can generate account keys for you.
 
-*Caution:* Ripple account keys are very sensitive, since they give full control over that account's money on the Ripple network. Do not transmit them to untrusted servers, or unencrypted over the internet (for example, through HTTP instead of HTTPS). There *are* bad actors who are sniffing around for account keys so they can steal your money!
+*Caution:* Divvy account keys are very sensitive, since they give full control over that account's money on the Divvy network. Do not transmit them to untrusted servers, or unencrypted over the internet (for example, through HTTP instead of HTTPS). There *are* bad actors who are sniffing around for account keys so they can steal your money!
 
 #### Response ####
 
@@ -604,14 +604,14 @@ The response is an object with the address and the secret for a potential new ac
 }
 ```
 
-The second step is [making a payment](#payments) of XRP to the new account address. (Ripple lets you send XRP to any mathematically possible account address, which creates the account if necessary.) The generated account does not exist in the ledger until it receives enough XRP to meet the account reserve.
+The second step is [making a payment](#payments) of XDV to the new account address. (Divvy lets you send XDV to any mathematically possible account address, which creates the account if necessary.) The generated account does not exist in the ledger until it receives enough XDV to meet the account reserve.
 
 
 
 ## Get Account Balances ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/balances.js#L34 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/balances.js#L34 "Source")
 
-Retrieve the current balances for the given Ripple account.
+Retrieve the current balances for the given Divvy account.
 
 <!-- <div class='multicode'> -->
 
@@ -623,13 +623,13 @@ GET /v1/accounts/{:address}/balances
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-account-balances)
+[Try it! >](https://divvy.com/build/rest-tool#get-account-balances)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| address | String | The Ripple account address of the account whose balances to retrieve. |
+| address | String | The Divvy account address of the account whose balances to retrieve. |
 
 Optionally, you can also include any of the following query parameters:
 
@@ -656,7 +656,7 @@ Optionally, you can also include any of the following query parameters:
   "validated": true,
   "balances": [
     {
-      "currency": "XRP",
+      "currency": "XDV",
       "amount": "1046.29877312",
       "counterparty": ""
     },
@@ -672,12 +672,12 @@ Optionally, you can also include any of the following query parameters:
 
 *Note:* `marker` will be present in the response when there are additional pages to page through.
 
-There is one entry in the `balances` array for the account's XRP balance, and additional entries for each combination of currency code and counterparty.
+There is one entry in the `balances` array for the account's XDV balance, and additional entries for each combination of currency code and counterparty.
 
 
 
 ## Get Account Settings ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/master/api/settings.js#L53 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/master/api/settings.js#L53 "Source")
 
 Retrieve the current settings for a given account.
 
@@ -691,13 +691,13 @@ GET /v1/accounts/{:address}/settings
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-account-settings)
+[Try it! >](https://divvy.com/build/rest-tool#get-account-settings)
 
 The following URL parameters are required by this API endpoint:
 
 | Field   | Value | Description |
 |---------|-------|-------------|
-| address | String | The Ripple account address of the account whose settings to retrieve. |
+| address | String | The Divvy account address of the account whose settings to retrieve. |
 
 #### Response ####
 
@@ -710,7 +710,7 @@ The following URL parameters are required by this API endpoint:
     "password_spent": false,
     "require_destination_tag": false,
     "require_authorization": false,
-    "disallow_xrp": false,
+    "disallow_xdv": false,
     "disable_master": false,
     "transaction_sequence": "36",
     "email_hash": "",
@@ -727,24 +727,24 @@ The response contains a `settings` object, with the following fields:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| account | String | The Ripple address of this account |
-| transfer_rate | String (Quoted decimal number) | If set, imposes a fee for transferring balances issued by this account. Must be between 1 and 2, with up to 9 decimal places of precision. See [TransferRate](https://ripple.com/build/transactions#transferrate) for details. |
-| password_spent | Boolean | If false, then this account can submit a special [SetRegularKey transaction](https://ripple.com/build/transactions#setregularkey) without a transaction fee. |
+| account | String | The Divvy address of this account |
+| transfer_rate | String (Quoted decimal number) | If set, imposes a fee for transferring balances issued by this account. Must be between 1 and 2, with up to 9 decimal places of precision. See [TransferRate](https://divvy.com/build/transactions#transferrate) for details. |
+| password_spent | Boolean | If false, then this account can submit a special [SetRegularKey transaction](https://divvy.com/build/transactions#setregularkey) without a transaction fee. |
 | require\_destination\_tag | Boolean | If true, require a destination tag to send payments to this account. (This is intended to protect users from accidentally omitting the destination tag in a payment to a gateway's hosted wallet.) |
 | require_authorization | Boolean | If true, require authorization for users to hold balances issued by this account. (This prevents users unknown to a gateway from holding funds issued by that gateway.) |
-| disallow_xrp | Boolean | If true, XRP should not be sent to this account. (Enforced in clients but not in the server, because it could cause accounts to become unusable if all their XRP were spent.) |
+| disallow_xdv | Boolean | If true, XDV should not be sent to this account. (Enforced in clients but not in the server, because it could cause accounts to become unusable if all their XDV were spent.) |
 | disable_master | Boolean | If true, the master secret key cannot be used to sign transactions for this account. Can only be set to true if a Regular Key is defined for the account. |
 | transaction_sequence | String (Quoted integer) | The sequence number of the next valid transaction for this account. (Each account starts with Sequence = 1 and increases each time a transaction is made.) |
 | email_hash | String | Hash of an email address to be used for generating an avatar image. Conventionally, clients use [Gravatar](http://en.gravatar.com/site/implement/hash/) to display this image. |
 | wallet_locator | String | (Not used) |
 | wallet_size | String | (Not used) |
 | message_key | String | A [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) public key that should be used to encrypt secret messages to this account. |
-| domain | String | The domain that holds this account. Clients can use this to verify the account in the [ripple.txt](https://wiki.ripple.com/Ripple.txt) or [host-meta](https://wiki.ripple.com/Gateway_Services) of the domain. |
+| domain | String | The domain that holds this account. Clients can use this to verify the account in the [divvy.txt](https://wiki.divvy.com/Divvy.txt) or [host-meta](https://wiki.divvy.com/Gateway_Services) of the domain. |
 
 
 
 ## Update Account Settings ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/settings.js#L135 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/settings.js#L135 "Source")
 
 Modify the existing settings for an account.
 
@@ -761,9 +761,9 @@ POST /v1/accounts/{:address}/settings?validated=true
     "transfer_rate": 1.02,
     "require_destination_tag": false,
     "require_authorization": false,
-    "disallow_xrp": false,
+    "disallow_xdv": false,
     "disable_master": false,
-    "default_ripple": false
+    "default_divvy": false
     "transaction_sequence": 22,
   }
 }
@@ -771,19 +771,19 @@ POST /v1/accounts/{:address}/settings?validated=true
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#update-account-settings)
+[Try it! >](https://divvy.com/build/rest-tool#update-account-settings)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address of the account whose settings to retrieve. |
+| address | String | The Divvy account address of the account whose settings to retrieve. |
 
 The request body must be a JSON object with the following fields:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| secret | String | A secret key for your Ripple account. This is either the master secret, or a regular secret, if your account has one configured. |
+| secret | String | A secret key for your Divvy account. This is either the master secret, or a regular secret, if your account has one configured. |
 | settings | Object | A map of settings to change for this account. Any settings not included are left unchanged. |
 
 Optionally, you can include the following as a URL query parameter:
@@ -801,15 +801,15 @@ The `settings` object can contain any of the following fields (any omitted field
 | transfer_rate | String (Quoted decimal number) | If set, imposes a fee for transferring balances issued by this account. Must be between 1 and 2, with up to 9 decimal places of precision. |
 | require\_destination\_tag | Boolean | If true, require a destination tag to send payments to this account. (This is intended to protect users from accidentally omitting the destination tag in a payment to a gateway's hosted wallet.) |
 | require_authorization | Boolean | If true, require authorization for users to hold balances issued by this account. (This prevents users unknown to a gateway from holding funds issued by that gateway.) |
-| disallow_xrp | Boolean | If true, XRP should not be sent to this account. (Enforced in clients but not in the server, because it could cause accounts to become unusable if all their XRP were spent.) |
+| disallow_xdv | Boolean | If true, XDV should not be sent to this account. (Enforced in clients but not in the server, because it could cause accounts to become unusable if all their XDV were spent.) |
 | disable_master | Boolean | If true, the master secret key cannot be used to sign transactions for this account. Can only be set to true if a Regular Key is defined for the account. |
-| default_ripple | Boolean | If true, enables [rippling](https://ripple.com/knowledge_center/understanding-the-noripple-flag/) on this account's trustlines by default.  |
+| default_divvy | Boolean | If true, enables [rippling](https://divvy.com/knowledge_center/understanding-the-nodivvy-flag/) on this account's trustlines by default.  |
 | transaction_sequence | String (Quoted integer) | The sequence number of the next valid transaction for this account.  |
 | email_hash | String | Hash of an email address to be used for generating an avatar image. Conventionally, clients use [Gravatar](http://en.gravatar.com/site/implement/hash/) to display this image. |
 | message_key | String | A [secp256k1](https://en.bitcoin.it/wiki/Secp256k1) public key that should be used to encrypt secret messages to this account, as hex. |
-| domain | String | The domain that holds this account, as lowercase ASCII. Clients can use this to verify the account in the [ripple.txt](https://wiki.ripple.com/Ripple.txt) or [host-meta](https://wiki.ripple.com/Gateway_Services) of the domain. |
+| domain | String | The domain that holds this account, as lowercase ASCII. Clients can use this to verify the account in the [divvy.txt](https://wiki.divvy.com/Divvy.txt) or [host-meta](https://wiki.divvy.com/Gateway_Services) of the domain. |
 
-*Note:* Some of the account setting fields cannot be modified by this method. For example, the `password_spent` flag is only enabled when the account uses a free SetRegularKey transaction, and only disabled when the account receives a transmission of XRP.
+*Note:* Some of the account setting fields cannot be modified by this method. For example, the `password_spent` flag is only enabled when the account uses a free SetRegularKey transaction, and only disabled when the account receives a transmission of XDV.
 
 #### Response ####
 
@@ -819,7 +819,7 @@ The `settings` object can contain any of the following fields (any omitted field
   "settings": {
     "require_destination_tag": false,
     "require_authorization": false,
-    "disallow_xrp": false,
+    "disallow_xdv": false,
     "email_hash": "98b4375e1d753e5b91627516f6d70977",
     "state": "pending",
     "ledger": "9248628",
@@ -832,7 +832,7 @@ The response is a JSON object containing the following fields:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| hash | String | A unique hash that identifies the Ripple transaction to change settings |
+| hash | String | A unique hash that identifies the Divvy transaction to change settings |
 | ledger | String (Quoted integer) | The sequence number of the ledger version where the settings-change transaction was applied. |
 | settings | Object | The settings that were changed, as provided in the request. |
 
@@ -841,11 +841,11 @@ The response is a JSON object containing the following fields:
 
 # PAYMENTS #
 
-`ripple-rest` provides access to `ripple-lib`'s robust transaction submission processes. This means that it will set the fee, manage the transaction sequence numbers, sign the transaction with your secret, and resubmit the transaction up to 10 times if `rippled` reports an initial error that can be solved automatically.
+`divvy-rest` provides access to `divvy-lib`'s robust transaction submission processes. This means that it will set the fee, manage the transaction sequence numbers, sign the transaction with your secret, and resubmit the transaction up to 10 times if `divvyd` reports an initial error that can be solved automatically.
 
 
 ## Prepare Payment ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L484 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L484 "Source")
 
 Get quotes for possible ways to make a particular payment.
 
@@ -859,14 +859,14 @@ GET /v1/accounts/{:source_address}/payments/paths/{:destination_address}/{:amoun
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#prepare-payment)
+[Try it! >](https://divvy.com/build/rest-tool#prepare-payment)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `address` | String | The Ripple address for the account that would send the payment. |
-| `destination_account` | String | The Ripple address for the account that would receive the payment. |
+| `address` | String | The Divvy address for the account that would send the payment. |
+| `destination_account` | String | The Divvy address for the account that would receive the payment. |
 | `destination_amount` | String ([URL-formatted Amount](#amounts-in-urls)) | The amount that the destination account should receive. |
 
 Optionally, you can also include the following as a query parameter:
@@ -875,7 +875,7 @@ Optionally, you can also include the following as a query parameter:
 |-------|------|-------------|
 | `source_currencies` | Comma-separated list of source currencies. Each should be an [ISO 4217 currency code](http://www.xe.com/iso4217.php), or a `{:currency}+{:counterparty}` string. | Filters possible payments to include only ones that spend the source account's balances in the specified currencies. If a counterparty is not specified, include all issuances of that currency held by the sending account. |
 
-Before you make a payment, it is necessary to figure out the possible ways in which that payment can be made. This method gets a list possible ways to make a payment, but it does not affect the network. This method effectively performs a [ripple_path_find](https://ripple.com/build/rippled-apis#ripple-path-find) and constructs payment objects for the paths it finds.
+Before you make a payment, it is necessary to figure out the possible ways in which that payment can be made. This method gets a list possible ways to make a payment, but it does not affect the network. This method effectively performs a [divvy_path_find](https://divvy.com/build/divvyd-apis#divvy-path-find) and constructs payment objects for the paths it finds.
 
 You can then choose one of the returned payment objects, modify it as desired (for example, to set slippage values or tags), and then submit the payment for processing.
 
@@ -902,16 +902,16 @@ You can then choose one of the returned payment objects, modify it as desired (f
         "issuer": "rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q"
       },
       "invoice_id": "",
-      "paths": "[[{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XRP\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]",
+      "paths": "[[{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"USD\",\"issuer\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"currency\":\"XDV\",\"type\":16,\"type_hex\":\"0000000000000010\"},{\"currency\":\"USD\",\"issuer\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]",
       "partial_payment": false,
-      "no_direct_ripple": false
+      "no_direct_divvy": false
     },
     {
       "source_account": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
       "source_tag": "",
       "source_amount": {
         "value": "61.06103",
-        "currency": "XRP",
+        "currency": "XDV",
         "issuer": ""
       },
       "source_slippage": "0",
@@ -925,7 +925,7 @@ You can then choose one of the returned payment objects, modify it as desired (f
       "invoice_id": "",
       "paths": "[[{\"currency\":\"USD\",\"issuer\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rpDMez6pm6dBve2TJsmDpv7Yae6V5Pyvy2\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rpDMez6pm6dBve2TJsmDpv7Yae6V5Pyvy2\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rHAwwozJw6FHfnJfRQaFXrkGHocGoaNYSy\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rEtr3Kzh5MmhPbeNu6PDtQZsKBpgFEEEo5\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}],[{\"currency\":\"USD\",\"issuer\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":48,\"type_hex\":\"0000000000000030\"},{\"account\":\"rsP3mgGb2tcYUrxiLFiHJiQXhsziegtwBc\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rKvPTQrD8ap1Y8TSmKjcK6G7q7Kvx7RAqQ\",\"type\":1,\"type_hex\":\"0000000000000001\"},{\"account\":\"rMwjYedjc7qqtKYVLiAccJSmCwih4LnE2q\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]",
       "partial_payment": false,
-      "no_direct_ripple": false
+      "no_direct_divvy": false
     }
   ]
 }
@@ -938,7 +938,7 @@ __NOTE:__ This command may be quite slow. If the command times out, please try i
 
 
 ## Submit Payment ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L52 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L52 "Source")
 
 Submit a payment object to be processed and executed.
 
@@ -974,14 +974,14 @@ POST /v1/accounts/{address}/payments?validated=true
     "invoice_id": "",
     "paths": "[[{\"account\":\"rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B\",\"type\":1,\"type_hex\":\"0000000000000001\"}]]",
     "partial_payment": false,
-    "no_direct_ripple": false
+    "no_direct_divvy": false
   }
 }
 ```
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#submit-payment)
+[Try it! >](https://divvy.com/build/rest-tool#submit-payment)
 
 The JSON body of the request includes the following parameters:
 
@@ -989,19 +989,19 @@ The JSON body of the request includes the following parameters:
 |-------|------|-------------|
 | payment | [Payment object](#payment_object) | The payment to send. You can generate a payment object using the [Prepare Payment](#prepare-payment) method. |
 | client\_resource\_id | String | A unique identifier for this payment. You can generate one using the [`GET /v1/uuid`](#calculating_a_uuid) method. |
-| secret | String | A secret key for your Ripple account. This is either the master secret, or a regular secret, if your account has one configured. |
+| secret | String | A secret key for your Divvy account. This is either the master secret, or a regular secret, if your account has one configured. |
 | last\_ledger\_sequence | String | (Optional) A string representation of a ledger sequence number. If this parameter is not set, it defaults to the current ledger sequence plus an appropriate buffer. |
-| max\_fee | String | (Optional) The maximum transaction fee to allow, as a decimal amount of XRP. |
-| fixed\_fee | String | (Optional) The exact transaction fee the payer wishes to pay to the server, as a decimal amount of XRP. |
+| max\_fee | String | (Optional) The maximum transaction fee to allow, as a decimal amount of XDV. |
+| fixed\_fee | String | (Optional) The exact transaction fee the payer wishes to pay to the server, as a decimal amount of XDV. |
 
 __DO NOT SUBMIT YOUR SECRET TO AN UNTRUSTED REST API SERVER__ -- The secret key can be used to send transactions from your account, including spending all the balances it holds. For the public server, only use test accounts.
 
 *Note:* The transaction fee is determined as follows:
 
 1. If `fixed_fee` is included, that exact value is used for the transaction fee. Otherwise, the transaction fee is set dynamically based on the server's current fee.
-2. If `max_fee` is included and the transaction fee is higher than `max_fee`, then the transaction is rejected without being submitted. This is true regardless of whether the fee was fixed or dynamically set. Otherwise, the transaction is submitted to the `rippled` server with the specified fee.
+2. If `max_fee` is included and the transaction fee is higher than `max_fee`, then the transaction is rejected without being submitted. This is true regardless of whether the fee was fixed or dynamically set. Otherwise, the transaction is submitted to the `divvyd` server with the specified fee.
 3. If the transaction succeeds, the sending account loses the whole amount of the transaction fee, even if it was higher than the server's current fee. 
-4. If the transaction fails because the fee was not high enough, Ripple-REST automatically resubmits it later. In this case, return to step 1.
+4. If the transaction fails because the fee was not high enough, Divvy-REST automatically resubmits it later. In this case, return to step 1.
 
 Consequently, you can use `max_fee` as a "set-it-and-forget-it" safeguard on the fees you are willing to pay.
 
@@ -1036,7 +1036,7 @@ The response can take two formats, depending on the `validated` query parameter:
 
 
 ## Confirm Payment ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L270 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L270 "Source")
 
 Retrieve the details of a payment, including the current state of the transaction and the result of transaction processing.
 
@@ -1050,13 +1050,13 @@ GET /v1/accounts/{:address}/payments/{:id}
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#confirm-payment)
+[Try it! >](https://divvy.com/build/rest-tool#confirm-payment)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| address | String | The Ripple account address of an account involved in the transaction. |
+| address | String | The Divvy account address of an account involved in the transaction. |
 | id | String | A unique identifier for the transaction: either a client resource ID or a transaction hash. |
 
 #### Response ####
@@ -1069,7 +1069,7 @@ The following URL parameters are required by this API endpoint:
     "source_tag": "",
     "source_amount": {
       "value": "0.00001",
-      "currency": "XRP",
+      "currency": "XDV",
       "issuer": ""
     },
     "source_slippage": "0",
@@ -1082,19 +1082,19 @@ The following URL parameters are required by this API endpoint:
     },
     "invoice_id": "",
     "paths": "[]",
-    "no_direct_ripple": false,
+    "no_direct_divvy": false,
     "partial_payment": true,
     "direction": "outgoing",
     "result": "tesSUCCESS",
     "timestamp": "2014-09-17T21:47:00.000Z",
     "fee": "0.00001",
     "balance_changes": [{
-      "currency": "XRP",
+      "currency": "XDV",
       "value": "-0.00002",
       "counterparty": ""
     }],
     "source_balance_changes": [{
-      "currency": "XRP",
+      "currency": "XDV",
       "value": "-0.00002",
       "counterparty": ""
     }],
@@ -1111,7 +1111,7 @@ The following URL parameters are required by this API endpoint:
     },
     "source_amount_submitted": {
       "value": "0.00001",
-      "currency": "XRP",
+      "currency": "XDV",
       "counterparty": ""
     }
   },
@@ -1126,20 +1126,20 @@ The following URL parameters are required by this API endpoint:
 |-------|------|-------------|
 | payment | Object | A [payment object](#payment-objects) for the transaction. |
 | client_resource_id | String | The [client resource identifier](#client-resource-ids) used for this payment. |
-| hash | String (Transaction Hash) | A hash value that uniquely identifies this transaction in the Ripple network. |
+| hash | String (Transaction Hash) | A hash value that uniquely identifies this transaction in the Divvy network. |
 | ledger | String (Ledger Index) | (May be omitted) The sequence number of the ledger that includes this transaction, if this transaction is in a ledger. |
 | state | String | Whether or not the transaction is included in a ledger that has been validated by consensus. |
 
-_New in [v1.4.0](https://github.com/ripple/ripple-rest/releases/tag/1.4.0) - The `hash`, `ledger`, and `state` fields have been moved to the top level. Previously, they were included as part of the Payment object._
+_New in [v1.4.0](https://github.com/xdv/divvy-rest/releases/tag/1.4.0) - The `hash`, `ledger`, and `state` fields have been moved to the top level. Previously, they were included as part of the Payment object._
 
 If the `state` field has the value `validated`, then the payment has been finalized, and is included in the shared global ledger. However, this does not necessarily mean that it succeeded. Check the `result` field of the Payment for a value of `"tesSUCCESS"` to see if the payment was successfully executed. If the `payment.partial_payment` flag is *true*, then you should also consult the `payment.destination_balance_changes` array to see how much currency was actually delivered to the destination account.
 
-Processing a payment can take several seconds to complete, depending on the [consensus process](https://ripple.com/consensus-whitepaper/). If the payment does not exist yet, or has not been validated, you should wait a few seconds before checking again.
+Processing a payment can take several seconds to complete, depending on the [consensus process](https://divvy.com/consensus-whitepaper/). If the payment does not exist yet, or has not been validated, you should wait a few seconds before checking again.
 
 
 
 ## Get Payment History ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L394 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/a268d7058b9bf20d48a1b61d86093756e5274512/api/payments.js#L394 "Source")
 
 Retrieve a selection of payments that affected the specified account.
 
@@ -1153,13 +1153,13 @@ GET /v1/accounts/{:address}/payments
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-payment-history)
+[Try it! >](https://divvy.com/build/rest-tool#get-payment-history)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| address | String | The Ripple account address of an account involved in the transaction. |
+| address | String | The Divvy account address of an account involved in the transaction. |
 
 Optionally, you can also include the following query parameters:
 
@@ -1186,7 +1186,7 @@ Optionally, you can also include the following query parameters:
       "source_tag": "",
       "source_amount": {
         "value": "20",
-        "currency": "XRP",
+        "currency": "XDV",
         "issuer": ""
       },
       "source_slippage": "0",
@@ -1194,29 +1194,29 @@ Optionally, you can also include the following query parameters:
       "destination_tag": "",
       "destination_amount": {
         "value": "20",
-        "currency": "XRP",
+        "currency": "XDV",
         "issuer": ""
       },
       "invoice_id": "",
       "paths": "[]",
-      "no_direct_ripple": false,
+      "no_direct_divvy": false,
       "partial_payment": false,
       "direction": "outgoing",
       "result": "tesSUCCESS",
       "timestamp": "2015-02-09T23:31:40.000Z",
       "fee": "0.012",
       "balance_changes": [{
-        "currency": "XRP",
+        "currency": "XDV",
         "value": "-20.012",
         "counterparty": ""
       }],
       "source_balance_changes": [{
-        "currency": "XRP",
+        "currency": "XDV",
         "value": "-20.012",
         "counterparty": ""
       }],
       "destination_balance_changes": [{
-        "currency": "XRP",
+        "currency": "XDV",
         "value": "20",
         "counterparty": ""
       }],
@@ -1232,14 +1232,14 @@ Optionally, you can also include the following query parameters:
 
 If the length of the `payments` array is equal to `results_per_page`, then there may be more results. To get them, increment the `page` query paramter and run the request again.
 
-*Note:* It is not more efficient to specify more filter values, because Ripple-REST has to retrieve the full list of payments from the `rippled` before it can filter them.
+*Note:* It is not more efficient to specify more filter values, because Divvy-REST has to retrieve the full list of payments from the `divvyd` before it can filter them.
 
 # ORDERS #
 
 ## Place Order ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L161 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L161 "Source")
 
-(New in [Ripple-REST v1.3.2](https://github.com/ripple/ripple-rest/releases/tag/1.3.2-rc4))
+(New in [Divvy-REST v1.3.2](https://github.com/xdv/divvy-rest/releases/tag/1.3.2-rc4))
 
 Places an order to exchange currencies.
 
@@ -1269,19 +1269,19 @@ POST /v1/accounts/{:address}/orders?validated=true
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#place-order)
+[Try it! >](https://divvy.com/build/rest-tool#place-order)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| address | String | The Ripple account address the account creating the order. |
+| address | String | The Divvy account address the account creating the order. |
 
 The following parameters are required in the JSON body of the request:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| secret | String | A secret key for your Ripple account. This is either the master secret, or a regular secret, if your account has one configured. |
+| secret | String | A secret key for your Divvy account. This is either the master secret, or a regular secret, if your account has one configured. |
 | order | Object ([Order](#order-objects)) | The order to place. |
 
 Optionally, you can include the following as a URL query parameter:
@@ -1320,7 +1320,7 @@ __DO NOT SUBMIT YOUR SECRET TO AN UNTRUSTED REST API SERVER__ -- The secret key 
 ```
 
 ## Cancel Order ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L250 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L250 "Source")
 
 Deletes a previous order to exchange currencies.
 
@@ -1337,22 +1337,22 @@ DELETE /v1/accounts/{:address}/orders/{:order}?validated=true
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#cancel-order)
+[Try it! >](https://divvy.com/build/rest-tool#cancel-order)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Type | Description |
 |-------|------|-------------|
-| address | String | The Ripple account address of an account involved in the transaction. |
+| address | String | The Divvy account address of an account involved in the transaction. |
 | order | Integer | The `sequence` number of the order to cancel. |
 
 The following parameters are required in the JSON body of the request:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| secret | String | A secret key for your Ripple account. This is either the master secret, or a regular secret, if your account has one configured. |
+| secret | String | A secret key for your Divvy account. This is either the master secret, or a regular secret, if your account has one configured. |
 
-*Note:* Some older client libraries do not support a body for the DELETE method. If this is a problem for you, please [file an issue in Ripple Labs' bug tracker](https://ripplelabs.atlassian.net/browse/RLJS).
+*Note:* Some older client libraries do not support a body for the DELETE method. If this is a problem for you, please [file an issue in Divvy Labs' bug tracker](https://divvylabs.atlassian.net/browse/RLJS).
 
 Optionally, you can include the following as a URL query parameter:
 
@@ -1380,9 +1380,9 @@ __DO NOT SUBMIT YOUR SECRET TO AN UNTRUSTED REST API SERVER__ -- The secret key 
 ```
 
 ## Get Account Orders ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L38 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L38 "Source")
 
-Retrieves all open currency-exchange orders associated with the Ripple address.
+Retrieves all open currency-exchange orders associated with the Divvy address.
 
 <!-- <div class='multicode'> -->
 
@@ -1394,13 +1394,13 @@ GET /v1/accounts/{:address}/orders
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-account-orders)
+[Try it! >](https://divvy.com/build/rest-tool#get-account-orders)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address whose orders to look up. |
+| address | String | The Divvy account address whose orders to look up. |
 
 Optionally, you can also include the following query parameters:
 
@@ -1475,7 +1475,7 @@ The response is an object with a `orders` array, where each member is a [order o
         "value": "4.7"
       },
       "taker_pays": {
-        "currency": "XRP",
+        "currency": "XDV",
         "counterparty": "",
         "value": "997.876857"
       },
@@ -1485,7 +1485,7 @@ The response is an object with a `orders` array, where each member is a [order o
     {
       "type": "sell",
       "taker_gets": {
-        "currency": "XRP",
+        "currency": "XDV",
         "counterparty": "",
         "value": "999"
       },
@@ -1505,7 +1505,7 @@ The response is an object with a `orders` array, where each member is a [order o
         "value": "5.35"
       },
       "taker_pays": {
-        "currency": "XRP",
+        "currency": "XDV",
         "counterparty": "",
         "value": "998.134328"
       },
@@ -1515,7 +1515,7 @@ The response is an object with a `orders` array, where each member is a [order o
     {
       "type": "sell",
       "taker_gets": {
-        "currency": "XRP",
+        "currency": "XDV",
         "counterparty": "",
         "value": "999"
       },
@@ -1578,7 +1578,7 @@ The response is an object with a `orders` array, where each member is a [order o
 ```
 
 ## Get Order Transaction ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L505 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L505 "Source")
 
 Get the details of an order transaction. An order transaction either [places an order](#place-order) or [cancels an order](#cancel-order).
 
@@ -1593,13 +1593,13 @@ GET /v1/accounts/{:address}/orders/{:hash}
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-order-transaction)
+[Try it! >](https://divvy.com/build/rest-tool#get-order-transaction)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address whose orders to look up. |
+| address | String | The Divvy account address whose orders to look up. |
 | hash | String | The transaction hash for the order |
 
 
@@ -1620,7 +1620,7 @@ An example response for an order transaction to place an order:
   "order": {
     "account": "rEQWVz1qN4DWw5J17s3DgXQzUuVYDSpK6M",
     "taker_pays": {
-      "currency": "XRP",
+      "currency": "XDV",
       "counterparty": "",
       "value": "10000000"
     },
@@ -1638,14 +1638,14 @@ An example response for an order transaction to place an order:
   "balance_changes": [
     {
       "counterparty": "",
-      "currency": "XRP",
+      "currency": "XDV",
       "value": "-0.012"
     }
   ],
   "order_changes": [
     {
       "taker_pays": {
-        "currency": "XRP",
+        "currency": "XDV",
         "counterparty": "",
         "value": "10000000"
       },
@@ -1682,12 +1682,12 @@ An example response for an order transaction that cancels an order:
   },
   "balance_changes": [{
     "counterparty": "",
-    "currency": "XRP",
+    "currency": "XDV",
     "value": "-0.012"
   }],
   "order_changes": [{
     "taker_pays": {
-      "currency": "XRP",
+      "currency": "XDV",
       "counterparty": "",
       "value": "0"
     },
@@ -1707,12 +1707,12 @@ The response includes the original [`order`](#order-objects), if the `action` is
 For transactions that cancel orders, the `order` object describes the transaction that canceled the original order.
 
 The response also includes `balance_changes` and [`order changes`](order-change-objects)
-for the perspective account (e.g., the Ripple account address used in the URI).
+for the perspective account (e.g., the Divvy account address used in the URI).
 
 The `direction` of the transaction is either `incoming`, `outgoing` or `unaffected`. Outgoing transactions are made by the perspective account. Incoming transactions affect the perspective account.
 
 ## Get Order Book ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L38 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/59ea02d634ac4a308db2ba21781efbc02f5ccf53/api/orders.js#L38 "Source")
 
 Retrieves the top of the order book for a currency pair.
 
@@ -1726,13 +1726,13 @@ GET /v1/accounts/{:address}/order_book/{:base}/{:counter}
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-order-book)
+[Try it! >](https://divvy.com/build/rest-tool#get-order-book)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address whose orders to look up. |
+| address | String | The Divvy account address whose orders to look up. |
 | base | String | The base currency as `currency+counterparty` (e.g., `USD+`)|
 | counter | String | The counter currency as `currency+counterparty` (e.g., `BTC+`)|
 
@@ -1885,9 +1885,9 @@ The response includes `bids` and `asks` arrays that contain [bid objects](#bid-o
 
 
 ## Get Trustlines ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/trustlines.js#L18 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/trustlines.js#L18 "Source")
 
-Retrieves all trustlines associated with the Ripple address.
+Retrieves all trustlines associated with the Divvy address.
 
 <!-- <div class='multicode'> -->
 
@@ -1899,13 +1899,13 @@ GET /v1/accounts/{:address}/trustlines
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-trustlines)
+[Try it! >](https://divvy.com/build/rest-tool#get-trustlines)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address whose trustlines to look up. |
+| address | String | The Divvy account address whose trustlines to look up. |
 
 Optionally, you can also include the following query parameters:
 
@@ -1956,7 +1956,7 @@ The response is an object with a `lines` array, where each member is a [trustlin
 *Note:* `marker` will be present in the response when there are additional pages to page through.
 
 ## Grant Trustline ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/trustlines.js#L88 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/trustlines.js#L88 "Source")
 
 Creates or modifies a trustline.
 
@@ -1979,13 +1979,13 @@ POST /v1/accounts/{:address}/trustlines?validated=true
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#grant-trustline)
+[Try it! >](https://divvy.com/build/rest-tool#grant-trustline)
 
 The following parameters are required in the JSON body of the request:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| secret | String | A secret key for your Ripple account. This is either the master secret, or a regular secret, if your account has one configured. |
+| secret | String | A secret key for your Divvy account. This is either the master secret, or a regular secret, if your account has one configured. |
 | trustline | Object ([Trustline](#trustline-objects)) | The trustline object to set. Ignores fields not controlled by this account. Any fields that are omitted are unchanged. |
 
 Optionally, you can include the following as a URL query parameter:
@@ -1996,7 +1996,7 @@ Optionally, you can include the following as a URL query parameter:
 
 __DO NOT SUBMIT YOUR SECRET TO AN UNTRUSTED REST API SERVER__ -- The secret key can be used to send transactions from your account, including spending all the balances it holds. For the public server, only use test accounts.
 
-*Note:* Since a trustline occupies space in the ledger, [a trustline increases the XRP the account must hold in reserve](https://wiki.ripple.com/Reserves). You cannot create more trustlines if you do not have sufficient XRP to pay the reserve. This applies to the account extending trust, not to the account receiving it. A trustline with a limit *and* a balance of 0 is equivalent to no trust line.
+*Note:* Since a trustline occupies space in the ledger, [a trustline increases the XDV the account must hold in reserve](https://wiki.divvy.com/Reserves). You cannot create more trustlines if you do not have sufficient XDV to pay the reserve. This applies to the account extending trust, not to the account receiving it. A trustline with a limit *and* a balance of 0 is equivalent to no trust line.
 
 #### Response ####
 
@@ -2024,13 +2024,13 @@ A successful response uses the `201 Created` HTTP response code, and provides a 
 
 # NOTIFICATIONS #
 
-Notifications provide a mechanism to monitor for any kind of transactions that modify your Ripple account. Unlike the [Get Payment History](#get-payment-history) method, notifications include _all_ types of transactions, but each is described in less detail.
+Notifications provide a mechanism to monitor for any kind of transactions that modify your Divvy account. Unlike the [Get Payment History](#get-payment-history) method, notifications include _all_ types of transactions, but each is described in less detail.
 
 Notifications are sorted in order of when they occurred, so you can save the most recently-known transaction and easily iterate forward to find any notifications that are newer than that.
 
 
 ## Check Notifications ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/notifications.js "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/notifications.js "Source")
 
 Get a notification for the specific transaction hash, along with links to previous and next notifications, if available.
 
@@ -2044,14 +2044,14 @@ GET /v1/accounts/{:address}/notifications/{:id}
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#check-notifications)
+[Try it! >](https://divvy.com/build/rest-tool#check-notifications)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| address | String | The Ripple account address of an account involved in the transaction. |
-| id | String | A unique identifier for the transaction this notification describes -- either a client resource ID or a Ripple transaction hash |
+| address | String | The Divvy account address of an account involved in the transaction. |
+| id | String | A unique identifier for the transaction this notification describes -- either a client resource ID or a Divvy transaction hash |
 
 You can find a transaction `hash` in a few places:
 
@@ -2075,11 +2075,11 @@ A successful response contains a notification object, for example:
     "ledger": "8924146",
     "hash": "9D591B18EDDD34F0B6CF4223A2940AEA2C3CC778925BABF289E0011CD8FA056E",
     "timestamp": "2014-09-17T21:47:00.000Z",
-    "transaction_url": "http://api.ripple.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/payments/9D591B18EDDD34F0B6CF4223A2940AEA2C3CC778925BABF289E0011CD8FA056E",
+    "transaction_url": "http://api.divvy.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/payments/9D591B18EDDD34F0B6CF4223A2940AEA2C3CC778925BABF289E0011CD8FA056E",
     "previous_hash": "8496C20AEB453803CB80474B59AB1E8FAA26725561EFF5AF41BD588B325AFBA8",
-    "previous_notification_url": "http://api.ripple.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/notifications/8496C20AEB453803CB80474B59AB1E8FAA26725561EFF5AF41BD588B325AFBA8",
+    "previous_notification_url": "http://api.divvy.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/notifications/8496C20AEB453803CB80474B59AB1E8FAA26725561EFF5AF41BD588B325AFBA8",
     "next_hash": "AE79DE34230403EA2769B4DA21A0D4D2FD7A18518DBA0A4C5B6352AFD844D22A",
-    "next_notification_url": "http://api.ripple.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/notifications/AE79DE34230403EA2769B4DA21A0D4D2FD7A18518DBA0A4C5B6352AFD844D22A"
+    "next_notification_url": "http://api.divvy.com:5990/v1/accounts/rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn/notifications/AE79DE34230403EA2769B4DA21A0D4D2FD7A18518DBA0A4C5B6352AFD844D22A"
   }
 }
 ```
@@ -2088,17 +2088,17 @@ If the server has any notifications that are older than this one, the `previous_
 
 The `next_hash` and `next_notification_url` fields work the same way, but they provide information on newer notifications instead.
 
-*Caution:* If you are accessing the REST API through a proxy, you may not be able to access the URLs as provided. (See [RA-129](https://ripplelabs.atlassian.net/browse/RA-129) for status and details.)
+*Caution:* If you are accessing the REST API through a proxy, you may not be able to access the URLs as provided. (See [RA-129](https://divvylabs.atlassian.net/browse/RA-129) for status and details.)
 
 
 
 
-# RIPPLED SERVER STATUS #
+# DIVVYD SERVER STATUS #
 
-The following two endpoints can be used to check if the `ripple-rest` API is currently connected to a `rippled` server, and to retrieve information about the current status of the API.
+The following two endpoints can be used to check if the `divvy-rest` API is currently connected to a `divvyd` server, and to retrieve information about the current status of the API.
 
 ## Check Connection ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/info.js#L33 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/info.js#L33 "Source")
 
 Perform a simple ping to make sure that the server is working properly.
 
@@ -2112,7 +2112,7 @@ GET /v1/server/connected
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#check-connection)
+[Try it! >](https://divvy.com/build/rest-tool#check-connection)
 
 #### Response ####
 
@@ -2123,12 +2123,12 @@ GET /v1/server/connected
 }
 ```
 
-If the server has any problems, for example with connecting to the `rippled` server, it returns an error message instead.
+If the server has any problems, for example with connecting to the `divvyd` server, it returns an error message instead.
 
 ## Get Server Status ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/info.js#L14 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/info.js#L14 "Source")
 
-Retrieve information about the current status of the Ripple-REST API and the `rippled` server it is connected to.
+Retrieve information about the current status of the Divvy-REST API and the `divvyd` server it is connected to.
 
 <!-- <div class='multicode'> -->
 
@@ -2140,16 +2140,16 @@ GET /v1/server
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#get-server-status)
+[Try it! >](https://divvy.com/build/rest-tool#get-server-status)
 
 #### Response ####
 
 ```js
 {
   "success": true,
-  "api_documentation_url": "https://github.com/ripple/ripple-rest",
-  "rippled_server_url": "wss://s1.ripple.com:443",
-  "rippled_server_status": {
+  "api_documentation_url": "https://github.com/xdv/divvy-rest",
+  "divvyd_server_url": "wss://s1.divvy.com:443",
+  "divvyd_server_status": {
     "build_version": "0.26.3-sp2",
     "complete_ledgers": "32570-9306249",
     "hostid": "MERT",
@@ -2164,10 +2164,10 @@ GET /v1/server
     "server_state": "full",
     "validated_ledger": {
       "age": 9,
-      "base_fee_xrp": 0.00001,
+      "base_fee_xdv": 0.00001,
       "hash": "7C3F4489091BAE5DCADE3B1A8A2C1E7E5C938FA4483660FD1A4098C4EC4805CD",
-      "reserve_base_xrp": 20,
-      "reserve_inc_xrp": 5,
+      "reserve_base_xdv": 20,
+      "reserve_inc_xdv": 5,
       "seq": 9306249
     },
     "validation_quorum": 3
@@ -2179,45 +2179,45 @@ The parameters in a successful response are as follows:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| api\_documentation\_url | String | A URL that contains more information about the software, typically the [Ripple-REST Github Project](https://github.com/ripple/ripple-rest). |
-| rippled_server_url | String | The URL of the `rippled` server that Ripple-REST is using to interface with the Ripple Network |
-| rippled\_server\_status | Object | Various information about the `rippled` server |
+| api\_documentation\_url | String | A URL that contains more information about the software, typically the [Divvy-REST Github Project](https://github.com/xdv/divvy-rest). |
+| divvyd_server_url | String | The URL of the `divvyd` server that Divvy-REST is using to interface with the Divvy Network |
+| divvyd\_server\_status | Object | Various information about the `divvyd` server |
 
-The `rippled_server_status` object may have any of the following fields:
+The `divvyd_server_status` object may have any of the following fields:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| build_version | String | The `rippled` software version number |
+| build_version | String | The `divvyd` software version number |
 | complete_ledgers | String | A range (possibly a disjointed range) of ledger versions that the server has on hand |
-| hostid | String | The hostname of the machine running the `rippled` server |
+| hostid | String | The hostname of the machine running the `divvyd` server |
 | io\_latency\_ms | Number | The number of milliseconds spent waiting for I/O operations to complete. A high number indicates too much load on the server, which can be improved with more RAM and faster hard disks. |
 | last\_close | Object | Some information about the most recently-closed ledger |
 | last\_close.converge\_time\_s | Number | How many seconds it took to reach consensus on the this ledger version |
 | last\_close.proposers | Number | How many trusted validators were involved in the consensus process for this ledger version |
 | load\_factor | Number | The load factor the server is currently enforcing, as a multiplier for the base transaction fee. The load factor is determined by the highest of the individual server’s load factor, cluster’s load factor, and the overall network’s load factor. |
-| peers | Number | How many other `rippled` servers this server is connected to |
+| peers | Number | How many other `divvyd` servers this server is connected to |
 | pubkey_node | String | Public key used to verify this node for internal communications; this key is automatically generated by the server the first time it starts up. (If deleted, the node can just create a new pair of keys.) |
-| server_state | String | A string indicating to what extent the server is participating in the network. See [Possible Server States in the rippled documentation](rippled-apis#possible-server-states) for more details. |
+| server_state | String | A string indicating to what extent the server is participating in the network. See [Possible Server States in the divvyd documentation](divvyd-apis#possible-server-states) for more details. |
 | validated_ledger | Object | Information about the fully-validated ledger with the highest sequence number (the most recent) |
 | validated_ledger.age | Unsigned Integer | The time since the ledger was closed, in seconds |
-| validated_ledger.base_fee_xrp | Number | Base fee, in XRP. This may be represented in scientific notation such as 1e-05 for 0.00005 |
+| validated_ledger.base_fee_xdv | Number | Base fee, in XDV. This may be represented in scientific notation such as 1e-05 for 0.00005 |
 | validated_ledger.hash | String | Unique hash for the ledger, as hex |
-| validated_ledger.reserve_base_xrp | Unsigned Integer | Minimum amount of XRP (not drops) necessary for every account to keep in reserve |
-| validated_ledger.reserve_inc_xrp | Unsigned Integer | Amount of XRP (not drops) added to the account reserve for each object an account is responsible for in the ledger |
+| validated_ledger.reserve_base_xdv | Unsigned Integer | Minimum amount of XDV (not drops) necessary for every account to keep in reserve |
+| validated_ledger.reserve_inc_xdv | Unsigned Integer | Amount of XDV (not drops) added to the account reserve for each object an account is responsible for in the ledger |
 | validated_ledger.seq | Unsigned Integer | Identifying sequence number of this ledger version |
 | validation_quorum | Number | Minimum number of trusted validations required in order to validate a ledger version. Some circumstances may cause the server to require more validations. |
 
-<!--Note: keep the above table up-to-date with the server_info command in the rippled documentation -->
+<!--Note: keep the above table up-to-date with the server_info command in the divvyd documentation -->
 
 
 
 
 # UTILITIES #
 
-## Retrieve Ripple Transaction ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/transactions.js#L118 "Source")
+## Retrieve Divvy Transaction ##
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/transactions.js#L118 "Source")
 
-Returns a Ripple transaction, in its complete, original format.
+Returns a Divvy transaction, in its complete, original format.
 
 <!-- <div class='multicode'> -->
 
@@ -2229,17 +2229,17 @@ GET /v1/transactions/{:id}
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#retrieve-ripple-transaction)
+[Try it! >](https://divvy.com/build/rest-tool#retrieve-divvy-transaction)
 
 The following URL parameters are required by this API endpoint:
 
 | Field | Value | Description |
 |-------|-------|-------------|
-| hash | String | A unique identifier for the Ripple transaction to retrieve -- either a client resource ID or a Ripple transaction hash. |
+| hash | String | A unique identifier for the Divvy transaction to retrieve -- either a client resource ID or a Divvy transaction hash. |
 
 #### Response ####
 
-The result is a JSON object, whose `transaction` field has the requested transaction. See the [Transaction format documentation](https://ripple.com/build/transactions) for a complete explanation of the fields of a transaction.
+The result is a JSON object, whose `transaction` field has the requested transaction. See the [Transaction format documentation](https://divvy.com/build/transactions) for a complete explanation of the fields of a transaction.
 
 ```js
 {
@@ -2325,7 +2325,7 @@ The result is a JSON object, whose `transaction` field has the requested transac
               },
               "LowNode": "0000000000000010"
             },
-            "LedgerEntryType": "RippleState",
+            "LedgerEntryType": "DivvyState",
             "LedgerIndex": "2E103526973EF8CCE3340125DD66D6BF84DD8473EF693EC5E06B2ACBF2BAC155",
             "PreviousFields": {
               "Balance": {
@@ -2390,7 +2390,7 @@ The result is a JSON object, whose `transaction` field has the requested transac
               },
               "LowNode": "000000000000000B"
             },
-            "LedgerEntryType": "RippleState",
+            "LedgerEntryType": "DivvyState",
             "LedgerIndex": "E3DC31319B6C121387EAE05253AF71CAF98360BF1419249DD1A218A9B4C121A9",
             "PreviousFields": {
               "Balance": {
@@ -2420,11 +2420,11 @@ The result is a JSON object, whose `transaction` field has the requested transac
 
 
 ## Retrieve Transaction Fee ##
-[[Source]<br>](https://github.com/ripple/ripple-rest/blob/develop/api/info.js#L42 "Source")
+[[Source]<br>](https://github.com/xdv/divvy-rest/blob/develop/api/info.js#L42 "Source")
 
-(New in [Ripple-REST v1.3.1](https://github.com/ripple/ripple-rest/releases/tag/1.3.1-rc1))
+(New in [Divvy-REST v1.3.1](https://github.com/xdv/divvy-rest/releases/tag/1.3.1-rc1))
 
-Retrieve the current transaction fee, in XRP, for the `rippled` server Ripple-REST is connected to. If Ripple-REST is connected to multiple rippled servers, returns the median fee among the connected servers.
+Retrieve the current transaction fee, in XDV, for the `divvyd` server Divvy-REST is connected to. If Divvy-REST is connected to multiple divvyd servers, returns the median fee among the connected servers.
 
 <!-- <div class='multicode'> -->
 
@@ -2436,11 +2436,11 @@ GET /v1/transaction-fee
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#retrieve-transaction-fee)
+[Try it! >](https://divvy.com/build/rest-tool#retrieve-transaction-fee)
 
 #### Response ####
 
-The response is a JSON object, whose `fee` field is a string containing a decimal amount of XRP that the `rippled` server requires to be destroyed in order to process and relay the transaction to the network.
+The response is a JSON object, whose `fee` field is a string containing a decimal amount of XDV that the `divvyd` server requires to be destroyed in order to process and relay the transaction to the network.
 
 ```js
 {
@@ -2464,7 +2464,7 @@ GET /v1/uuid
 
 <!-- </div> -->
 
-[Try it! >](https://ripple.com/build/rest-tool#generate-uuid)
+[Try it! >](https://divvy.com/build/rest-tool#generate-uuid)
 
 #### Response ####
 

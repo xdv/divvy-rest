@@ -7,10 +7,10 @@ function generateIndexPage(request, response, next) {
 
   respond.success(response, {
     success: true,
-    name: 'ripple-rest',
+    name: 'divvy-rest',
     package_version: version.getPackageVersion(),
     version: version.getApiVersion(),
-    documentation: 'https://github.com/ripple/ripple-rest',
+    documentation: 'https://github.com/xdv/divvy-rest',
     endpoints: {
       wallet_new: url_base + '/wallet/new',
       payment_paths: url_base + '/accounts/{address}/payments/paths/'
@@ -30,7 +30,7 @@ function generateIndexPage(request, response, next) {
       account_order_transaction: url_base + '/accounts/{address}/orders/{hash}',
       account_order_book: url_base + '/accounts/{address}/order_book/'
         + '{base as currency+issuer}/{counter as currency+issuer}',
-      ripple_transactions: url_base + '/transactions/{hash}',
+      divvy_transactions: url_base + '/transactions/{hash}',
       server_status: url_base + '/server',
       server_connected: url_base + '/server/connected',
       transaction_fee: url_base + '/transaction-fee',

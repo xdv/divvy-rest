@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures').settings;
 var errors = require('./fixtures').errors;
@@ -8,7 +8,7 @@ var addresses = require('./fixtures').addresses;
 suite('get settings', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -60,7 +60,7 @@ suite('get settings', function() {
 suite('post settings', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -80,7 +80,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.LastLedgerSequence, lastLedger);
@@ -173,7 +173,7 @@ suite('post settings', function() {
       settings: {
         require_destination_tag: true,
         require_authorization: true,
-        disallow_xrp: true,
+        disallow_xdv: true,
         domain: 'example.com',
         email_hash: '23463B99B62A72F26ED677CC556C44E8',
         wallet_locator: 'DEADBEEF',
@@ -204,7 +204,7 @@ suite('post settings', function() {
       settings: {
         require_destination_tag: true,
         require_authorization: true,
-        disallow_xrp: true,
+        disallow_xdv: true,
         domain: 'example.com',
         email_hash: '23463B99B62A72F26ED677CC556C44E8',
         wallet_locator: 'DEADBEEF',
@@ -271,7 +271,7 @@ suite('post settings', function() {
     .end(done);
   });
 
-  test('/accounts/:account/settings -- disallow_xrp invalid', function(done) {
+  test('/accounts/:account/settings -- disallow_xdv invalid', function(done) {
     self.wss.once('request_account_info', function(message, conn) {
       assert(false, 'Should not request account info');
     });
@@ -285,7 +285,7 @@ suite('post settings', function() {
     .send({
       secret: addresses.SECRET,
       settings: fixtures.settings({
-        disallow_xrp: 1
+        disallow_xdv: 1
       })
     })
     .expect(testutils.checkStatus(400))
@@ -293,7 +293,7 @@ suite('post settings', function() {
     .expect(testutils.checkBody(errors.RESTErrorResponse({
       type: 'invalid_request',
       error: 'restINVALID_PARAMETER',
-      message: 'Parameter must be a boolean: disallow_xrp'
+      message: 'Parameter must be a boolean: disallow_xdv'
     })))
     .end(done);
   });
@@ -500,10 +500,10 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
-      assert.strictEqual(so.Flags & ripple.Transaction.flags.AccountSet.RequireDestTag, 0);
+      assert.strictEqual(so.Flags & divvy.Transaction.flags.AccountSet.RequireDestTag, 0);
 
       conn.send(fixtures.submitSettingsResponse(message, {
         hash: hash
@@ -536,10 +536,10 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
-      assert((so.Flags & ripple.Transaction.flags.AccountSet.OptionalDestTag) > 0);
+      assert((so.Flags & divvy.Transaction.flags.AccountSet.OptionalDestTag) > 0);
 
       conn.send(fixtures.submitSettingsResponse(message, {
         hash: hash
@@ -572,7 +572,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.Domain, '');
@@ -608,7 +608,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.EmailHash, new Array(32 + 1).join('0'));
@@ -644,7 +644,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.WalletLocator, new Array(64 + 1).join('0'));
@@ -680,7 +680,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.TransferRate, 0);
@@ -716,7 +716,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.ClearFlag, 6);
@@ -739,7 +739,7 @@ suite('post settings', function() {
     .end(done);
   });
 
-  test('/accounts/:account/settings -- default_ripple -- clear setting', function(done) {
+  test('/accounts/:account/settings -- default_divvy -- clear setting', function(done) {
     var hash = testutils.generateHash();
 
     self.wss.once('request_account_info', function(message, conn) {
@@ -752,7 +752,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransactionType, 'AccountSet');
       assert.strictEqual(so.ClearFlag, 8);
@@ -767,7 +767,7 @@ suite('post settings', function() {
     .send({
       secret: addresses.SECRET,
       settings: {
-        default_ripple: false
+        default_divvy: false
       }
     })
     .expect(testutils.checkStatus(200))
@@ -816,7 +816,7 @@ suite('post settings', function() {
       assert.strictEqual(message.command, 'submit');
       assert(message.hasOwnProperty('tx_blob'));
 
-      var so = new ripple.SerializedObject(message.tx_blob).to_json();
+      var so = new divvy.SerializedObject(message.tx_blob).to_json();
 
       assert.strictEqual(so.TransferRate, 1200000000);
 
@@ -830,7 +830,7 @@ suite('post settings', function() {
       settings: {
         require_destination_tag: true,
         require_authorization: true,
-        disallow_xrp: true,
+        disallow_xdv: true,
         domain: 'example.com',
         email_hash: '23463B99B62A72F26ED677CC556C44E8',
         wallet_locator: 'DEADBEEF',

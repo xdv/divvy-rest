@@ -8,10 +8,10 @@ var utils = require('./lib/utils.js');
 function getServerStatus(callback) {
   serverlib.getStatus(this.remote, function(error, status) {
     if (error) {
-      callback(new errors.RippledNetworkError(error.message));
+      callback(new errors.DivvydNetworkError(error.message));
     } else {
       callback(null, _.extend({
-        api_documentation_url: 'https://github.com/ripple/ripple-rest'
+        api_documentation_url: 'https://github.com/xdv/divvy-rest'
       }, status));
     }
   });
@@ -40,7 +40,7 @@ function getUUID(callback) {
 
 function getFee(callback) {
   var fee = this.remote.createTransaction()._computeFee();
-  callback(null, {fee: utils.dropsToXrp(fee)});
+  callback(null, {fee: utils.dropsToXdv(fee)});
 }
 
 module.exports.serverStatus = getServerStatus;

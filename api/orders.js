@@ -3,7 +3,7 @@
 'use strict';
 var _ = require('lodash');
 var Promise = require('bluebird');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var transactions = require('./transactions');
 var SubmitTransactionHooks = require('./lib/submit_transaction_hooks.js');
 var utils = require('./lib/utils');
@@ -24,7 +24,7 @@ var OfferCreateFlags = {
 var DefaultPageLimit = 200;
 
 /**
- * Get orders from the ripple network
+ * Get orders from the divvy network
  *
  *  @query
  *  @param {String} [request.query.limit]
@@ -36,8 +36,8 @@ var DefaultPageLimit = 200;
  *     - (required if request.query.marker is present)
  *
  *  @url
- *  @param {RippleAddress} request.params.account
- *     - The ripple address to query orders
+ *  @param {DivvyAddress} request.params.account
+ *     - The divvy address to query orders
  *
  */
 function getOrders(account, options, callback) {
@@ -93,8 +93,8 @@ function getOrders(account, options, callback) {
   function getParsedOrders(offers) {
     return _.reduce(offers, function(orders, off) {
       var sequence = off.seq;
-      var type = off.flags & ripple.Remote.flags.offer.Sell ? 'sell' : 'buy';
-      var passive = (off.flags & ripple.Remote.flags.offer.Passive) !== 0;
+      var type = off.flags & divvy.Remote.flags.offer.Sell ? 'sell' : 'buy';
+      var passive = (off.flags & divvy.Remote.flags.offer.Passive) !== 0;
 
       var taker_gets = utils.parseCurrencyAmount(off.taker_gets);
       var taker_pays = utils.parseCurrencyAmount(off.taker_pays);
@@ -136,10 +136,10 @@ function getOrders(account, options, callback) {
 }
 
 /**
- *  Submit an order to the ripple network
+ *  Submit an order to the divvy network
  *
  *  More information about order flags can be found at
- *  https://ripple.com/build/transactions/#offercreate-flags
+ *  https://divvy.com/build/transactions/#offercreate-flags
  *
  *  @body
  *  @param {Order} request.body.order
@@ -157,11 +157,11 @@ function getOrders(account, options, callback) {
  *  @param {String} request.body.order.taker_pays
  *         - Amount of a currency the taker must pay for consuming this order
  *  @param {String} request.body.secret
- *         - YOUR secret key. Do NOT submit to an unknown ripple-rest server
+ *         - YOUR secret key. Do NOT submit to an unknown divvy-rest server
  *
  *  @query
  *  @param {String "true"|"false"} request.query.validated
- *         - used to force request to wait until rippled has finished
+ *         - used to force request to wait until divvyd has finished
  *         - validating the submitted transaction
  */
 function placeOrder(account, order, secret, options, callback) {
@@ -179,13 +179,13 @@ function placeOrder(account, order, secret, options, callback) {
   validate.validated(options.validated, true);
 
   function setTransactionParameters(transaction) {
-    var takerPays = order.taker_pays.currency !== 'XRP'
-      ? order.taker_pays : utils.xrpToDrops(order.taker_pays.value);
-    var takerGets = order.taker_gets.currency !== 'XRP'
-      ? order.taker_gets : utils.xrpToDrops(order.taker_gets.value);
+    var takerPays = order.taker_pays.currency !== 'XDV'
+      ? order.taker_pays : utils.xdvToDrops(order.taker_pays.value);
+    var takerGets = order.taker_gets.currency !== 'XDV'
+      ? order.taker_gets : utils.xdvToDrops(order.taker_gets.value);
 
-    transaction.offerCreate(account, ripple.Amount.from_json(takerPays),
-      ripple.Amount.from_json(takerGets));
+    transaction.offerCreate(account, divvy.Amount.from_json(takerPays),
+      divvy.Amount.from_json(takerGets));
 
     transactions.setTransactionBitFlags(transaction, {
       input: order,
@@ -213,7 +213,7 @@ function placeOrder(account, order, secret, options, callback) {
 }
 
 /**
- *  Cancel an order in the ripple network
+ *  Cancel an order in the divvy network
  *
  *  @url
  *  @param {Number String} request.params.sequence
@@ -221,7 +221,7 @@ function placeOrder(account, order, secret, options, callback) {
  *
  *  @query
  *  @param {String "true"|"false"} request.query.validated
- *      - used to force request to wait until rippled has finished
+ *      - used to force request to wait until divvyd has finished
  *        validating the submitted transaction
  */
 function cancelOrder(account, sequence, secret, options, callback) {
@@ -256,12 +256,12 @@ function cancelOrder(account, sequence, secret, options, callback) {
  *  Get the most recent spapshot of the order book for a currency pair
  *
  *  @url
- *  @param {RippleAddress} request.params.account
- *      - The ripple address to use as point-of-view
+ *  @param {DivvyAddress} request.params.account
+ *      - The divvy address to use as point-of-view
  *        (returns unfunded orders for this account)
- *  @param {String ISO 4217 Currency Code + RippleAddress} request.params.base
+ *  @param {String ISO 4217 Currency Code + DivvyAddress} request.params.base
  *      - Base currency as currency+issuer
- *  @param {String ISO 4217 Currency Code + RippleAddress}
+ *  @param {String ISO 4217 Currency Code + DivvyAddress}
  *      request.params.counter - Counter currency as currency+issuer
  *
  *  @query
@@ -350,8 +350,8 @@ function getOrderBook(account, base, counter, options, callback) {
       var sequence = off.Sequence;
 
       // Transaction Flags
-      var passive = (off.Flags & ripple.Remote.flags.offer.Passive) !== 0;
-      var sell = (off.Flags & ripple.Remote.flags.offer.Sell) !== 0;
+      var passive = (off.Flags & divvy.Remote.flags.offer.Passive) !== 0;
+      var sell = (off.Flags & divvy.Remote.flags.offer.Sell) !== 0;
 
       var taker_gets_total = utils.parseCurrencyAmount(off.TakerGets);
       var taker_gets_funded = off.taker_gets_funded ?
@@ -421,7 +421,7 @@ function getOrderBook(account, base, counter, options, callback) {
  *  Get an Order transaction (`OfferCreate` or `OfferCancel`)
  *
  *  @url
- *  @param {RippleAddress} request.params.account
+ *  @param {DivvyAddress} request.params.account
  *  @param {String} request.params.identifier
  *
  *  @param {Express.js Request} request

@@ -11,8 +11,8 @@ var validate = require('./lib/validate');
 
 var TrustSetFlags = {
   SetAuth: {name: 'authorized', set: 'SetAuth'},
-  ClearNoRipple: {name: 'account_allows_rippling', set: 'ClearNoRipple',
-    unset: 'NoRipple'},
+  ClearNoDivvy: {name: 'account_allows_rippling', set: 'ClearNoDivvy',
+    unset: 'NoDivvy'},
   SetFreeze: {name: 'account_trustline_frozen', set: 'SetFreeze',
     unset: 'ClearFreeze'}
 };
@@ -32,7 +32,7 @@ var DefaultPageLimit = 200;
  * @query
  * @param {String ISO 4217 Currency Code} [request.query.currency]
  *         - only request trustlines with given currency
- * @param {RippleAddress} [request.query.counterparty]
+ * @param {DivvyAddress} [request.query.counterparty]
  *         - only request trustlines with given counterparty
  * @param {String} [request.query.marker] - start position in response paging
  * @param {Number String} [request.query.limit] - max results per response
@@ -100,9 +100,9 @@ function getTrustLines(account, options, callback) {
             currency: line.currency,
             limit: line.limit,
             reciprocated_limit: line.limit_peer,
-            account_allows_rippling: line.no_ripple ? !line.no_ripple : true,
-            counterparty_allows_rippling: line.no_ripple_peer
-              ? !line.no_ripple_peer : true,
+            account_allows_rippling: line.no_divvy ? !line.no_divvy : true,
+            counterparty_allows_rippling: line.no_divvy_peer
+              ? !line.no_divvy_peer : true,
             account_trustline_frozen: line.freeze ? line.freeze : false,
             counterparty_trustline_frozen: line.freeze_peer
               ? line.freeze_peer : false
@@ -151,7 +151,7 @@ function getTrustLines(account, options, callback) {
  *
  * @query
  * @param {String "true"|"false"} request.query.validated Used to force request
- *     to wait until rippled has finished validating the submitted transaction
+ *     to wait until divvyd has finished validating the submitted transaction
  *
  */
 

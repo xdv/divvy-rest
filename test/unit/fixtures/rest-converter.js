@@ -15,27 +15,27 @@ module.exports.paymentRest = {
   }
 };
 
-module.exports.paymentRestXRP = {
+module.exports.paymentRestXDV = {
   'source_account': addresses.VALID,
   'destination_account': addresses.COUNTERPARTY,
   'destination_amount': {
     'value': '1',
-    'currency': 'XRP',
+    'currency': 'XDV',
     'issuer': ''
   }
 };
 
-module.exports.paymentRestXRPtoXRP = {
+module.exports.paymentRestXDVtoXDV = {
   'source_account': addresses.VALID,
   'source_amount': {
     'value': '1',
-    'currency': 'XRP',
+    'currency': 'XDV',
     'issuer': ''
   },
   'destination_account': addresses.COUNTERPARTY,
   'destination_amount': {
     'value': '1',
-    'currency': 'XRP',
+    'currency': 'XDV',
     'issuer': ''
   }
 };
@@ -59,7 +59,7 @@ module.exports.paymentRestComplex = {
   'invoice_id': '',
   'paths': '[]',
   'partial_payment': false,
-  'no_direct_ripple': false
+  'no_direct_divvy': false
 };
 
 module.exports.paymentTx = {
@@ -85,7 +85,7 @@ module.exports.paymentTx = {
   finalized: false
 };
 
-module.exports.paymentTxXRP = {
+module.exports.paymentTxXDV = {
   tx_json: {
     Flags: 0,
     TransactionType: 'Payment',
@@ -164,7 +164,7 @@ module.exports.exportsPaymentRestIssuers = function(options) {
     invoice_id: '',
     paths: '[]',
     partial_payment: false,
-    no_direct_ripple: false
+    no_direct_divvy: false
   };
 
 };

@@ -2,7 +2,7 @@
 var _ = require('lodash');
 var InvalidRequestError = require('./errors.js').InvalidRequestError;
 var validator = require('./schema-validator');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var utils = require('./utils');
 
 function isBoolean(value) {
@@ -24,13 +24,13 @@ function missing(name) {
 }
 
 function isValidAddress(address) {
-  return address ? ripple.UInt160.is_valid(address) : false;
+  return address ? divvy.UInt160.is_valid(address) : false;
 }
 
 function validateAddress(address) {
   if (!isValidAddress(address)) {
-    throw error('Parameter is not a valid Ripple address: account');
-    // TODO: thow invalid('Ripple address', address);
+    throw error('Parameter is not a valid Divvy address: account');
+    // TODO: thow invalid('Divvy address', address);
   }
 }
 
@@ -42,7 +42,7 @@ function validateAddressAndSecret(obj) {
     throw missing('secret');
   }
   try {
-    if (!ripple.Seed.from_json(secret).get_key(address)) {
+    if (!divvy.Seed.from_json(secret).get_key(address)) {
       throw error('Invalid secret', secret);
     }
   } catch (exception) {
@@ -59,7 +59,7 @@ function validateCurrency(currency) {
 
 function validateCounterparty(counterparty) {
   if (!isValidAddress(counterparty)) {
-    throw error('Parameter is not a valid Ripple address: counterparty');
+    throw error('Parameter is not a valid Divvy address: counterparty');
     // TODO: throw invalid('counterparty', counterparty);
   }
 }
@@ -145,11 +145,11 @@ function validateOrder(order) {
     throw error('Parameter must be a boolean: fill_or_kill');
   } else if (!order.taker_gets
       || (!validator.isValid(order.taker_gets, 'Amount'))
-      || (!order.taker_gets.issuer && order.taker_gets.currency !== 'XRP')) {
+      || (!order.taker_gets.issuer && order.taker_gets.currency !== 'XDV')) {
     throw error('Parameter must be a valid Amount object: taker_gets');
   } else if (!order.taker_pays
       || (!validator.isValid(order.taker_pays, 'Amount'))
-      || (!order.taker_pays.issuer && order.taker_pays.currency !== 'XRP')) {
+      || (!order.taker_pays.issuer && order.taker_pays.currency !== 'XDV')) {
     throw error('Parameter must be a valid Amount object: taker_pays');
   }
   // TODO: validateSchema(order, 'Order');
@@ -157,7 +157,7 @@ function validateOrder(order) {
 
 function isValidAmount(amount) {
   return (amount.currency && validator.isValid(amount.currency, 'Currency')
-      && (amount.currency === 'XRP' || isValidAddress(amount.counterparty)));
+      && (amount.currency === 'XDV' || isValidAddress(amount.counterparty)));
 }
 
 function validateOrderbook(orderbook) {
@@ -169,12 +169,12 @@ function validateOrderbook(orderbook) {
     throw error('Invalid parameter: counter. '
       + 'Must be a currency string in the form currency+counterparty');
   }
-  if (orderbook.counter.currency === 'XRP'
+  if (orderbook.counter.currency === 'XDV'
       && orderbook.counter.counterparty) {
-    throw error('Invalid parameter: counter. XRP cannot have counterparty');
+    throw error('Invalid parameter: counter. XDV cannot have counterparty');
   }
-  if (orderbook.base.currency === 'XRP' && orderbook.base.counterparty) {
-    throw error('Invalid parameter: base. XRP cannot have counterparty');
+  if (orderbook.base.currency === 'XDV' && orderbook.base.counterparty) {
+    throw error('Invalid parameter: base. XDV cannot have counterparty');
   }
 }
 
@@ -226,12 +226,12 @@ function validatePaymentMemos(memos) {
 function validatePayment(payment) {
   if (!isValidAddress(payment.source_account)) {
     throw error('Invalid parameter: source_account. '
-      + 'Must be a valid Ripple address');
+      + 'Must be a valid Divvy address');
   }
 
   if (!isValidAddress(payment.destination_account)) {
     throw error('Invalid parameter: '
-      + 'destination_account. Must be a valid Ripple address');
+      + 'destination_account. Must be a valid Divvy address');
   }
 
   if (payment.source_tag &&
@@ -260,16 +260,16 @@ function validatePayment(payment) {
   }
 
   if (payment.destination_amount
-      && payment.destination_amount.currency.toUpperCase() === 'XRP'
+      && payment.destination_amount.currency.toUpperCase() === 'XDV'
       && payment.destination_amount.issuer) {
     throw error(
-      'Invalid parameter: destination_amount. XRP cannot have issuer');
+      'Invalid parameter: destination_amount. XDV cannot have issuer');
   }
   if (payment.source_amount
-      && payment.source_amount.currency.toUpperCase() === 'XRP'
+      && payment.source_amount.currency.toUpperCase() === 'XDV'
       && payment.source_amount.issuer) {
     throw error(
-      'Invalid parameter: source_amount. XRP cannot have issuer');
+      'Invalid parameter: source_amount. XDV cannot have issuer');
   }
 
   if (payment.source_slippage
@@ -308,10 +308,10 @@ function validatePayment(payment) {
       'Invalid parameter: partial_payment. Must be a boolean');
   }
 
-  if (payment.hasOwnProperty('no_direct_ripple')
-      && typeof payment.no_direct_ripple !== 'boolean') {
+  if (payment.hasOwnProperty('no_direct_divvy')
+      && typeof payment.no_direct_divvy !== 'boolean') {
     throw error(
-      'Invalid parameter: no_direct_ripple. Must be a boolean');
+      'Invalid parameter: no_direct_divvy. Must be a boolean');
   }
 
   if (payment.hasOwnProperty('memos')) {
@@ -322,20 +322,20 @@ function validatePayment(payment) {
 function validatePathFind(pathfind) {
   if (!pathfind.source_account) {
     throw error(
-      'Missing parameter: source_account. Must be a valid Ripple address');
+      'Missing parameter: source_account. Must be a valid Divvy address');
   }
 
   if (!pathfind.destination_account) {
     throw error('Missing parameter: destination_account. '
-      + 'Must be a valid Ripple address');
+      + 'Must be a valid Divvy address');
   }
 
   if (!isValidAddress(pathfind.source_account)) {
-    throw error('Parameter is not a valid Ripple address: account');
+    throw error('Parameter is not a valid Divvy address: account');
   }
 
   if (!isValidAddress(pathfind.destination_account)) {
-    throw error('Parameter is not a valid Ripple address: destination_account');
+    throw error('Parameter is not a valid Divvy address: destination_account');
   }
 
   if (!pathfind.destination_amount) {
@@ -393,8 +393,8 @@ function validateSettings(settings) {
   if (!/(undefined|boolean)/.test(typeof settings.require_authorization)) {
     throw error('Parameter must be a boolean: require_authorization');
   }
-  if (!/(undefined|boolean)/.test(typeof settings.disallow_xrp)) {
-    throw error('Parameter must be a boolean: disallow_xrp');
+  if (!/(undefined|boolean)/.test(typeof settings.disallow_xdv)) {
+    throw error('Parameter must be a boolean: disallow_xdv');
   }
 
   var setCollision = (typeof settings.no_freeze === 'boolean')
@@ -426,7 +426,7 @@ function validateTrustline(trustline) {
     throw error('Parameter missing: trustline.counterparty');
   }
   if (!isValidAddress(trustline.counterparty)) {
-    throw error('Parameter is not a Ripple address: trustline.counterparty');
+    throw error('Parameter is not a Divvy address: trustline.counterparty');
   }
   if (!/^(undefined|number)$/.test(typeof trustline.quality_in)) {
     throw error('Parameter must be a number: trustline.quality_in');

@@ -1,12 +1,12 @@
 /* eslint-disable valid-jsdoc */
 'use strict';
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var utils = require('./utils');
 var _ = require('lodash');
 var Promise = require('bluebird');
-var parseBalanceChanges = require('ripple-lib-transactionparser')
+var parseBalanceChanges = require('divvy-lib-transactionparser')
                           .parseBalanceChanges;
-var parseOrderBookChanges = require('ripple-lib-transactionparser')
+var parseOrderBookChanges = require('divvy-lib-transactionparser')
                             .parseOrderBookChanges;
 
 function TxToRestConverter() {}
@@ -44,19 +44,19 @@ function renameCounterpartyToIssuer(orderChanges) {
 // Orders
 var OfferCreateFlags = {
   Passive: {name: 'passive',
-    value: ripple.Transaction.flags.OfferCreate.Passive},
+    value: divvy.Transaction.flags.OfferCreate.Passive},
   ImmediateOrCancel: {name: 'immediate_or_cancel',
-    value: ripple.Transaction.flags.OfferCreate.ImmediateOrCancel},
+    value: divvy.Transaction.flags.OfferCreate.ImmediateOrCancel},
   FillOrKill: {name: 'fill_or_kill',
-    value: ripple.Transaction.flags.OfferCreate.FillOrKill},
-  Sell: {name: 'sell', value: ripple.Transaction.flags.OfferCreate.Sell}
+    value: divvy.Transaction.flags.OfferCreate.FillOrKill},
+  Sell: {name: 'sell', value: divvy.Transaction.flags.OfferCreate.Sell}
 };
 
 // Paths
 
 /**
- *  Convert a transaction in rippled tx format
- *  to a ripple-rest payment
+ *  Convert a transaction in divvyd tx format
+ *  to a divvy-rest payment
  *
  *  @param {transaction} tx
  *  @param {Function} callback
@@ -135,7 +135,7 @@ TxToRestConverter.prototype.parsePaymentFromTx =
     // Advanced options
     invoice_id: tx.InvoiceID || '',
     paths: JSON.stringify(tx.Paths || []),
-    no_direct_ripple: (tx.Flags & 0x00010000 ? true : false),
+    no_direct_divvy: (tx.Flags & 0x00010000 ? true : false),
     partial_payment: isPartialPayment,
     // Generated after validation
     // TODO: Update to use `unaffected` when perspective account in URI
@@ -149,8 +149,8 @@ TxToRestConverter.prototype.parsePaymentFromTx =
       ''),
     result: tx.meta ? tx.meta.TransactionResult : '',
     timestamp: (tx.date
-      ? new Date(ripple.utils.toTimestamp(tx.date)).toISOString() : ''),
-    fee: utils.dropsToXrp(tx.Fee) || '',
+      ? new Date(divvy.utils.toTimestamp(tx.date)).toISOString() : ''),
+    fee: utils.dropsToXdv(tx.Fee) || '',
     balance_changes: balanceChanges[options.account] || [],
     source_balance_changes: balanceChanges[tx.Account] || [],
     destination_balance_changes: balanceChanges[tx.Destination] || [],
@@ -166,22 +166,22 @@ TxToRestConverter.prototype.parsePaymentFromTx =
     payment.destination_amount_submitted = (typeof tx.Amount === 'object' ?
       tx.Amount :
     {
-      value: utils.dropsToXrp(tx.Amount),
-      currency: 'XRP',
+      value: utils.dropsToXdv(tx.Amount),
+      currency: 'XDV',
       issuer: ''
     });
     payment.source_amount_submitted = (tx.SendMax ?
       (typeof tx.SendMax === 'object' ?
         tx.SendMax :
       {
-        value: utils.dropsToXrp(tx.SendMax),
-        currency: 'XRP',
+        value: utils.dropsToXdv(tx.SendMax),
+        currency: 'XDV',
         issuer: ''
       }) :
       (typeof tx.Amount === 'string' ?
       {
-        value: utils.dropsToXrp(tx.Amount),
-        currency: 'XRP',
+        value: utils.dropsToXdv(tx.Amount),
+        currency: 'XDV',
         issuer: ''
       } :
         tx.Amount));
@@ -191,8 +191,8 @@ TxToRestConverter.prototype.parsePaymentFromTx =
 };
 
 /**
- *  Convert an OfferCreate or OfferCancel transaction in rippled tx format
- *  to a ripple-rest order_change
+ *  Convert an OfferCreate or OfferCancel transaction in divvyd tx format
+ *  to a divvy-rest order_change
  *
  *  @param {Object} tx
  *  @param {Object} options
@@ -227,7 +227,7 @@ TxToRestConverter.prototype.parseOrderFromTx = function(tx, options) {
     var balance_changes = tx.meta
       ? parseBalanceChanges(tx.meta)[options.account] || [] : [];
     var timestamp = tx.date
-      ? new Date(ripple.utils.toTimestamp(tx.date)).toISOString() : '';
+      ? new Date(divvy.utils.toTimestamp(tx.date)).toISOString() : '';
     var order_changes = tx.meta ?
       parseOrderBookChanges(tx.meta)[options.account] : [];
 
@@ -265,7 +265,7 @@ TxToRestConverter.prototype.parseOrderFromTx = function(tx, options) {
       ledger: tx.ledger_index,
       validated: tx.validated,
       timestamp: timestamp,
-      fee: utils.dropsToXrp(tx.Fee),
+      fee: utils.dropsToXdv(tx.Fee),
       action: action,
       direction: direction,
       order: order,
@@ -278,16 +278,16 @@ TxToRestConverter.prototype.parseOrderFromTx = function(tx, options) {
 // Paths
 
 /**
- *  Convert the pathfind results returned from rippled into an
- *  array of payments in the ripple-rest format. The client should be
- *  able to submit any of the payments in the array back to ripple-rest.
+ *  Convert the pathfind results returned from divvyd into an
+ *  array of payments in the divvy-rest format. The client should be
+ *  able to submit any of the payments in the array back to divvy-rest.
  *
- *  @param {rippled Pathfind results} pathfindResults
+ *  @param {divvyd Pathfind results} pathfindResults
  *  @param {Amount} options.destination_amount Since this is not returned by
- *                  rippled in the pathfind results it can either be added
+ *                  divvyd in the pathfind results it can either be added
  *                  to the results or included in the options here
- *  @param {RippleAddress} options.source_account Since this is not returned
- *                  by rippled in the pathfind results it can either be added
+ *  @param {DivvyAddress} options.source_account Since this is not returned
+ *                  by divvyd in the pathfind results it can either be added
  *                  to the results or included in the options here
  *
  *  @returns {Array of Payments} payments
@@ -302,8 +302,8 @@ TxToRestConverter.prototype.parsePaymentsFromPathFind =
       source_tag: '',
       source_amount: (typeof alternative.source_amount === 'string' ?
       {
-        value: utils.dropsToXrp(alternative.source_amount),
-        currency: 'XRP',
+        value: utils.dropsToXdv(alternative.source_amount),
+        currency: 'XDV',
         issuer: ''
       } :
       {
@@ -319,8 +319,8 @@ TxToRestConverter.prototype.parsePaymentsFromPathFind =
       destination_amount: (
         typeof pathfindResults.destination_amount === 'string' ?
       {
-        value: utils.dropsToXrp(pathfindResults.destination_amount),
-        currency: 'XRP',
+        value: utils.dropsToXdv(pathfindResults.destination_amount),
+        currency: 'XDV',
         issuer: ''
       } :
       {
@@ -331,7 +331,7 @@ TxToRestConverter.prototype.parsePaymentsFromPathFind =
       invoice_id: '',
       paths: JSON.stringify(alternative.paths_computed),
       partial_payment: false,
-      no_direct_ripple: false
+      no_direct_divvy: false
     };
 
     payments.push(payment);
@@ -348,7 +348,7 @@ TxToRestConverter.prototype.parseCancelOrderFromTx =
 
   _.extend(result.order, {
     account: message.tx_json.Account,
-    fee: utils.dropsToXrp(message.tx_json.Fee),
+    fee: utils.dropsToXdv(message.tx_json.Fee),
     offer_sequence: message.tx_json.OfferSequence,
     sequence: message.tx_json.Sequence
   });
@@ -367,8 +367,8 @@ TxToRestConverter.prototype.parseSubmitOrderFromTx =
     account: message.tx_json.Account,
     taker_gets: utils.parseCurrencyAmount(message.tx_json.TakerGets),
     taker_pays: utils.parseCurrencyAmount(message.tx_json.TakerPays),
-    fee: utils.dropsToXrp(message.tx_json.Fee),
-    type: (message.tx_json.Flags & ripple.Transaction.flags.OfferCreate.Sell)
+    fee: utils.dropsToXdv(message.tx_json.Fee),
+    type: (message.tx_json.Flags & divvy.Transaction.flags.OfferCreate.Sell)
       > 0 ? 'sell' : 'buy',
     sequence: message.tx_json.Sequence
   });
@@ -381,12 +381,12 @@ TxToRestConverter.prototype.parseSubmitOrderFromTx =
 // Trustlines
 
 var TrustSetResponseFlags = {
-  NoRipple: {name: 'prevent_rippling',
-    value: ripple.Transaction.flags.TrustSet.NoRipple},
+  NoDivvy: {name: 'prevent_rippling',
+    value: divvy.Transaction.flags.TrustSet.NoDivvy},
   SetFreeze: {name: 'account_trustline_frozen',
-    value: ripple.Transaction.flags.TrustSet.SetFreeze},
+    value: divvy.Transaction.flags.TrustSet.SetFreeze},
   SetAuth: {name: 'authorized',
-    value: ripple.Transaction.flags.TrustSet.SetAuth}
+    value: divvy.Transaction.flags.TrustSet.SetAuth}
 };
 
 TxToRestConverter.prototype.parseTrustResponseFromTx =
@@ -416,11 +416,11 @@ TxToRestConverter.prototype.parseTrustResponseFromTx =
 
 var AccountSetResponseFlags = {
   RequireDestTag: {name: 'require_destination_tag',
-    value: ripple.Transaction.flags.AccountSet.RequireDestTag},
+    value: divvy.Transaction.flags.AccountSet.RequireDestTag},
   RequireAuth: {name: 'require_authorization',
-    value: ripple.Transaction.flags.AccountSet.RequireAuth},
-  DisallowXRP: {name: 'disallow_xrp',
-    value: ripple.Transaction.flags.AccountSet.DisallowXRP}
+    value: divvy.Transaction.flags.AccountSet.RequireAuth},
+  DisallowXDV: {name: 'disallow_xdv',
+    value: divvy.Transaction.flags.AccountSet.DisallowXDV}
 };
 
 TxToRestConverter.prototype.parseSettingResponseFromTx =
@@ -452,9 +452,9 @@ TxToRestConverter.prototype.parseSettingResponseFromTx =
 // Utilities
 
 /**
- *  Helper that parses bit flags from ripple response
+ *  Helper that parses bit flags from divvy response
  *
- *  @param {Number} responseFlags - Integer flag on the ripple response
+ *  @param {Number} responseFlags - Integer flag on the divvy response
  *  @param {Object} flags - Object with parameter name and bit flag value pairs
  *
  *  @returns {Object} parsedFlags - Object with parameter name and boolean

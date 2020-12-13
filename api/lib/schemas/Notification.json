@@ -5,8 +5,8 @@
   "type": "object",
   "properties": {
     "account": {
-      "description": "The Ripple address of the account to which the notification pertains",
-      "$ref": "RippleAddress"
+      "description": "The Divvy address of the account to which the notification pertains",
+      "$ref": "DivvyAddress"
     },
     "type": {
       "description": "The resource type this notification corresponds to. Possible values are \"payment\", \"order\", \"trustline\", \"accountsettings\"",
@@ -19,26 +19,26 @@
       "pattern": "^incoming|outgoing|passthrough$"
     },
     "state": {
-      "description": "The state of the transaction from the perspective of the Ripple Ledger. Possible values are \"validated\" and \"failed\"",
+      "description": "The state of the transaction from the perspective of the Divvy Ledger. Possible values are \"validated\" and \"failed\"",
       "type": "string",
       "pattern": "^validated|failed$" 
     },
     "result": {
-      "description": "The rippled code indicating the success or failure type of the transaction. The code \"tesSUCCESS\" indicates that the transaction was successfully validated and written into the Ripple Ledger. All other codes will begin with the following prefixes: \"tec\", \"tef\", \"tel\", or \"tej\"",
+      "description": "The divvyd code indicating the success or failure type of the transaction. The code \"tesSUCCESS\" indicates that the transaction was successfully validated and written into the Divvy Ledger. All other codes will begin with the following prefixes: \"tec\", \"tef\", \"tel\", or \"tej\"",
       "type": "string",
       "pattern": "te[cfjlms][A-Za-z_]+"
     },
     "ledger": {
-      "description": "The string representation of the index number of the ledger containing the validated or failed transaction. Failed payments will only be written into the Ripple Ledger if they fail after submission to a rippled and a Ripple Network fee is claimed",
+      "description": "The string representation of the index number of the ledger containing the validated or failed transaction. Failed payments will only be written into the Divvy Ledger if they fail after submission to a divvyd and a Divvy Network fee is claimed",
       "type": "string",
       "pattern": "^[0-9]+$"
     },
     "hash": {
-      "description": "The 256-bit hash of the transaction. This is used throughout the Ripple protocol as the unique identifier for the transaction",
+      "description": "The 256-bit hash of the transaction. This is used throughout the Divvy protocol as the unique identifier for the transaction",
       "$ref": "Hash256"
     },
     "timestamp": {
-      "description": "The timestamp representing when the transaction was validated and written into the Ripple ledger",
+      "description": "The timestamp representing when the transaction was validated and written into the Divvy ledger",
       "$ref": "Timestamp"
     },
     "transaction_url": {

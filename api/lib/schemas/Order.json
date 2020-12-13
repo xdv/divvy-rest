@@ -1,19 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Order",
-  "description": "A simplified Order object used by the ripple-rest API (note that \"orders\" are referred to elsewhere in the Ripple protocol as \"offers\")",
+  "description": "A simplified Order object used by the divvy-rest API (note that \"orders\" are referred to elsewhere in the Divvy protocol as \"offers\")",
   "type": "object",
   "properties": {
     "account": {
-      "description": "The Ripple account address of the order's creator",
-      "$ref": "RippleAddress"
+      "description": "The Divvy account address of the order's creator",
+      "$ref": "DivvyAddress"
     },
     "type": {
       "description": "If set to true the order it indicates that the creator is looking to receive the base_amount in exchange for the counter_amount. If undefined or set to false it indicates that the creator is looking to sell the base_amount to receive the counter_amount",
       "enum": ["buy", "sell"]
     },
     "taker_pays": {
-      "description": "The amount of currency the seller_account is seeking to buy. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the counter_amount OR exchange_rate but not both. When the order is parsed from the Ripple Ledger the base currency will be determined according to the Priority Ranking of Currencies (XRP,EUR,GBP,AUD,NZD,USD,CAD,CHF,JPY,CNY) and if neither currency is listed in the ranking the base currency will be the one that is alphabetically first",
+      "description": "The amount of currency the seller_account is seeking to buy. If other orders take part of this one, this value will change to represent the amount left in the order. This may be specified along with the counter_amount OR exchange_rate but not both. When the order is parsed from the Divvy Ledger the base currency will be determined according to the Priority Ranking of Currencies (XDV,EUR,GBP,AUD,NZD,USD,CAD,CHF,JPY,CNY) and if neither currency is listed in the ranking the base currency will be the one that is alphabetically first",
       "$ref": "Amount"
     },
     "taker_gets": {
@@ -37,11 +37,11 @@
       "pattern": "^[0-9]*$"
     },
     "immediate_or_cancel": {
-      "description": "If set to true this order will only take orders that are available at the time of execution and will not create an entry in the Ripple Ledger",
+      "description": "If set to true this order will only take orders that are available at the time of execution and will not create an entry in the Divvy Ledger",
       "type": "boolean"
     },
     "fill_or_kill": {
-      "description": "If set to true this order will only take orders that fill the base_amount and are available at the time of execution and will not create an entry in the Ripple Ledger",
+      "description": "If set to true this order will only take orders that fill the base_amount and are available at the time of execution and will not create an entry in the Divvy Ledger",
       "type": "boolean"
     },
     "maximize_buy_or_sell": {
@@ -54,12 +54,12 @@
       "pattern": "^d*$"
     },
     "sequence": {
-      "description": "The sequence number of this order from the perspective of the seller_account. The seller_account and the sequence number uniquely identify the order in the Ripple Ledger",
+      "description": "The sequence number of this order from the perspective of the seller_account. The seller_account and the sequence number uniquely identify the order in the Divvy Ledger",
       "type": "string",
       "pattern": "^[0-9]*$"
     },
     "fee": {
-      "description": "The Ripple Network transaction fee, represented in whole XRP (NOT \"drops\", or millionths of an XRP, which is used elsewhere in the Ripple protocol) used to create the order",
+      "description": "The Divvy Network transaction fee, represented in whole XDV (NOT \"drops\", or millionths of an XDV, which is used elsewhere in the Divvy protocol) used to create the order",
       "$ref": "FloatString"
     },
     "state": {
@@ -73,7 +73,7 @@
       "pattern": "^[0-9]+$"
     },
     "hash": {
-      "description": "When returned as the result of a historical query this will be the hash of Ripple transaction that created, modified, or deleted this order. The transaction hash is used throughout the Ripple Protocol to uniquely identify a particular transaction",
+      "description": "When returned as the result of a historical query this will be the hash of Divvy transaction that created, modified, or deleted this order. The transaction hash is used throughout the Divvy Protocol to uniquely identify a particular transaction",
       "$ref": "Hash256"
     },
     "previous": {

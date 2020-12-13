@@ -41,7 +41,7 @@ suite('unit - converter - Tx to Rest', function() {
         },
         {
           value: '-0.015',
-          currency: 'XRP',
+          currency: 'XDV',
           issuer: ''}
       ]);
 
@@ -124,7 +124,7 @@ suite('unit - converter - Tx to Rest', function() {
       settings: {
         require_destination_tag: true,
         require_authorization: true,
-        disallow_xrp: true,
+        disallow_xdv: true,
         domain: 'example.com',
         email_hash: '23463B99B62A72F26ED677CC556C44E8',
         wallet_locator: 'DEADBEEF',
@@ -132,7 +132,7 @@ suite('unit - converter - Tx to Rest', function() {
         transfer_rate: 2,
         no_freeze: false,
         global_freeze: true,
-        default_ripple: true
+        default_divvy: true
       }
     };
 
@@ -153,7 +153,7 @@ suite('unit - converter - Tx to Rest', function() {
   test('parseFlagsFromResponse()', function(done) {
     var responseFlags = 2147614720;
     var flags = {
-      NoRipple: {
+      NoDivvy: {
         name: 'prevent_rippling',
         value: 131072
       },

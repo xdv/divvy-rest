@@ -1,53 +1,53 @@
 /* eslint-disable valid-jsdoc */
 'use strict';
 var _ = require('lodash');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var BigNumber = require('bignumber.js');
 var utils = require('./utils');
 
 function RestToTxConverter() {}
 
 /**
- *  Convert a payment in the ripple-rest format
- *  to a ripple-lib transaction.
+ *  Convert a payment in the divvy-rest format
+ *  to a divvy-lib transaction.
  *
  *  @param {Payment} payment
  *  @param {Function} callback
  *
  *  @callback
  *  @param {Error} error
- *  @param {ripple-lib Transaction} transaction
+ *  @param {divvy-lib Transaction} transaction
  */
 RestToTxConverter.prototype.convert = function(payment, callback) {
   function isSendMaxAllowed() {
     var srcAmt = payment.source_amount;
     var dstAmt = payment.destination_amount;
 
-    // Don't set SendMax for XRP->XRP payment
+    // Don't set SendMax for XDV->XDV payment
     // temREDUNDANT_SEND_MAX removed in:
-    // https://github.com/ripple/rippled/commit/
+    // https://github.com/divvy/divvyd/commit/
     //  c522ffa6db2648f1d8a987843e7feabf1a0b7de8/
-    return srcAmt && !(srcAmt.currency === 'XRP' && dstAmt.currency === 'XRP');
+    return srcAmt && !(srcAmt.currency === 'XDV' && dstAmt.currency === 'XDV');
   }
 
   try {
   // Convert blank issuer to sender's address
-  //   (Ripple convention for 'any issuer')
-  // https://ripple.com/build/transactions/
+  //   (Divvy convention for 'any issuer')
+  // https://xdv.io/build/transactions/
   //    #special-issuer-values-for-sendmax-and-amount
-  // https://ripple.com/build/ripple-rest/#counterparties-in-payments
-    if (payment.source_amount && payment.source_amount.currency !== 'XRP'
+  // https://xdv.io/build/divvy-rest/#counterparties-in-payments
+    if (payment.source_amount && payment.source_amount.currency !== 'XDV'
         && payment.source_amount.issuer === '') {
       payment.source_amount.issuer = payment.source_account;
     }
 
     // Convert blank issuer to destinations's address
-    //   (Ripple convention for 'any issuer')
-    // https://ripple.com/build/transactions/
+    //   (Divvy convention for 'any issuer')
+    // https://xdv.io/build/transactions/
     //    #special-issuer-values-for-sendmax-and-amount
-    // https://ripple.com/build/ripple-rest/#counterparties-in-payments
+    // https://xdv.io/build/divvy-rest/#counterparties-in-payments
     if (payment.destination_amount
-        && payment.destination_amount.currency !== 'XRP'
+        && payment.destination_amount.currency !== 'XDV'
         && payment.destination_amount.issuer === '') {
       payment.destination_amount.issuer = payment.destination_account;
     }
@@ -61,7 +61,7 @@ RestToTxConverter.prototype.convert = function(payment, callback) {
       payment.destination_amount.currency.toUpperCase();
     }
     /* Construct payment */
-    var transaction = new ripple.Transaction();
+    var transaction = new divvy.Transaction();
     var transactionData = {
       from: payment.source_account,
       to: payment.destination_account,
@@ -87,8 +87,8 @@ RestToTxConverter.prototype.convert = function(payment, callback) {
       var max_value = new BigNumber(payment.source_amount.value)
         .plus(payment.source_slippage || 0).toString();
 
-      if (payment.source_amount.currency === 'XRP') {
-        transaction.sendMax(utils.xrpToDrops(max_value));
+      if (payment.source_amount.currency === 'XDV') {
+        transaction.sendMax(utils.xdvToDrops(max_value));
       } else {
         transaction.sendMax({
           value: max_value,
@@ -118,8 +118,8 @@ RestToTxConverter.prototype.convert = function(payment, callback) {
     if (payment.partial_payment) {
       flags.push('PartialPayment');
     }
-    if (payment.no_direct_ripple) {
-      flags.push('NoRippleDirect');
+    if (payment.no_direct_divvy) {
+      flags.push('NoDivvyDirect');
     }
     if (flags.length > 0) {
       transaction.setFlags(flags);
@@ -131,7 +131,7 @@ RestToTxConverter.prototype.convert = function(payment, callback) {
 };
 
 /**
- *  Convert a numerical transfer rate in ripple-rest format to ripple-lib
+ *  Convert a numerical transfer rate in divvy-rest format to divvy-lib
  *
  *  Note: A fee of 1% requires 101% of the destination to be sent for the
  *        destination to receive 100%.

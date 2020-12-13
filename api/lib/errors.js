@@ -4,11 +4,11 @@
 /**
  * Base class for all errors
  */
-function RippleError(message) {
+function DivvyError(message) {
   this.message = message;
 }
-RippleError.prototype = new Error();
-RippleError.prototype.name = 'RippleError';
+DivvyError.prototype = new Error();
+DivvyError.prototype.name = 'DivvyError';
 
 
 /**
@@ -18,7 +18,7 @@ RippleError.prototype.name = 'RippleError';
 function InvalidRequestError(message) {
   this.message = message;
 }
-InvalidRequestError.prototype = new RippleError();
+InvalidRequestError.prototype = new DivvyError();
 InvalidRequestError.prototype.name = 'InvalidRequestError';
 InvalidRequestError.prototype.error = 'restINVALID_PARAMETER';
 
@@ -29,18 +29,18 @@ InvalidRequestError.prototype.error = 'restINVALID_PARAMETER';
 function NetworkError(message) {
   this.message = message;
 }
-NetworkError.prototype = new RippleError();
+NetworkError.prototype = new DivvyError();
 NetworkError.prototype.name = 'NetworkError';
 
 /**
- * Rippled NetworkError
+ * Divvyd NetworkError
  * Failed transactions, no paths found, not enough balance, etc.
  */
-function RippledNetworkError(message) {
-  this.message = message !== undefined ? message : 'Cannot connect to rippled';
+function DivvydNetworkError(message) {
+  this.message = message !== undefined ? message : 'Cannot connect to divvyd';
 }
-RippledNetworkError.prototype = new NetworkError();
-RippledNetworkError.prototype.error = 'restRIPPLED_NETWORK_ERR';
+DivvydNetworkError.prototype = new NetworkError();
+DivvydNetworkError.prototype.error = 'restDIVVYD_NETWORK_ERR';
 
 /**
  * Transaction Error
@@ -49,7 +49,7 @@ RippledNetworkError.prototype.error = 'restRIPPLED_NETWORK_ERR';
 function TransactionError(message) {
   this.message = message;
 }
-TransactionError.prototype = new RippleError();
+TransactionError.prototype = new DivvyError();
 TransactionError.prototype.name = 'TransactionError';
 
 /**
@@ -59,7 +59,7 @@ TransactionError.prototype.name = 'TransactionError';
 function NotFoundError(message) {
   this.message = message;
 }
-NotFoundError.prototype = new RippleError();
+NotFoundError.prototype = new DivvyError();
 NotFoundError.prototype.name = 'NotFoundError';
 NotFoundError.prototype.error = 'restNOT_FOUND';
 
@@ -70,7 +70,7 @@ NotFoundError.prototype.error = 'restNOT_FOUND';
 function TimeOutError(message) {
   this.message = message;
 }
-TimeOutError.prototype = new RippleError();
+TimeOutError.prototype = new DivvyError();
 TimeOutError.prototype.name = 'TimeOutError';
 
 /**
@@ -80,7 +80,7 @@ TimeOutError.prototype.name = 'TimeOutError';
 function ApiError(message) {
   this.message = message;
 }
-ApiError.prototype = new RippleError();
+ApiError.prototype = new DivvyError();
 ApiError.prototype.name = 'ApiError';
 
 /**
@@ -100,18 +100,18 @@ DuplicateTransactionError.prototype.error = 'restDUPLICATE_TRANSACTION';
 function DatabaseError(message) {
   this.message = message;
 }
-DatabaseError.prototype = new RippleError();
+DatabaseError.prototype = new DivvyError();
 DatabaseError.prototype.name = 'DatabaseError';
 
 module.exports = {
   InvalidRequestError: InvalidRequestError,
   NetworkError: NetworkError,
   TransactionError: TransactionError,
-  RippledNetworkError: RippledNetworkError,
+  DivvydNetworkError: DivvydNetworkError,
   NotFoundError: NotFoundError,
   TimeOutError: TimeOutError,
   ApiError: ApiError,
   DuplicateTransactionError: DuplicateTransactionError,
   DatabaseError: DatabaseError,
-  RippleError: RippleError
+  DivvyError: DivvyError
 };

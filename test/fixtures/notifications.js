@@ -1,6 +1,6 @@
 var _                = require('lodash');
 var addresses        = require('./../fixtures').addresses;
-var SerializedObject = require('ripple-lib').SerializedObject;
+var SerializedObject = require('divvy-lib').SerializedObject;
 
 module.exports.VALID_TRANSACTION_HASH = 'F4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF';
 module.exports.INVALID_TRANSACTION_HASH = 'XF4AB442A6D4CBB935D66E1DA7309A5FC71C7143ED4049053EC14E3875B0CF9BF';
@@ -105,7 +105,7 @@ var METADATA = module.exports.METADATA = {
         },
         LowNode: '0000000000000002'
       },
-      LedgerEntryType: 'RippleState',
+      LedgerEntryType: 'DivvyState',
       LedgerIndex: '4BD1874F8F3A60EDB0C23F5BD43E07953C2B8741B226648310D113DE2B486F01',
       PreviousFields: {
         Balance: {
@@ -174,7 +174,7 @@ var METADATA = module.exports.METADATA = {
         },
         LowNode: '000000000000000C'
       },
-      LedgerEntryType: 'RippleState',
+      LedgerEntryType: 'DivvyState',
       LedgerIndex: 'FA1255C2E0407F1945BCF9351257C7C5C28B0F5F09BB81C08D35A03E9F0136BC',
       PreviousFields: {
         Balance: {
@@ -237,10 +237,10 @@ module.exports.serverInfoResponse = function(request) {
         server_state: 'full',
         validated_ledger: {
           age: 5,
-          base_fee_xrp: 0.00001,
+          base_fee_xdv: 0.00001,
           hash: '4482DEE5362332F54A4036ED57EE1767C9F33CF7CE5A6670355C16CECE381D46',
-          reserve_base_xrp: 20,
-          reserve_inc_xrp: 5,
+          reserve_base_xdv: 20,
+          reserve_inc_xdv: 5,
           seq: 6595042
         },
         validation_quorum: 3
@@ -294,10 +294,10 @@ module.exports.serverInfoMissingLedgerResponse = function(request) {
         server_state: 'syncing',
         validated_ledger: {
           age: 5,
-          base_fee_xrp: 0.00001,
+          base_fee_xdv: 0.00001,
           hash: '4482DEE5362332F54A4036ED57EE1767C9F33CF7CE5A6670355C16CECE381D46',
-          reserve_base_xrp: 20,
-          reserve_inc_xrp: 5,
+          reserve_base_xdv: 20,
+          reserve_inc_xdv: 5,
           seq: 6595042
         },
         validation_quorum: 3
@@ -435,5 +435,5 @@ module.exports.RESTMissingLedgerResponse = JSON.stringify({
   success: false,
   error_type: 'invalid_request',
   error: 'restNOT_FOUND',
-  message: 'Cannot Get Notification. This transaction is not in the ripple\'s complete ledger set. Because there is a gap in the rippled\'s historical database it is not possible to determine the transactions that precede this one'
+  message: 'Cannot Get Notification. This transaction is not in the divvy\'s complete ledger set. Because there is a gap in the divvyd\'s historical database it is not possible to determine the transactions that precede this one'
 });

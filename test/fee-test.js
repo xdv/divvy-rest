@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ripple = require('ripple-lib');
+var divvy = require('divvy-lib');
 var testutils = require('./testutils');
 var fixtures = require('./fixtures');
 var errors = require('./fixtures').errors;
@@ -8,7 +8,7 @@ var utils = require('../api/lib/utils');
 suite('get fee', function() {
   var self = this;
 
-  //self.wss: rippled mock
+  //self.wss: divvyd mock
   //self.app: supertest-enabled REST handler
 
   setup(testutils.setup.bind(self));
@@ -42,7 +42,7 @@ suite('get fee', function() {
     .expect(function(res, err) {
       assert.ifError(err);
       assert.strictEqual(res.body.success, true);
-      assert.strictEqual(res.body.fee, utils.dropsToXrp('24'));
+      assert.strictEqual(res.body.fee, utils.dropsToXdv('24'));
     })
     .end(done);
   });
